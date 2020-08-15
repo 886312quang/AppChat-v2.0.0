@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 let ContactSchema = new Schema({
-  userId: String,
-  contactId: String,
+  userId: { type: mongoose.SchemaTypes.ObjectId, ref: "User" },
+  contactId: { type: mongoose.SchemaTypes.ObjectId, ref: "User" },
   status: { type: Boolean, default: false },
   createdAt: { type: Number, default: Date.now },
   updatedAt: { type: Number, default: null },

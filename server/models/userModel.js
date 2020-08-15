@@ -34,6 +34,29 @@ let UserSchema = new Schema({
 });
 
 UserSchema.statics = {
+  /**
+   * Get user
+   *
+   * @param {ObjectId} id - The objectId of user.
+   */
+  async get(id) {
+    try {
+      let user;
+
+      if (mongoose.Types.ObjectId.isValid(id)) {
+        user = await this.findById(id).exec();
+      }
+      if (user) {
+        return user;
+      }
+      throw new APIError({
+        message: "User does not exist",
+        status: httpStatus.NOT_FOUND,
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
   createNew(item) {
     return this.create(item);
   },

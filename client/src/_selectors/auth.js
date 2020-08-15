@@ -51,6 +51,10 @@ const selectChangePasswordError = createSelector(
   (auth) => auth.changePasswordError,
 );
 
+const selectUserInfo = createSelector([selectRaw], (auth) => auth.userInfo);
+
+const selectToken = createSelector([selectRaw], (auth) => auth.token);
+
 const selectors = {
   selectInitLoading,
   selectSigninLoading,
@@ -62,6 +66,8 @@ const selectors = {
   selectChangePasswordLoading,
   selectChangePasswordError,
   selectSendResetPasswordError,
+  selectToken,
+  selectUserInfo,
 };
 
 export default selectors;

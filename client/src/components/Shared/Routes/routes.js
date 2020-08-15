@@ -2,11 +2,16 @@ const privateRoutes = [
   {
     path: "/",
     exact: true,
-    loader: () => import("../../ChatPage/index"),
+    loader: () => import("../../ChatPage"),
     menu: false,
     label: "Trang chủ",
     permissionRequired: null,
     icon: "home",
+  },
+  {
+    path: "/m/:userId/",
+    exact: true,
+    loader: () => import("../../ChatPage/index"),
   },
   /* {
     path: "/user/:userId/update",
@@ -25,11 +30,6 @@ const privateRoutes = [
     label: "Trang chủ",
     permissionRequired: null,
     icon: "home",
-  },
-  {
-    path: "/m/:userId/",
-    exact: true,
-    loader: () => import("./ChatPage/index"),
   },
   {
     path: "/call",

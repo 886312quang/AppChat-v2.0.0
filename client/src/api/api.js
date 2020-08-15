@@ -9,6 +9,7 @@ api.interceptors.request.use(
   (config) => {
     if (isAuthenticated()) {
       config.headers["Authorization"] = "Bearer " + isAuthenticated();
+      config.headers["x-access-token"] = isAuthenticated();
     }
     config.headers["Content-Type"] = "application/json";
     return config;
