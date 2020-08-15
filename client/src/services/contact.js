@@ -5,6 +5,10 @@ const services = {
     const response = await api.get(`/contact/?type=${type}`);
     return response;
   },
+  findUserContacts: async (filter) => {
+    const response = await api.get(`/contact/find-users/${filter}`);
+    return response;
+  },
 };
 
 export default services;

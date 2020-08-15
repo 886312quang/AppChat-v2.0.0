@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.param("userId", user.load);
 
+// Get current user
 router.route("/current").get(AuthMiddleware.isAuth, user.getCurrentUser);
 
 module.exports = router;

@@ -5,9 +5,9 @@ let findUsers = [
   check("keyword", transValidation.keyword_incorrect)
     .optional()
     .isLength({ min: 1, max: 17 })
-   /*  .matches(
+    .matches(
       /^[\s0-9a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹý ]+$/,
-    ) */,
+    ),
 ];
 
 module.exports = {

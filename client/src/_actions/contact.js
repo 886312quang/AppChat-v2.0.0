@@ -2,6 +2,7 @@ import * as constants from "../constants/contact";
 import * as userConstants from "../constants/user";
 import Errors from "../components/Shared/error/errors";
 import services from "../services/contact";
+import Message from "../components/Shared/message";
 
 const actions = {
   listContacts: () => async (dispatch) => {
@@ -41,6 +42,21 @@ const actions = {
     } catch (error) {
       Errors.handle(error);
       dispatch({ type: constants.REQUEST_SENT_GET_ERROR });
+    }
+  },
+  findUserContacts: (filter) => async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.USER_GET_START });
+
+      let response = await services.findUserContacts(filter);
+
+      dispatch({
+        type: userConstants.USER_GET_SUCCESS,
+        payload: response.data,
+      });
+    } catch (error) {
+      Message.error("Error find user!");
+      dispatch({ type: userConstants.USER_GET_ERROR });
     }
   },
 };
