@@ -1,20 +1,39 @@
-const { User } = require('../models/User');
+const jwtHelper = require("../helpers/jwt.helper");
 
-let auth = (req, res, next) => {
-  let token = req.cookies.w_auth;
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
-  User.findByToken(token, (err, user) => {
-    if (err) throw err;
-    if (!user)
-      return res.json({
-        isAuth: false,
-        error: true
+/**
+ * Middleware: Authorization user by Token
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+let isAuth = async (req, res, next) => {
+  const tokenFromClient =
+    req.body.token || req.query.token || req.headers["x-access-token"];
+  if (tokenFromClient) {
+    try {
+      const decoded = await jwtHelper.verifyToken(
+        tokenFromClient,
+        accessTokenSecret,
+      );
+
+      req.jwtDecoded = decoded;
+      req.user = decoded.data;
+
+      next();
+    } catch (error) {
+      return res.status(401).json({
+        message: "Unauthorized.",
       });
-
-    req.token = token;
-    req.user = user;
-    next();
-  });
+    }
+  } else {
+    return res.status(403).send({
+      message: "No token provided.",
+    });
+  }
 };
 
-module.exports = { auth };
+module.exports = {
+  isAuth,
+};

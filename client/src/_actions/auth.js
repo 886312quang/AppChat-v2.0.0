@@ -9,8 +9,8 @@ import {
 } from "../services/auth";
 import Errors from "../components/Shared/error/errors";
 import Message from "../components/Shared/message";
-/* import { socketDisconnect, configSocket } from "../rootSocket";
-import { initSetting } from "../shared/settings"; */
+/* import { socketDisconnect, configSocket } from "../rootSocket";*/
+import { initSetting } from "../components/Shared/settings"; 
 
 const actions = {
   doInitLoadingDone: () => {
@@ -36,13 +36,17 @@ const actions = {
       console.log(response);
       window.localStorage.setItem("asauth", JSON.stringify(response.data));
       dispatch({
+        type: constants.UPDATE_INFO,
+        payload: response.data,
+      });
+      dispatch({
         type: constants.SIGNIN_SUCCESS,
         payload: response.data.message,
       });
 
       getHistory().push("/");
       //configSocket();
-      // initSetting();
+      initSetting();
     } catch (error) {
       Message.error(error.response.data.message);
       dispatch({

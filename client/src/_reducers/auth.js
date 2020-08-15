@@ -14,6 +14,8 @@ const initialState = {
   signupError: null,
   verifyEmailLoading: false,
   verifyEmailError: null,
+  userInfo: null,
+  token: null,
 };
 
 const authReducer = (state = initialState, { type, payload }) =>
@@ -28,7 +30,7 @@ const authReducer = (state = initialState, { type, payload }) =>
         break;
       case constants.SIGNIN_SUCCESS:
         draft.signinLoading = false;
-        draft.signinSuccess = payload || null;
+        draft.signinSuccess = payload;
         draft.signinError = null;
         break;
       case constants.SIGNIN_ERROR:
@@ -41,7 +43,6 @@ const authReducer = (state = initialState, { type, payload }) =>
         break;
       case constants.SIGNUP_SUCCESS:
         draft.signupLoading = false;
-        draft.signupSuccess = payload || null;
         draft.signupError = null;
         break;
       case constants.SIGNUP_ERROR:
@@ -81,6 +82,10 @@ const authReducer = (state = initialState, { type, payload }) =>
       case constants.CHANGE_PASSWORD_ERROR:
         draft.changePasswordLoading = false;
         draft.changePasswordError = payload || null;
+        break;
+      case constants.UPDATE_INFO:
+        draft.userInfo = payload.user;
+        draft.token = payload.token.accessToken;
         break;
       case constants.ERROR_MESSAGE_CLEAR:
         draft.signupError = null;

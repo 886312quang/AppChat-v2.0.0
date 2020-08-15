@@ -2,21 +2,25 @@ import { isAuthenticated } from "./permissionChecker";
 import React, { useEffect } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import userActions from "../../../_actions/user";
+import userSelectors from "../../../_selectors/user";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  /* const currentUser = useSelector(userSelectors.selectCurrentUser); */
+  const currentUser = useSelector(userSelectors.selectCurrentUser);
+
   const dispatch = useDispatch();
 
-  /*  useEffect(() => {
-    if (isAuthenticated()) {
+  useEffect(() => {
+    /* if (isAuthenticated()) {
       configSocket();
-    }
+    } */
 
     // dispatch(socketActions.doConnect());
+
     if (!currentUser && isAuthenticated()) {
-      dispatch(userActions.getCurrent());
+      dispatch(userActions.getCurrentUser());
     }
-  }); */
+  });
   return (
     <Route
       {...rest}
