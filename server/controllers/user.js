@@ -19,6 +19,7 @@ let getCurrentUser = async (req, res) => {
   return res.status(200).json(user);
 };
 
+
 module.exports = {
   getCurrentUser,
   load,

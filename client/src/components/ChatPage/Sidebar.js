@@ -24,6 +24,7 @@ import layoutSelectors from "../../_selectors/layout";
 import userSelectors from "../../_selectors/user";
 import contactSelectors from "../../_selectors/contact";
 import AvatarCus from "../Commons/AvatarCus";
+import UserList from "../UserPage/List/List";
 import ContactList from "../ContactPage/List/List";
 
 const { Sider, Header } = Layout;
@@ -59,7 +60,7 @@ function ChatSidebar() {
     } else if (currentTab === "notification") {
       return <div>Notifications</div>;
     } else if (currentTab === "user") {
-      return <div>User List</div>;
+      return <UserList />;
     }
     return <div>Message List</div>;
   };

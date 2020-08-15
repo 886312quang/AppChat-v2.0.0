@@ -22,6 +22,19 @@ const userReducer = (state = initialState, { type, payload }) =>
       case constants.USER_GET_CURRENT_SUCCESS:
         draft.current = payload;
         break;
+      case constants.USER_GET_START:
+        draft.findLoading = true;
+        draft.error = null;
+        break;
+      case constants.USER_GET_SUCCESS:
+        draft.findLoading = false;
+        draft.users = payload;
+        draft.error = null;
+        break;
+      case constants.USER_GET_ERROR:
+        draft.findLoading = false;
+        draft.error = payload;
+        break;
 
       default:
         break;
