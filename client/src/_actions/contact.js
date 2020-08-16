@@ -5,11 +5,11 @@ import services from "../services/contact";
 import Message from "../components/Shared/message";
 
 const actions = {
-  listContacts: () => async (dispatch) => {
+  getContacts: () => async (dispatch) => {
     try {
       dispatch({ type: constants.CONTACT_GET_START });
 
-      let response = await services.getListFriend({ type: "contact" });
+      let response = await services.getContacts();
 
       dispatch({ type: constants.CONTACT_GET_SUCCESS, payload: response.data });
     } catch (error) {
@@ -57,6 +57,41 @@ const actions = {
     } catch (error) {
       Message.error("Error find user!");
       dispatch({ type: userConstants.USER_GET_ERROR });
+    }
+  },
+  doCreate: (userInfo) => async (dispatch) => {
+    try {
+      dispatch({ type: constants.CONTACT_CREATE_START });
+
+      const response = await services.createContact(userInfo);
+
+      dispatch({
+        type: constants.CONTACT_CREATE_SUCCESS,
+        payload: response.data,
+      });
+      Message.success("Add friend success");
+    } catch (error) {
+      Message.error("Add friend fail");
+      dispatch({
+        type: userConstants.USER_ADD_CONTACT_ERROR,
+      });
+    }
+  },
+  removeSentRequestContact: (id) => async (dispatch) => {
+    try {
+      dispatch({ type: constants.CONTACT_REMOVE_SENT_START });
+
+      const response = await services.removeRequestSent(id);
+
+      dispatch({
+        type: constants.CONTACT_REMOVE_SENT_SUCCESS,
+        payload: response.data,
+      });
+    } catch (error) {
+      Message.error("Error");
+      dispatch({
+        type: constants.CONTACT_REMOVE_SENT_ERROR,
+      });
     }
   },
 };

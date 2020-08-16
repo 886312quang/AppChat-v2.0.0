@@ -1,9 +1,10 @@
 const { validationResult } = require("express-validator/check");
 const ContactModel = require("../models/contactModel");
+const UserModel = require("../models/userModel");
 const { transSuccess, transErrors } = require("../../lang/vi");
 const { contact } = require("../services/index");
 
-let list = async (req, res, next) => {
+/* let list = async (req, res, next) => {
   try {
     let currentUserId = req.user._id;
     console.log(currentUserId);
@@ -54,6 +55,33 @@ let list = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+}; */
+
+let getContacts = async (req, res, next) => {
+  try {
+    let currentUserId = req.user._id;
+
+    // Contact
+    const contacts = await contact.getContacts(currentUserId);
+    const requests = await contact.getContactsReceived(currentUserId);
+    const requestsSent = await contact.getContactsSent(currentUserId);
+
+    // Count
+    const countContact = await contact.countAllContacts(currentUserId);
+    const countRequest = await contact.countAllContactsSent(currentUserId);
+    const countReceived = await contact.countAllContactsReceived(currentUserId);
+
+    return res.status(200).json({
+      contacts,
+      requests,
+      requestsSent,
+      countContact,
+      countReceived,
+      countRequest,
+    });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 let findUsersContact = async (req, res) => {
@@ -78,7 +106,42 @@ let findUsersContact = async (req, res) => {
   }
 };
 
+let createContact = async (req, res) => {
+  try {
+    let currentUserId = req.user._id;
+  
+    let contactId = req.body._id;
+    let userContact;
+
+    let newContact = await contact.addNew(currentUserId, contactId);
+    if (newContact) {
+      userContact = await UserModel.getNormalUserDataById(contactId);
+    }
+
+    return res.status(200).json(userContact); // return true or false with !!newContact
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+let removeRequestContactSent = async (req, res) => {
+  try {
+    let currentUserId = req.user._id;
+    let contactId = req.params.id;
+
+    await contact.removeRequestContactSent(
+      currentUserId,
+      contactId,
+    );
+    return res.status(200).send({ contactId }); // return true or false with !!newContact
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
 module.exports = {
-  list,
+  getContacts,
   findUsersContact,
+  createContact,
+  removeRequestContactSent,
 };
