@@ -28,13 +28,39 @@ const contactReducer = (state = initialState, { type, payload }) =>
         draft.saveLoading = true;
         draft.error = null;
         break;
+      case constants.CONTACT_CREATE_SUCCESS:
+        draft.saveLoading = false;
+        draft.requestsSent.push(payload);
+        draft.error = null;
+        break;
+      case constants.CONTACT_CREATE_ERROR:
+        draft.saveLoading = false;
+        draft.error = payload;
+        break;
       case constants.CONTACT_GET_START:
         draft.contactLoading = true;
         draft.error = null;
         break;
+      case constants.CONTACT_REMOVE_SENT_START:
+        draft.deleteLoading = true;
+        draft.error = null;
+        break;
+      case constants.CONTACT_REMOVE_SENT_SUCCESS:
+        draft.deleteLoading = false;
+        draft.requestsSent = state.requestsSent.filter(
+          (item) => item._id !== payload.contactId,
+        );
+        draft.error = null;
+        break;
+      case constants.CONTACT_REMOVE_SENT_ERROR:
+        draft.deleteLoading = false;
+        draft.error = payload;
+        break;
       case constants.CONTACT_GET_SUCCESS:
         draft.contactLoading = false;
-        draft.contacts = payload;
+        draft.contacts = payload.contacts;
+        draft.requests = payload.requests;
+        draft.requestsSent = payload.requestsSent;
         draft.error = null;
         break;
       case constants.CONTACT_GET_ERROR:

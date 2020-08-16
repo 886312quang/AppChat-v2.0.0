@@ -15,6 +15,8 @@ import {
   Search as SearchIcon,
   Users,
   Bell,
+  Contact,
+  List,
 } from "react-feather";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -26,24 +28,32 @@ import contactSelectors from "../../_selectors/contact";
 import AvatarCus from "../Commons/AvatarCus";
 import UserList from "../UserPage/List/List";
 import ContactList from "../ContactPage/List/List";
+import ModalCreateGroupChat from "./ModalCreateGroupChat";
+import ContactModal from "../ContactPage/ContactModal/ContactModal";
 
 const { Sider, Header } = Layout;
 const { Search } = Input;
 
 function ChatSidebar() {
   const dispatch = useDispatch();
+
+  // State
   const [currentTab, setCurrentTab] = useState("message");
+  const [playSound, setPlaySound] = useState(getSetting().sound);
   const [
     modalCreateGroupChatVisible,
     setModalCreateGroupChatVisible,
   ] = useState(false);
+  const [modalContactVisible, setModalContactVisible] = useState(false);
+
+  // Selector
   const currentUser = useSelector(userSelectors.selectCurrentUser);
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
   const leftSidebarVisible = useSelector(
     layoutSelectors.selectLeftSidebarVisible,
   );
   const requests = useSelector(contactSelectors.selectRequests);
-  const [playSound, setPlaySound] = useState(getSetting().sound);
+
   const messageFooter = (
     <div className="py-3 px-3" style={{ backgroundColor: "#fff" }}>
       <Search placeholder="Search contact" />
@@ -53,67 +63,6 @@ function ChatSidebar() {
   const handleMenuClick = (e) => {
     setCurrentTab(e.key);
   };
-
-  const messagesSidebar = () => {
-    if (currentTab === "contact") {
-      return <ContactList />;
-    } else if (currentTab === "notification") {
-      return <div>Notifications</div>;
-    } else if (currentTab === "user") {
-      return <UserList />;
-    }
-    return <div>Message List</div>;
-  };
-
-  const messageHeader = (
-    <Menu
-      mode="horizontal"
-      className="border-0"
-      selectedKeys={[currentTab]}
-      onClick={handleMenuClick}
-    >
-      <Menu.Item
-        key="message"
-        style={{
-          width: "33%",
-          textAlign: "center",
-        }}
-      >
-        <MessageCircle size={20} strokeWidth={1} />
-      </Menu.Item>
-      <Menu.Item
-        key="contact"
-        style={{
-          width: "33%",
-          textAlign: "center",
-        }}
-      >
-        <Badge /* ={requests && requests.length > 0} */ count={2}>
-          <Users size={20} strokeWidth={1} />
-        </Badge>
-      </Menu.Item>
-      <Menu.Item
-        key="user"
-        style={{
-          width: "33%",
-          textAlign: "center",
-        }}
-      >
-        <SearchIcon size={20} strokeWidth={1} />
-      </Menu.Item>
-      <Menu.Item
-        key="notification"
-        style={{
-          width: "25%",
-          textAlign: "center",
-        }}
-      >
-        <Badge dot={true}>
-          <Bell size={20} strokeWidth={1} />
-        </Badge>
-      </Menu.Item>
-    </Menu>
-  );
 
   const toggleMuteSound = () => {
     setSetting({ sound: !playSound });
@@ -140,6 +89,76 @@ function ChatSidebar() {
       <Menu.Divider />
       <Menu.Item key="3" onClick={() => dispatch(authActions.doSignOut())}>
         <span>Sign out</span>
+      </Menu.Item>
+    </Menu>
+  );
+
+  const messagesSidebar = () => {
+    if (currentTab === "message") {
+      return <div>Message List</div>;
+    } else if (currentTab === "notification") {
+      return <div>Notifications</div>;
+    } else if (currentTab === "searchFriend") {
+      return <UserList />;
+    }
+    return <div>Message List</div>;
+  };
+
+  const messageHeader = (
+    <Menu
+      mode="horizontal"
+      className="border-0"
+      selectedKeys={[currentTab]}
+      onClick={handleMenuClick}
+    >
+      <Menu.Item
+        key="message"
+        style={{
+          width: "33%",
+          textAlign: "center",
+        }}
+      >
+        <Tooltip title="Message">
+          <MessageCircle size={20} strokeWidth={1} />
+        </Tooltip>
+      </Menu.Item>
+      <Menu.Item
+        key="notification"
+        style={{
+          width: "33%",
+          textAlign: "center",
+        }}
+      >
+        <Tooltip title="Notification">
+          <Badge dot={true}>
+            <Bell size={20} strokeWidth={1} />
+          </Badge>
+        </Tooltip>
+      </Menu.Item>
+      <Menu.Item
+        key="searchFriend"
+        style={{
+          width: "100%",
+          textAlign: "center",
+        }}
+      >
+        <Tooltip title="Search friend">
+          <SearchIcon size={20} strokeWidth={1} />
+        </Tooltip>
+      </Menu.Item>
+      <Menu.Item
+        key="contact"
+        style={{
+          width: "100%",
+          textAlign: "center",
+        }}
+        onClick={() => setModalContactVisible(!modalContactVisible)}
+      >
+        <Tooltip title="Contact">
+          <Badge count={2}>
+            <Users size={20} strokeWidth={1} />
+          </Badge>
+        </Tooltip>
       </Menu.Item>
     </Menu>
   );
@@ -205,12 +224,16 @@ function ChatSidebar() {
           : "300"
       }
     >
-      {/* <ModalCreateGroupchat
+      <ModalCreateGroupChat
         visible={modalCreateGroupChatVisible}
         doToggle={() =>
           setModalCreateGroupChatVisible(!modalCreateGroupChatVisible)
         }
-      /> */}
+      />
+      <ContactModal
+        visible={modalContactVisible}
+        doToggle={() => setModalContactVisible(!modalContactVisible)}
+      />
       <div
         style={{
           display: "flex",

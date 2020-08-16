@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const { findByIdAndRemove } = require("./userModel");
 
 let Schema = mongoose.Schema;
 
 let ContactSchema = new Schema({
-  userId: { type: mongoose.SchemaTypes.ObjectId, ref: "User" },
-  contactId: { type: mongoose.SchemaTypes.ObjectId, ref: "User" },
+  userId: String,
+  contactId: String,
   status: { type: Boolean, default: false },
   createdAt: { type: Number, default: Date.now },
   updatedAt: { type: Number, default: null },
@@ -70,7 +71,7 @@ ContactSchema.statics = {
    * @param {string} contactId
    */
   removeRequestContactSent(userId, contactId) {
-    return this.remove({
+    return this.deleteOne({
       $and: [{ userId: userId }, { contactId: contactId }, { status: false }],
     }).exec();
   },
@@ -153,7 +154,7 @@ ContactSchema.statics = {
    * @param {string} userId
    */
   countAllContacts(userId) {
-    return this.count({
+    return this.countDocuments({
       $and: [
         { $or: [{ userId: userId }, { contactId: userId }] },
         { status: true },
@@ -161,12 +162,12 @@ ContactSchema.statics = {
     }).exec();
   },
   countAllContactsSent(userId) {
-    return this.count({
+    return this.countDocuments({
       $and: [{ userId: userId }, { status: false }],
     }).exec();
   },
   countAllContactsReceived(userId) {
-    return this.count({
+    return this.countDocuments({
       $and: [{ contactId: userId }, { status: false }],
     }).exec();
   },

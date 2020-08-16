@@ -1,6 +1,6 @@
 import * as constants from "../constants/user";
+import * as constantsContact from "../constants/contact";
 import produce from "immer";
-import { constant } from "lodash";
 
 const initialState = {
   initLoading: true,
@@ -35,7 +35,20 @@ const userReducer = (state = initialState, { type, payload }) =>
         draft.findLoading = false;
         draft.error = payload;
         break;
-
+      case constantsContact.CONTACT_CREATE_SUCCESS:
+        draft.users.forEach((user) => {
+          if (user._id == payload._id) {
+            user.status = true;
+          }
+        });
+        break;
+      case constantsContact.CONTACT_REMOVE_SENT_SUCCESS:
+        draft.users.forEach((user) => {
+          if (user._id == payload.contactId) {
+            user.status = false;
+          }
+        });
+        break;
       default:
         break;
     }

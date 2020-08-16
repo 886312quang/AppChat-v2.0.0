@@ -71,12 +71,14 @@ let addNew = (currentUserId, contactId) => {
 
 let removeRequestContactSent = (currentUserId, contactId) => {
   return new Promise(async (resolve, reject) => {
+  
     let removeReq = await ContactModel.removeRequestContactSent(
       currentUserId,
       contactId,
     );
+    console.log(removeReq);
     // result.n === 0 sua k thanh cong else 1
-    if (removeReq.result.n === 0) {
+    if (removeReq.n === 0) {
       return reject(false);
     }
 
@@ -178,6 +180,7 @@ let getContactsSent = (currentUserId) => {
         currentUserId,
         LIMIT_NUMBER_TAKEN,
       );
+
       let users = contacts.map(async (contact) => {
         return await UserModel.getNormalUserDataById(contact.contactId);
       });
