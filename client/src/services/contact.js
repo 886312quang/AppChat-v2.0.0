@@ -18,11 +18,15 @@ const services = {
     return response;
   },
   removeRequest: async (id) => {
-    const response = await api.delete(`/contact/remove-request`, id);
+    const response = await api.delete(`/contact/remove-request/${id}`);
     return response;
   },
   removeContact: async (id) => {
-    const response = await api.delete(`/contact/remove-contact`, id);
+    const response = await api.delete(`/contact/remove-contact/${id}`);
+    return response;
+  },
+  acceptContact: async (id) => {
+    const response = await api.put(`/contact/accept/${id}`);
     return response;
   },
 };

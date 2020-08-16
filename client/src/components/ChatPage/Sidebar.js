@@ -52,7 +52,13 @@ function ChatSidebar() {
   const leftSidebarVisible = useSelector(
     layoutSelectors.selectLeftSidebarVisible,
   );
-  const requests = useSelector(contactSelectors.selectRequests);
+
+  const countContactSent = useSelector(contactSelectors.selectCountSent);
+  const countContactReceived = useSelector(
+    contactSelectors.selectCountReceived,
+  );
+
+  let countTotal = countContactSent + countContactReceived;
 
   const messageFooter = (
     <div className="py-3 px-3" style={{ backgroundColor: "#fff" }}>
@@ -155,7 +161,7 @@ function ChatSidebar() {
         onClick={() => setModalContactVisible(!modalContactVisible)}
       >
         <Tooltip title="Contact">
-          <Badge count={2}>
+          <Badge count={countTotal}>
             <Users size={20} strokeWidth={1} />
           </Badge>
         </Tooltip>

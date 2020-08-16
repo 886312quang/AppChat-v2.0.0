@@ -13,8 +13,11 @@ function ContactRequest() {
   // Selector
   const contacts = useSelector(selector.selectRequests);
 
-  const handleRemoveContactClick = (userInfo) => {
-    dispatch(actions.removeSentRequestContact(userInfo));
+  const handleRemoveContactRequest = (userInfo) => {
+    dispatch(actions.removeRequestContact(userInfo._id));
+  };
+  const handleAcceptContactRequest = (userInfo) => {
+    dispatch(actions.acceptContact(userInfo._id));
   };
 
   const renderContacts = () => {
@@ -56,7 +59,7 @@ function ContactRequest() {
                     <Button
                       type="primary"
                       size="small"
-                      onClick={() => handleRemoveContactClick(item)}
+                      onClick={() => handleAcceptContactRequest(item)}
                     >
                       Accept
                     </Button>
@@ -64,7 +67,7 @@ function ContactRequest() {
                     <Button
                       type="danger"
                       size="small"
-                      onClick={() => handleRemoveContactClick(item)}
+                      onClick={() => handleRemoveContactRequest(item)}
                     >
                       Remove
                     </Button>

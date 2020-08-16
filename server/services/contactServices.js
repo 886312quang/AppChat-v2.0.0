@@ -76,7 +76,6 @@ let removeRequestContactSent = (currentUserId, contactId) => {
       currentUserId,
       contactId,
     );
-    console.log(removeReq);
     // result.n === 0 sua k thanh cong else 1
     if (removeReq.n === 0) {
       return reject(false);
@@ -99,17 +98,9 @@ let removeRequestContactReceived = (currentUserId, contactId) => {
       contactId,
     );
     //{n:0, nModified 0, ok: 1} 0 that bai
-    if (removeReq.result.n === 0) {
+    if (removeReq.n === 0) {
       return reject(false);
     }
-
-    // Remove notification  k can
-    /* await NotificationModel.model.removeRequestContactReceivedNotification(
-      currentUserId,
-      contactId,
-      NotificationModel.types.ADD_CONTACT,
-    ); */
-
     resolve(true);
   });
 };
@@ -120,7 +111,7 @@ let removeContact = (currentUserId, contactId) => {
       contactId,
     );
     // result.n === 0 sua k thanh cong else 1
-    if (removeContact.result.n === 0) {
+    if (removeContact.n === 0) {
       return reject(false);
     }
     resolve(true);
@@ -132,6 +123,7 @@ let acceptRequestContactReceived = (currentUserId, contactId) => {
       currentUserId,
       contactId,
     );
+
     //nModified === 0 sua khong thanh cong else 1 {n:0, nModified 0, ok: 1}
     if (acceptReq.nModified === 0) {
       return reject(false);

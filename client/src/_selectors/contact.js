@@ -40,6 +40,19 @@ const selectRequestsSent = createSelector(
   (contact) => contact.requestsSent,
 );
 
+const selectCountContact = createSelector(
+  [selectRaw],
+  (contact) => contact.countContact,
+);
+const selectCountSent = createSelector(
+  [selectRaw],
+  (contact) => contact.countSent,
+);
+const selectCountReceived = createSelector(
+  [selectRaw],
+  (contact) => contact.countReceived,
+);
+
 const selectRecord = createSelector([selectRaw], (contact) => contact.record);
 
 const selectors = {
@@ -52,6 +65,9 @@ const selectors = {
   selectDestroyLoading,
   selectRecord,
   selectFindLoading,
+  selectCountContact,
+  selectCountSent,
+  selectCountReceived,
 };
 
 export default selectors;

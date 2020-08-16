@@ -10,6 +10,7 @@ const actions = {
       dispatch({ type: constants.CONTACT_GET_START });
 
       let response = await services.getContacts();
+      console.log(response);
 
       dispatch({ type: constants.CONTACT_GET_SUCCESS, payload: response.data });
     } catch (error) {
@@ -91,6 +92,62 @@ const actions = {
       Message.error("Error");
       dispatch({
         type: constants.CONTACT_REMOVE_SENT_ERROR,
+      });
+    }
+  },
+  removeRequestContact: (id) => async (dispatch) => {
+    try {
+      dispatch({ type: constants.CONTACT_REMOVE_REQUEST_START });
+
+      const response = await services.removeRequest(id);
+
+      dispatch({
+        type: constants.CONTACT_REMOVE_REQUEST_SUCCESS,
+        payload: response.data,
+      });
+    } catch (error) {
+      Message.error("Error");
+      dispatch({
+        type: constants.CONTACT_REMOVE_REQUEST_ERROR,
+      });
+    }
+  },
+  removeContact: (id) => async (dispatch) => {
+    try {
+      dispatch({ type: constants.CONTACT_REMOVE_CONTACT_START });
+
+      await services.removeContact(id);
+
+      dispatch({
+        type: constants.CONTACT_REMOVE_CONTACT_SUCCESS,
+        payload: id,
+      });
+    } catch (error) {
+      Message.error("Error");
+      dispatch({
+        type: constants.CONTACT_REMOVE_CONTACT_ERROR,
+      });
+    }
+  },
+  acceptContact: (id) => async (dispatch) => {
+    try {
+      dispatch({ type: constants.ACCEPT_CONTACT_START });
+
+      const response = await services.acceptContact(id);
+
+      let data = {
+        userContact: response.data,
+        id,
+      };
+
+      dispatch({
+        type: constants.ACCEPT_CONTACT_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      Message.error("Error");
+      dispatch({
+        type: constants.ACCEPT_CONTACT_ERROR,
       });
     }
   },

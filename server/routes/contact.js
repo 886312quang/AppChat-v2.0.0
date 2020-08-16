@@ -15,5 +15,14 @@ router.route("/create").post(AuthMiddleware.isAuth, contact.createContact);
 router
   .route("/remove-request-sent/:id")
   .delete(AuthMiddleware.isAuth, contact.removeRequestContactSent);
+router
+  .route("/remove-request/:id")
+  .delete(AuthMiddleware.isAuth, contact.removeRequest);
+router
+  .route("/remove-contact/:id")
+  .delete(AuthMiddleware.isAuth, contact.removeContact);
+router
+  .route("/accept/:id")
+  .put(AuthMiddleware.isAuth, contact.accept);
 
 module.exports = router;

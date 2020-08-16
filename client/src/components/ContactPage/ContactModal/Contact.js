@@ -12,21 +12,12 @@ function Contact() {
 
   // Selector
   const contacts = useSelector(selector.selectContacts);
-  console.log(contacts);
 
-  // State
-  const [Action, setAction] = useState("remove");
-
-  const handleAddContactClick = (userInfo) => {
-    dispatch(actions.doCreate(userInfo));
-    setAction("cancel");
+  const handleRemoveContactClick = (id) => {
+    dispatch(actions.removeContact(id));
   };
 
-  const handleRemoveContactClick = (userInfo) => {
-    setAction("add");
-  };
-
-  const renderContacts = (contacts) => {
+  const renderContacts = () => {
     return (
       <List
         className="scroll-y flex-1 bg-transparent"
@@ -48,18 +39,29 @@ function Contact() {
               }
               description={
                 <>
-                  {Action === "remove" && (
-                    <>
-                      <Tooltip title="Remove contact">
-                        <Button
-                          size="small"
-                          onClick={() => handleRemoveContactClick(item)}
-                        >
-                          Remove Contact
-                        </Button>
-                      </Tooltip>
-                    </>
+                  {item.address ? (
+                    <span
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                      }}
+                    >
+                      {item.address}
+                    </span>
+                  ) : (
+                    ""
                   )}
+                  <br />
+
+                  <>
+                    <Button
+                      type="danger"
+                      size="small"
+                      onClick={() => handleRemoveContactClick(item._id)}
+                    >
+                      Remove Contact
+                    </Button>
+                  </>
                 </>
               }
             />

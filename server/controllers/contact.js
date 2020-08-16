@@ -4,59 +4,6 @@ const UserModel = require("../models/userModel");
 const { transSuccess, transErrors } = require("../../lang/vi");
 const { contact } = require("../services/index");
 
-/* let list = async (req, res, next) => {
-  try {
-    let currentUserId = req.user._id;
-    console.log(currentUserId);
-    // Get Types
-    const type = ["request", "contact", "requestsent"].includes(
-      req.query.type.toLowerCase(),
-    )
-      ? req.query.type.toLowerCase()
-      : "contact";
-    // Get options GET LIST
-    let options = {};
-    if (type === "request") {
-      options = {
-        $and: [{ status: false }, { contactId: currentUserId }],
-      };
-    } else if (type === "requestsent") {
-      options = {
-        $and: [{ status: false }, { userId: currentUserId }],
-      };
-    } else {
-      options = {
-        $and: [
-          {
-            $or: [{ contactId: currentUserId }, { userId: currentUserId }],
-          },
-          { status: true },
-        ],
-      };
-    }
-
-    let contacts = await ContactModel.find(options)
-      .populate("userId", "id userName avatar createdAt")
-      .populate("contactId", "id userName avatar createdAt");
-    console.log(contacts);
-
-    let responseList = [];
-
-    contacts.forEach((contact) => {
-      if (contact.userId.id == currentUserId) {
-        responseList.push(contact.contactId);
-      } else if (contact.contactId.id == currentUserId) {
-        responseList.push(contact.userId);
-      }
-    });
-
-    console.log(responseList);
-    return res.status(200).json(responseList);
-  } catch (error) {
-    next(error);
-  }
-}; */
-
 let getContacts = async (req, res, next) => {
   try {
     let currentUserId = req.user._id;
@@ -68,7 +15,7 @@ let getContacts = async (req, res, next) => {
 
     // Count
     const countContact = await contact.countAllContacts(currentUserId);
-    const countRequest = await contact.countAllContactsSent(currentUserId);
+    const countSent = await contact.countAllContactsSent(currentUserId);
     const countReceived = await contact.countAllContactsReceived(currentUserId);
 
     return res.status(200).json({
@@ -77,7 +24,7 @@ let getContacts = async (req, res, next) => {
       requestsSent,
       countContact,
       countReceived,
-      countRequest,
+      countSent,
     });
   } catch (error) {
     return next(error);
@@ -139,9 +86,58 @@ let removeRequestContactSent = async (req, res) => {
   }
 };
 
+let removeRequest = async (req, res) => {
+  try {
+    let currentUserId = req.user._id;
+    let contactId = req.params.id;
+    console.log(contactId)
+
+    let removeReq = await contact.removeRequestContactReceived(
+      currentUserId,
+      contactId,
+    );
+    return res.status(200).send({ contactId }); // return true or false with !!newContact
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+let removeContact = async (req, res) => {
+  try {
+    let currentUserId = req.user._id;
+    let contactId = req.params.id;
+
+    let removeContact = await contact.removeContact(currentUserId, contactId);
+    return res.status(200).send({ success: !!removeContact }); // return true or false with !!newContact
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+let accept = async (req, res) => {
+  try {
+    let currentUserId = req.user._id;
+    let contactId = req.params.id;
+
+    let acceptReq = await contact.acceptRequestContactReceived(
+      currentUserId,
+      contactId,
+    );
+
+    let userContact = await UserModel.getNormalUserDataById(contactId);
+
+    return res.status(200).json(userContact); // return true or false with !!newContact
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
 module.exports = {
   getContacts,
   findUsersContact,
   createContact,
   removeRequestContactSent,
+  removeRequest,
+  removeContact,
+  accept,
 };
