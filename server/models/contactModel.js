@@ -46,7 +46,7 @@ ContactSchema.statics = {
    * @param {String} contactId
    */
   removeContact(userId, contactId) {
-    return this.remove({
+    return this.deleteOne({
       $or: [
         {
           $and: [
@@ -81,7 +81,7 @@ ContactSchema.statics = {
    * @param {String} contactId
    */
   removeRequestContactReceived(userId, contactId) {
-    return this.remove({
+    return this.deleteOne({
       $and: [{ contactId: userId }, { userId: contactId }, { status: false }],
     }).exec();
   },

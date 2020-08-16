@@ -4,15 +4,13 @@ import userSelectors from "../../../_selectors/user";
 import { useSelector, useDispatch } from "react-redux";
 import actions from "../../../_actions/message";
 import contactActions from "../../../_actions/contact";
-import contactSelectors from "../../../_selectors/contact";
+import selectors from "../../../_selectors/contact";
 import Contact from "./Contact";
 import ContactSent from "./ContactSent";
 import ContactRequest from "./ContactRequest";
+import Text from "antd/lib/typography/Text";
 
 function ContactModal({ visible, doToggle }) {
-  let users = useSelector(contactSelectors.selectContacts);
-  const currentUser = useSelector(userSelectors.selectCurrentUser);
-
   const [currentTab, setCurrentTab] = useState("contact");
 
   const dispatch = useDispatch();
@@ -20,6 +18,9 @@ function ContactModal({ visible, doToggle }) {
   const handleMenuClick = (e) => {
     setCurrentTab(e.key);
   };
+
+  const countRequest = useSelector(selectors.selectCountReceived);
+  const countSent = useSelector(selectors.selectCountSent);
 
   useEffect(() => {
     dispatch(contactActions.getContacts());
@@ -48,7 +49,10 @@ function ContactModal({ visible, doToggle }) {
           textAlign: "center",
         }}
       >
-        <span>Đang chờ xác nhận</span>
+        <span>
+          Đang chờ xác nhận{" "}
+          {countSent > 0 && <em style={{ color: "#f5222d" }}>({countSent})</em>}
+        </span>
       </Menu.Item>
       <Menu.Item
         key="contact-request"
@@ -57,7 +61,12 @@ function ContactModal({ visible, doToggle }) {
           textAlign: "center",
         }}
       >
-        <span>Lời mời kết bạn</span>
+        <span>
+          Lời mời kết bạn{" "}
+          {countRequest > 0 && (
+            <em style={{ color: "#f5222d" }}>({countRequest})</em>
+          )}
+        </span>
       </Menu.Item>
     </Menu>
   );
