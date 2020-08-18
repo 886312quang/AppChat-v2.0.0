@@ -9,8 +9,8 @@ import {
 } from "../services/auth";
 import Errors from "../components/Shared/error/errors";
 import Message from "../components/Shared/message";
-/* import { socketDisconnect, configSocket } from "../rootSocket";*/
-import { initSetting } from "../components/Shared/settings"; 
+import { socketDisconnect, configSocket } from "../sockets/rootSocket";
+import { initSetting } from "../components/Shared/settings";
 
 const actions = {
   doInitLoadingDone: () => {
@@ -45,7 +45,7 @@ const actions = {
       });
 
       getHistory().push("/");
-      //configSocket();
+     /*  configSocket(); */
       initSetting();
     } catch (error) {
       Message.error(error.response.data.message);
