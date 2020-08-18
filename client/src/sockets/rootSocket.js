@@ -1,17 +1,20 @@
 import io from "socket.io-client";
 import { isAuthenticated } from "../components/Shared/Routes/permissionChecker";
+import {
+  onAddContact,
+  onAcceptRequestContact,
+  onRemoveRequestContact,
+  onRemoveRequestSentContact,
+  onRemoveContact,
+} from "./contact";
 
 const endpoint = process.env.REACT_APP_SOCKET_ENDPOINT;
 
 let socket = null;
 
-const onConnected = () => {
-  console.log("socket: connected");
-};
+const onConnected = () => {};
 
-const onDisconnect = () => {
-  console.log("socket: disconnect");
-};
+const onDisconnect = () => {};
 
 export const configSocket = () => {
   if (socket && socket.disconnected) {
@@ -24,9 +27,15 @@ export const configSocket = () => {
     query: `token=${isAuthenticated()}`,
   });
 
-  console.log(socket);
   socket.on("connect", onConnected);
   socket.on("disconnect", onDisconnect);
+
+  // Contact
+  socket.on("response-add-contact", onAddContact);
+  socket.on("response-accept-request-contact-received", onAcceptRequestContact);
+  socket.on("response-remove-request-contact-received", onRemoveRequestContact);
+  socket.on("response-remove-request-sent-contact", onRemoveRequestSentContact);
+  socket.on("response-remove-contact", onRemoveContact);
 
   return socket;
 };
