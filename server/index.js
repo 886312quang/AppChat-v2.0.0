@@ -1,18 +1,34 @@
 require("dotenv").config();
 
-const express = require("express");
-const ConnectDB = require("./config/connectDB");
-const app = express();
 const path = require("path");
+const http = require("http");
+const express = require("express");
+const morgan = require("morgan");
+const ConnectDB = require("./config/connectDB");
 const cors = require("cors");
-
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const event = require("events");
+const configApp = require("./config/app");
+const socketio = require("socket.io");
+const initSockets = require("./sockets/index");
+const helmet = require("helmet");
+const methodOverride = require("method-override");
+
+const app = express();
+
+// Set max connection event listeners
+event.EventEmitter.defaultMaxListeners = configApp.max_event_listeners;
+
+// Static File
+app.use("/public", express.static(path.join(__dirname, "../../public")));
+
+// Init server with socket.io & express app
+const server = http.createServer(app);
+const io = socketio(server, { path: "/chat/socket.io" });
 
 //Connect to MongoDB
 ConnectDB();
-
-app.use(cors());
 
 //to not get any deprecation warning or error
 //support parsing of application/x-www-form-urlencoded post data
@@ -22,10 +38,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+app.use(methodOverride());
+
+app.use(helmet());
+
+const optionsCors = {
+  origin: "http://localhost:3000",
+  credentials: true,
+};
+
+app.use(cors(optionsCors));
+
 // Config routes
 app.use("/api", require("./routes/index"));
+/* app.get("/", cors(optionsCors)); */
 
-//use this to show the image you have in node js server to client (react js)
+//Init all sockets
+initSockets(io);
+
+/* //use this to show the image you have in node js server to client (react js)
 //https://stackoverflow.com/questions/48914987/send-image-path-from-node-js-express-server-to-react-client
 app.use("/uploads", express.static("uploads"));
 
@@ -39,10 +70,10 @@ if (process.env.NODE_ENV === "production") {
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
   });
-}
+} */
 
-const port = process.env.PORT || 5000;
+const port = process.env.APP_PORT || 5000;
 
-app.listen(port, () => {
-  console.log(`Server Listening on ${port}`);
+server.listen(port, () => {
+  console.log(`Server Listening on ${port} @@`);
 });

@@ -4,6 +4,7 @@ import { Redirect, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import userActions from "../../../_actions/user";
 import userSelectors from "../../../_selectors/user";
+import { configSocket } from "../../../sockets/rootSocket";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const currentUser = useSelector(userSelectors.selectCurrentUser);
@@ -11,16 +12,16 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    /* if (isAuthenticated()) {
+    if (isAuthenticated()) {
       configSocket();
-    } */
+    }
 
     // dispatch(socketActions.doConnect());
 
     if (!currentUser && isAuthenticated()) {
       dispatch(userActions.getCurrentUser());
     }
-  });
+  }, []);
   return (
     <Route
       {...rest}
