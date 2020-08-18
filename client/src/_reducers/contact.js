@@ -27,6 +27,41 @@ const initialState = {
 const contactReducer = (state = initialState, { type, payload }) =>
   produce(state, (draft) => {
     switch (type) {
+      case constants.ON_ACCEPT_REQUEST_ADD:
+        draft.requestsSent = state.requestsSent.filter(
+          (item) => item._id !== payload._id,
+        );
+        draft.contacts.push(payload);
+        draft.countSent = state.countSent - 1;
+        draft.countContact = state.countContact + 1;
+        break;
+      case constants.ON_REMOVE_REQUEST_ADD:
+        draft.countSent = state.countSent - 1;
+        draft.requestsSent = state.requestsSent.filter(
+          (item) => item._id !== payload._id,
+        );
+        break;
+      case constants.ON_CONTACT_REQUEST_ADD:
+        let existsRequest = state.requests.filter(
+          (item) => item._id === payload.id,
+        );
+        if (existsRequest.length === 0) {
+          draft.requests.push(payload);
+          draft.countReceived = state.countReceived + 1;
+        }
+        break;
+      case constants.ON_REMOVE_REQUEST_SENT_ADD:
+        draft.countReceived = state.countReceived - 1;
+        draft.requests = state.requests.filter(
+          (item) => item._id !== payload._id,
+        );
+        break;
+      case constants.ON_REMOVE_CONTACT:
+        draft.countContact = state.countContact - 1;
+        draft.contacts = state.contacts.filter(
+          (item) => item._id !== payload._id,
+        );
+        break;
       case constants.CONTACT_CREATE_START:
         draft.saveLoading = true;
         draft.error = null;
@@ -49,6 +84,7 @@ const contactReducer = (state = initialState, { type, payload }) =>
         break;
       case constants.CONTACT_REMOVE_CONTACT_SUCCESS:
         draft.contacts = state.contacts.filter((item) => item._id !== payload);
+        draft.countContact = state.countContact - 1;
         draft.error = null;
         break;
       case constants.CONTACT_REMOVE_SENT_SUCCESS:

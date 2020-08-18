@@ -19,6 +19,7 @@ function ContactModal({ visible, doToggle }) {
     setCurrentTab(e.key);
   };
 
+  const countContact = useSelector(selectors.selectCountContact);
   const countRequest = useSelector(selectors.selectCountReceived);
   const countSent = useSelector(selectors.selectCountSent);
 
@@ -40,7 +41,10 @@ function ContactModal({ visible, doToggle }) {
           textAlign: "center",
         }}
       >
-        <span>Danh bạ</span>
+        <span>
+          Danh bạ{" "}
+          {countContact > 0 && <em style={{ color: "#f5222d" }}>({countContact})</em>}
+        </span>
       </Menu.Item>
       <Menu.Item
         key="contact-sent"

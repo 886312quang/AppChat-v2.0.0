@@ -1,31 +1,22 @@
-const {
-  pushSocketIdToArry,
-  emitNotifyToArray,
-  removeSocketIdFromArray,
-} = require("../../helpers/socketHelper");
-/**
- * @param io from socket.io lib
- */
-let acceptRequestContactReceived = (io, clients) => {
-  socket.on("accept-request-contact-received", (data) => {
-    let currentUser = {
-      id: socket.request.user._id,
-      userName: socket.request.user.userName,
-      avatar: socket.request.user.avatar,
-      address:
-        socket.request.user.address !== null ? socket.request.user.address : "",
-    };
-    // Id cua thang duoc gui
-    if (clients[data.contactId]) {
-      emitNotifyToArray(
-        clients,
-        data.contactId,
-        io,
-        "response-accept-request-contact-received",
-        currentUser,
-      );
-    }
-  });
+const { emitNotifyToArray } = require("../../helpers/socketHelper");
+
+let acceptRequestContactReceived = (io, data, clients, user) => {
+  let notify = {
+    message: `${user.userName} has added you to the contacts`,
+    avatar: user.avatar,
+    userName: user.userName,
+    _id: user._id,
+  };
+  // emit Data
+  if (clients[data.id]) {
+    emitNotifyToArray(
+      clients,
+      data.id,
+      io,
+      "response-accept-request-contact-received",
+      notify,
+    );
+  }
 };
 
 module.exports = acceptRequestContactReceived;
