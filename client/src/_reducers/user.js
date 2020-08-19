@@ -35,6 +35,21 @@ const userReducer = (state = initialState, { type, payload }) =>
         draft.findLoading = false;
         draft.error = payload;
         break;
+      case constants.USER_UPDATE_START:
+      case constants.USER_UPDATE_PASSWORD_START:
+        draft.saveLoading = true;
+        break;
+      case constants.USER_UPDATE_PASSWORD_SUCCESS:
+        draft.saveLoading = false;
+        break;
+      case constants.USER_UPDATE_ERROR:
+      case constants.USER_UPDATE_PASSWORD_ERROR:
+        draft.saveLoading = false;
+        break;
+      case constants.USER_UPDATE_SUCCESS:
+        draft.saveLoading = false;
+        draft.current = payload;
+        break;
       case constantsContact.CONTACT_CREATE_SUCCESS:
         draft.users.forEach((user) => {
           if (user._id == payload._id) {
@@ -48,6 +63,19 @@ const userReducer = (state = initialState, { type, payload }) =>
             user.status = false;
           }
         });
+        break;
+      case constants.USER_FIND_START:
+        draft.findLoading = true;
+        draft.error = null;
+        break;
+      case constants.USER_FIND_SUCCESS:
+        draft.findLoading = false;
+        draft.record = payload;
+        draft.error = null;
+        break;
+      case constants.USER_FIND_ERROR:
+        draft.findLoading = false;
+        draft.error = payload;
         break;
       default:
         break;

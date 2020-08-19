@@ -7,9 +7,11 @@ function AvatarCus(props) {
   const [imageModalShow, setImageModalShow] = useState(false);
   if (!record) return <Avatar size={size} icon="user" />;
 
-  if (record.picture) {
+
+  if (record.avatar) {
     const imageUrl =
-      process.env.REACT_APP_STATIC_AVATARS + "/" + record.picture;
+      process.env.REACT_APP_STATIC_AVATARS + "/" + record.avatar;
+      console.log(imageUrl)
     return (
       <>
         <ModalGateway>
@@ -35,7 +37,7 @@ function AvatarCus(props) {
     );
   }
 
-  if (record.firstname && record.lastname) {
+  if (record.userName) {
     return (
       <Avatar
         {...props}
@@ -45,7 +47,7 @@ function AvatarCus(props) {
           backgroundColor: "#fde3cf",
         }}
       >
-        {record.firstname[0].toUpperCase() + record.lastname[0].toUpperCase()}
+        {record.userName[0].toUpperCase()}
       </Avatar>
     );
   }

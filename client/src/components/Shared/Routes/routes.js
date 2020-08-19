@@ -13,24 +13,26 @@ const privateRoutes = [
     exact: true,
     loader: () => import("../../ChatPage/index"),
   },
-  /* {
-    path: "/user/:userId/update",
+  {
+    path: "/user/:userId/update-password",
     exact: true,
-    loader: () => import("./UserPage/form/FormPage"),
+    loader: () => import("../../UserPage/Form/UpdatePassword"),
     menu: false,
     label: "Trang chủ",
     permissionRequired: null,
     icon: "home",
   },
   {
-    path: "/user/:userId/update-password",
+    path: "/user/:userId/update",
     exact: true,
-    loader: () => import("./UserPage/form/UpdatePassword"),
+    loader: () => import("../../UserPage/Form/FormPage"),
     menu: false,
     label: "Trang chủ",
     permissionRequired: null,
     icon: "home",
   },
+  /* 
+
   {
     path: "/call",
     exact: true,

@@ -48,6 +48,8 @@ function ChatSidebar() {
 
   // Selector
   const currentUser = useSelector(userSelectors.selectCurrentUser);
+  console.log(currentUser);
+
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
   const leftSidebarVisible = useSelector(
     layoutSelectors.selectLeftSidebarVisible,
@@ -102,8 +104,6 @@ function ChatSidebar() {
   const messagesSidebar = () => {
     if (currentTab === "message") {
       return <div>Message List</div>;
-    } else if (currentTab === "notification") {
-      return <div>Notifications</div>;
     } else if (currentTab === "searchFriend") {
       return <UserList />;
     }
@@ -129,22 +129,9 @@ function ChatSidebar() {
         </Tooltip>
       </Menu.Item>
       <Menu.Item
-        key="notification"
-        style={{
-          width: "33%",
-          textAlign: "center",
-        }}
-      >
-        <Tooltip title="Notification">
-          <Badge dot={true}>
-            <Bell size={20} strokeWidth={1} />
-          </Badge>
-        </Tooltip>
-      </Menu.Item>
-      <Menu.Item
         key="searchFriend"
         style={{
-          width: "100%",
+          width: "33%",
           textAlign: "center",
         }}
       >
@@ -155,7 +142,7 @@ function ChatSidebar() {
       <Menu.Item
         key="contact"
         style={{
-          width: "100%",
+          width: "34%",
           textAlign: "center",
         }}
         onClick={() => setModalContactVisible(!modalContactVisible)}

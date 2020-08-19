@@ -9,7 +9,7 @@ import {
 } from "../services/auth";
 import Errors from "../components/Shared/error/errors";
 import Message from "../components/Shared/message";
-import { socketDisconnect, configSocket } from "../sockets/rootSocket";
+import { socketDisconnect } from "../sockets/rootSocket";
 import { initSetting } from "../components/Shared/settings";
 
 const actions = {
@@ -22,7 +22,7 @@ const actions = {
 
   doSignOut: () => (dispatch) => {
     window.localStorage.removeItem("asauth");
-    //socketDisconnect();
+    socketDisconnect();
 
     getHistory().push("/signin");
     dispatch({ type: "RESET" });
@@ -33,7 +33,6 @@ const actions = {
       dispatch({ type: constants.SIGNIN_START });
 
       let response = await fetchSignin(userInfo);
-      console.log(response);
       window.localStorage.setItem("asauth", JSON.stringify(response.data));
       dispatch({
         type: constants.UPDATE_INFO,
