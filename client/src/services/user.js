@@ -11,6 +11,18 @@ const services = {
     const response = await api.get(url);
     return response;
   },
+  doUpdatePassword: async (values) => {
+    const response = await api.put("/user/updatePassword", values);
+    return response;
+  },
+  getUserUpdate: async (id) => {
+    const response = await api.get(`/user/${id}`);
+    return response;
+  },
+  updateInfo: async (dataUpdate) => {
+    const response = await api.put("/user", dataUpdate);
+    return response;
+  },
 };
 
 export default services;

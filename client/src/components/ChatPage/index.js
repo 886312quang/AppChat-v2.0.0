@@ -15,9 +15,7 @@ const ChatContent = lazy(() => import("./ChatContent"));
 
 export default function ChatPage() {
   const dispatch = useDispatch();
-  let { userId } = useParams();
-  console.log(userId);
-
+  
   const rightSidebarVisible = useSelector(
     layoutSelectors.selectRightSidebarVisible,
   );

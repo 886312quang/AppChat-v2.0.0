@@ -21,7 +21,7 @@ const app = express();
 event.EventEmitter.defaultMaxListeners = configApp.max_event_listeners;
 
 // Static File
-app.use("/public", express.static(path.join(__dirname, "../../public")));
+app.use("/public", express.static(path.join(__dirname, "./public")));
 
 // Init server with socket.io & express app
 const server = http.createServer(app);

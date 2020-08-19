@@ -43,7 +43,7 @@ let updatePassword = (id, dataUpdate) => {
 
     await UserModel.updatePassword(
       id,
-      bcrypt.hashSync(dataUpdate.confirmNewPassword, salt),
+      bcrypt.hashSync(dataUpdate.confirm, salt),
     );
 
     resolve(true);

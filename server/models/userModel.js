@@ -142,6 +142,7 @@ UserSchema.statics = {
       userName: 1,
       address: 1,
       avatar: 1,
+      phone: 1,
     }).exec();
   },
   async login(data) {
