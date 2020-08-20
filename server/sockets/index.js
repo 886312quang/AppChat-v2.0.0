@@ -9,6 +9,7 @@ const addContact = require("./contact/addContact");
 const removeRequestContactReceived = require("./contact/removeRequestContactReceived");
 const removeRequestContactSent = require("./contact/removeRequestContactSent");
 const removeContact = require("./contact/removeContact");
+const checkStatus = require("./status/checkStatus");
 
 let initSockets = (io) => {
   io.use(
@@ -35,6 +36,10 @@ let initSockets = (io) => {
       console.log(clients);
       // Config Socket
 
+      // Check Status
+      socket.on("check-status", () => {
+        checkStatus(socket, clients, user);
+      });
       // Contact
       socket.on("add-contact", (data) => {
         addContact(io, data, clients, user);
@@ -59,6 +64,8 @@ let initSockets = (io) => {
           socket.decoded_token.data._id,
           socket,
         );
+        //Step 99 Emit to all another user when has user offline
+        socket.broadcast.emit("server-send-when-new-user-offline", user._id);
       });
     } catch (error) {
       console.log(error);

@@ -10,6 +10,7 @@ import {
   emitRemoveRequestSentContact,
   emitRemoveContact,
 } from "../sockets/contact";
+import { emitCheckStatus } from "../sockets/checkStatus";
 
 const actions = {
   getContacts: () => async (dispatch) => {
@@ -153,7 +154,7 @@ const actions = {
       };
 
       emitAcceptRequestContact(data);
-
+      emitCheckStatus();
       dispatch({
         type: constants.ACCEPT_CONTACT_SUCCESS,
         payload: data,

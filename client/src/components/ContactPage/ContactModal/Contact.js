@@ -5,7 +5,7 @@ import actions from "../../../_actions/contact";
 import selector from "../../../_selectors/contact";
 import ListUser from "./styles/ListUser";
 import { useDispatch, useSelector } from "react-redux";
-import { List, Tooltip, Button } from "antd";
+import { List, Tooltip, Button, Badge } from "antd";
 
 function Contact() {
   const dispatch = useDispatch();
@@ -26,7 +26,14 @@ function Contact() {
         renderItem={(item, index) => (
           <List.Item className={`"border-0" border-0 px-4 py-3`}>
             <List.Item.Meta
-              avatar={<AvatarCus record={item.avatar} />}
+              avatar={
+                <Badge
+                  status={item.online === true ? "success" : "default"}
+                  offset={[-5, 35]}
+                >
+                  <AvatarCus record={item.avatar} />
+                </Badge>
+              }
               title={
                 <span
                   style={{
