@@ -43,7 +43,7 @@ const FormComp = ({ form }) => {
                     ? `${process.env.REACT_APP_STATIC_URI}/images/users/${user.avatar}`
                     : null
                 }
-                onSuccess={(avatar) => dispatch(actions.doChangeAvatar(avatar))}
+
               />
             </Col>
           </Row>

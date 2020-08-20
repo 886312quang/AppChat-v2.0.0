@@ -23,6 +23,10 @@ const services = {
     const response = await api.put("/user", dataUpdate);
     return response;
   },
+  updateAvatar: async (avatar) => {
+    const response = await api.post("/user/updateAvatar", avatar);
+    return response;
+  },
 };
 
 export default services;
