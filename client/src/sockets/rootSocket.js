@@ -7,6 +7,7 @@ import {
   onRemoveRequestSentContact,
   onRemoveContact,
 } from "./contact";
+import { onListUserOnline, onNewUserOnline, onNewUserOffline } from "./checkStatus";
 
 const endpoint = process.env.REACT_APP_SOCKET_ENDPOINT;
 
@@ -36,7 +37,9 @@ export const configSocket = () => {
   socket.on("response-remove-request-contact-received", onRemoveRequestContact);
   socket.on("response-remove-request-sent-contact", onRemoveRequestSentContact);
   socket.on("response-remove-contact", onRemoveContact);
-
+  socket.on("server-send-list-users-online", onListUserOnline);
+  socket.on("server-send-when-new-user-online", onNewUserOnline);
+  socket.on("server-send-when-new-user-offline", onNewUserOffline);
   return socket;
 };
 

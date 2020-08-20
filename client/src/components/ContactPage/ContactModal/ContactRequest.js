@@ -6,6 +6,7 @@ import selector from "../../../_selectors/contact";
 import ListUser from "./styles/ListUser";
 import { useDispatch, useSelector } from "react-redux";
 import { List, Tooltip, Button } from "antd";
+import { emitCheckStatus } from "../../../sockets/checkStatus";
 
 function ContactRequest() {
   const dispatch = useDispatch();

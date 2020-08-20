@@ -16,7 +16,7 @@ const FormComp = ({ form }) => {
   const user = useSelector(selectors.selectCurrentUser);
 
   let doSubmit = async (values) => {
-     let userInfoNow = {
+    let userInfoNow = {
       userName: values.username ? values.userName : user.userName,
       phone: values.phone ? values.phone : user.phone,
       address: values.address ? values.address : user.address,
@@ -43,7 +43,6 @@ const FormComp = ({ form }) => {
                     ? `${process.env.REACT_APP_STATIC_URI}/images/users/${user.avatar}`
                     : null
                 }
-
               />
             </Col>
           </Row>
