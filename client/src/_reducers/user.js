@@ -77,6 +77,9 @@ const userReducer = (state = initialState, { type, payload }) =>
         draft.findLoading = false;
         draft.error = payload;
         break;
+      case constants.USER_UPDATE_AVATAR_SUCCESS:
+        draft.current.avatar = payload;
+        break;
       default:
         break;
     }

@@ -1,13 +1,18 @@
 import { Form, Icon, Upload, message, Avatar } from "antd";
 import React, { useEffect, useState } from "react";
 import { isAuthenticated } from "../../../components/Shared/Routes/permissionChecker";
+import * as constants from "../../../constants/user";
+import { useDispatch } from "react-redux";
+
 const UpdateAvatar = ({
   avatar,
-  action = `${process.env.REACT_APP_API_URI}/user/avatar`,
+  action = `${process.env.REACT_APP_API_URI}/user/updateAvatar`,
   onSuccess,
 }) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(avatar ? avatar : "");
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setImageUrl(avatar);
@@ -46,6 +51,8 @@ const UpdateAvatar = ({
         setLoading(false);
       });
     }
+   
+    dispatch({ type: constants.USER_GET_CURRENT_SUCCESS });
   };
 
   const uploadButton = (
@@ -64,12 +71,17 @@ const UpdateAvatar = ({
       action={action}
       headers={{
         Authorization: "Bearer " + isAuthenticated(),
+        "x-access-token": isAuthenticated(),
       }}
       beforeUpload={beforeUpload}
       onChange={handleChange}
     >
       {imageUrl ? (
-        <Avatar src={imageUrl} alt="avatar" style={{ width: "20%", height: "100%" }} />
+        <Avatar
+          src={imageUrl}
+          alt="avatar"
+          style={{ width: "30%", height: "200%" }}
+        />
       ) : (
         uploadButton
       )}

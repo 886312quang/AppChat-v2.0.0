@@ -10,11 +10,14 @@ router.param("userId", user.load);
 
 // Get current user
 router.route("/current").get(AuthMiddleware.isAuth, user.getCurrentUser);
+
+// Update user
 router
   .route("/updatePassword")
   .put(AuthMiddleware.isAuth, userValid.updatePassword, user.updatePassword);
 router
   .route("/")
   .put(AuthMiddleware.isAuth, userValid.updateInfo, user.updateInfo);
+router.route("/updateAvatar").post(AuthMiddleware.isAuth, user.updateAvatar);
 
 module.exports = router;
