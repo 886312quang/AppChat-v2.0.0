@@ -17,7 +17,7 @@ const FormComp = ({ form }) => {
 
   let doSubmit = async (values) => {
     let userInfoNow = {
-      userName: values.username ? values.userName : user.userName,
+      userName: values.userName ? values.userName : user.userName,
       phone: values.phone ? values.phone : user.phone,
       address: values.address ? values.address : user.address,
       _id: user._id,

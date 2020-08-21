@@ -1,4 +1,4 @@
-import constants from "../constants/layout";
+import * as constants from "../constants/layout";
 
 const actions = {
   doWindowResize: (windowWidth) => ({

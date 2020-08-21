@@ -40,7 +40,7 @@ function ModalCreateGroupChat({ visible, doToggle }) {
       >
         <div>
           <AvatarCus className="avatar" record={user} />
-          {`${user.firstname} ${user.lastname}`}
+          {`${user.userName}`}
         </div>
         <div style={{ lineHeight: "40px", marginRight: "5px" }}>
           {idNewMemberAdded(user.id) && (

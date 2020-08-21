@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import userSelectors from "../../../_selectors/user";
-import AvatarCus from "../../Commons/AvatarCus";
+import { Badge, Button, List } from "antd";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import actions from "../../../_actions/contact";
 import selector from "../../../_selectors/contact";
+import AvatarCus from "../../Commons/AvatarCus";
 import ListUser from "./styles/ListUser";
-import { useDispatch, useSelector } from "react-redux";
-import { List, Tooltip, Button, Badge } from "antd";
 
 function Contact() {
   const dispatch = useDispatch();
@@ -29,9 +28,9 @@ function Contact() {
               avatar={
                 <Badge
                   status={item.online === true ? "success" : "default"}
-                  offset={[-5, 35]}
+                  offset={[-5, 33]}
                 >
-                  <AvatarCus record={item.avatar} />
+                  <AvatarCus record={item} />
                 </Badge>
               }
               title={
