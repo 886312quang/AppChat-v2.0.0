@@ -1,5 +1,4 @@
 const express = require("express");
-const validate = require("express-validator");
 const { contact } = require("../controllers/index");
 const AuthMiddleware = require("../middleware/auth");
 const { contactValid } = require("../validation/index");

@@ -10,6 +10,6 @@ module.exports = {
   user: userServices,
   contact: contactServices,
   notification: notificationServices,
-  messageServices: messageServices,
+  message: messageServices,
   group: groupServices,
 };

@@ -7,7 +7,7 @@ import selectors from "../../_selectors/message";
 //import ImageUploadList from "./ImageUploadList";
 import constants from "../../constants/message";
 //import FileUploadList from "./FileUploadList";
-//import Conversation from "./Conversation";
+import Conversation from "./Conversation";
 import ChatContentFooter from "./ChatContentFooter";
 import ChatContentHeader from "./ChatContentHeader";
 import ChatStyled from "./styles/chat";
@@ -19,8 +19,8 @@ function ChatContent() {
   const scrollRef = useRef();
   const dispatch = useDispatch();
   let { userId } = useParams();
-  
-  //const record = useSelector(selectors.selectRecord);
+
+  const record = useSelector(selectors.selectRecord);
   // const inputMessage = useSelector(selectors.selectInputMessage);
   //const isScrollToBottom = useSelector(selectors.selectScrollToBottom);
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
@@ -60,11 +60,11 @@ function ChatContent() {
         width: isMobileDevice && rightSidebarVisible ? 0 : "auto",
       }}
     >
-      <div>Header</div>
-
+      <ChatContentHeader />
+      <Conversation messages />
       {/* {record.messages && (
         <ChatStyled ref={scrollRef}>
-          <Conversation messages={record.messages} />
+         
           <div>Conversation</div>
         </ChatStyled>
       )} */}
@@ -82,6 +82,7 @@ function ChatContent() {
             fileList={inputMessage.files}
           />
         )} */}
+        <ChatContentFooter />
       </div>
     </Layout>
   );

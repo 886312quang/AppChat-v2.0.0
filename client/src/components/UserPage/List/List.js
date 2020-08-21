@@ -46,7 +46,6 @@ const UserList = () => {
             <List.Item.Meta
               key={index}
               avatar={
-                // <Badge dot status="success"> </Badge>
                 <AvatarCus record={item.avatar} />
               }
               title={

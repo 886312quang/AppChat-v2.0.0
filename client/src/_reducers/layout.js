@@ -1,4 +1,4 @@
-import constants from "../constants/layout";
+import * as constants from "../constants/layout";
 import produce from "immer";
 
 const initialState = {
@@ -28,7 +28,7 @@ const layoutReducer = (state = initialState, { type, payload }) =>
       case constants.LAYOUT_LEFT_SIDEBAR_SHOW:
         draft.leftSidebarVisible = true;
         break;
-      case constants.LAYOUT_LEFT_SIDEBAR_TOGGLE:
+      case constants.LAYOUT_RIGHT_SIDEBAR_TOGGLE:
         draft.rightSidebarVisible = !state.rightSidebarVisible;
         break;
       case constants.LAYOUT_RIGHT_SIDEBAR_HIDE:

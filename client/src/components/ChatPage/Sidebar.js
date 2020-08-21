@@ -27,9 +27,9 @@ import userSelectors from "../../_selectors/user";
 import contactSelectors from "../../_selectors/contact";
 import AvatarCus from "../Commons/AvatarCus";
 import UserList from "../UserPage/List/List";
-import ContactList from "../ContactPage/List/List";
 import ModalCreateGroupChat from "./ModalCreateGroupChat";
 import ContactModal from "../ContactPage/ContactModal/ContactModal";
+import MessagesList from "./MessageList";
 
 const { Sider, Header } = Layout;
 const { Search } = Input;
@@ -48,13 +48,13 @@ function ChatSidebar() {
 
   // Selector
   const currentUser = useSelector(userSelectors.selectCurrentUser);
-  console.log(currentUser);
-
+  // Layout
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
   const leftSidebarVisible = useSelector(
     layoutSelectors.selectLeftSidebarVisible,
   );
 
+  // Contact
   const countContactSent = useSelector(contactSelectors.selectCountSent);
   const countContactReceived = useSelector(
     contactSelectors.selectCountReceived,
@@ -103,11 +103,11 @@ function ChatSidebar() {
 
   const messagesSidebar = () => {
     if (currentTab === "message") {
-      return <div>Message List</div>;
+      return <MessagesList />;
     } else if (currentTab === "searchFriend") {
       return <UserList />;
     }
-    return <div>Message List</div>;
+    return <MessagesList />;
   };
 
   const messageHeader = (

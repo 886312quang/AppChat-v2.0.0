@@ -5,8 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 import selectors from "../../_selectors/message";
 import actions from "../../_actions/message";
 import constants from "../../constants/message";
+import userSelectors from "../../_selectors/user";
 import layoutSelectors from "../../_selectors/layout";
 import { Picker } from "emoji-mart";
+//import { emitTypingOn, emitTypingOff } from "./socket";
 import { isAuthenticated } from "../../components/Shared/Routes/permissionChecker";
 
 let typingTimer = null;
@@ -19,6 +21,138 @@ function delay(callback, ms) {
 }
 
 function ChatContentFooter() {
+  const inputMessageRef = useRef();
+  const dispatch = useDispatch();
+
+  // State
+  const [emojiVisible, setEmojiVisible] = useState(false);
+  const [typing, setTyping] = useState(false);
+
+  // Selector
+  const record = useSelector(selectors.selectRecord);
+  const currentUser = useSelector(userSelectors.selectCurrentUser);
+  const inputMessage = useSelector(selectors.selectInputMessage);
+  const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
+
+  const handleTypingOff = () => {
+    /* emitTypingOff({
+      info: currentUser,
+      receiver: record.receiver,
+      conversationType: record.conversationType,
+    }); */
+  };
+
+  const onInputMessageChange = (message) => {
+    dispatch({
+      type: constants.INPUT_MESSAGE_CHANGE,
+      payload: message,
+    });
+    if (message.trim() === "") {
+      handleTypingOff();
+    }
+  };
+
+  const onInputImageListChange = ({ fileList }) => {
+    dispatch({
+      type: constants.INPUT_IMAGE_LIST_CHANGE,
+      payload: [...fileList],
+    });
+  };
+
+  const onInputFileListChange = ({ fileList }) => {
+    dispatch({
+      type: constants.INPUT_FILE_LIST_CHANGE,
+      payload: [...fileList],
+    });
+  };
+
+  const addEmoji = (e) => {
+    onInputMessageChange(inputMessage.text + e.native);
+    if (!isMobileDevice) inputMessageRef.current.focus();
+  };
+
+  const sendText = () => {
+   /*  if (inputMessage.text.trim() !== "") {
+      // Gửi text và emoji
+      dispatch(
+        actions.doCreate({
+          message: inputMessage.text,
+          receiver: record.receiver.id,
+          conversationType: record.conversationType,
+        }),
+      );
+      onInputMessageChange("");
+    } */
+  };
+
+  const sendImage = () => {
+    // Nếu đang uploading thì không gửi
+    let uploading = false;
+    inputMessage.images.forEach((item) => {
+      if (item.status === "uploading") uploading = true;
+    });
+    if (uploading) return;
+    if (inputMessage.images.length > 0) {
+      // gửi hình ảnh
+      let images = [];
+      inputMessage.images.forEach((item) => {
+        if (item.response.name) {
+          images.push(item.response.name);
+        }
+      });
+
+      dispatch(
+        actions.doCreate({
+          images,
+          type: "image",
+          receiver: record.receiver.id,
+          conversationType: record.conversationType,
+        }),
+      );
+      onInputImageListChange({ fileList: [] });
+    }
+  };
+
+  const sendFile = () => {
+    // Nếu đang uploading thì không gửi
+    let uploading = false;
+    inputMessage.files.forEach((item) => {
+      if (item.status === "uploading") uploading = true;
+    });
+    if (uploading) return;
+    if (inputMessage.files.length > 0) {
+      // gửi file
+      let files = [];
+      inputMessage.files.forEach((item) => {
+        if (item.response.name) {
+          files.push({
+            name: item.name,
+            path: item.response.name,
+          });
+        }
+      });
+
+      dispatch(
+        actions.doCreate({
+          files,
+          type: "file",
+          receiver: record.receiver.id,
+          conversationType: record.conversationType,
+        }),
+      );
+      onInputFileListChange({ fileList: [] });
+    }
+  };
+
+  const handleSendClick = () => {
+    sendText();
+    sendImage();
+    sendFile();
+    //   dispatch(actions.doToggleScrollToBottom());
+
+    handleTypingOff();
+    inputMessageRef.current.focus();
+  };
   return (
     <>
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -26,14 +160,14 @@ function ChatContentFooter() {
           accept="image/*"
           name="photos"
           multiple={true}
-          fileList
+          fileList/* ={inputMessage.images} */
           headers={{
             Authorization: `Bearer ${isAuthenticated()}`,
           }}
           action={`${process.env.REACT_APP_API_URI}/message/photos`}
           showUploadList={false}
           onChange={(files) => {
-            //onInputImageListChange(files);
+            onInputImageListChange(files);
           }}
         >
           <Button
@@ -48,14 +182,14 @@ function ChatContentFooter() {
           accept="text/plain, application/pdf, .csv, .docx, .xlsx"
           name="files"
           multiple={true}
-          fileList
+          fileList/* ={inputMessage.files} */
           headers={{
             Authorization: `Bearer ${isAuthenticated()}`,
           }}
           action={`${process.env.REACT_APP_API_URI}/message/files`}
           showUploadList={false}
           onChange={(files) => {
-            //onInputFileListChange(files);
+            onInputFileListChange(files);
           }}
         >
           <Button
@@ -67,46 +201,46 @@ function ChatContentFooter() {
           </Button>
         </Upload>
         <Input
-          ref
+          ref={inputMessageRef}
           placeholder="Type a message"
-          value
+          value/* ={inputMessage.text} */
           onChange={(e) => {
-            //onInputMessageChange(e.target.value);
+            onInputMessageChange(e.target.value);
           }}
           style={{ borderRadius: "1rem", color: "black" }}
-          onPressEnter
+          onPressEnter={handleSendClick}
           onKeyUp={() => {
-           /*  if (!typing) {
+            if (!typing) {
               setTyping(true);
               if (inputMessage.text.trim() !== "") {
-                emitTypingOn({
+                /* emitTypingOn({
                   info: currentUser,
                   receiver: record.receiver,
                   conversationType: record.conversationType,
-                });
+                }); */
               }
             }
             delay(() => {
               handleTypingOff();
               setTyping(false);
-            }, 1000); */
+            }, 1000);
           }}
           suffix={
             <Popover
               content={
-                <Picker set="facebook" sheetSize={32} onSelect />
+                <Picker set="facebook" sheetSize={32} onSelect={addEmoji} />
               }
               title="Title"
               trigger="click"
-              visible
-              onVisibleChange
+              visible={emojiVisible}
+              onVisibleChange={() => setEmojiVisible(!emojiVisible)}
             >
               <Smile style={{ cursor: "pointer" }} size={20} strokeWidth={1} />
             </Popover>
           }
         />
 
-        <Button shape="circle" type="link" onClick>
+        <Button shape="circle" type="link" onClick={handleSendClick}>
           <Send size={20} strokeWidth={1} />
         </Button>
       </div>

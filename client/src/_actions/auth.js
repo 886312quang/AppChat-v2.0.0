@@ -47,7 +47,7 @@ const actions = {
      /*  configSocket(); */
       initSetting();
     } catch (error) {
-      Message.error(error.response.data.message);
+      Message.error("error");
       dispatch({
         type: constants.SIGNIN_ERROR,
         payload: Errors.selectMessage(error),

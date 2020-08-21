@@ -11,7 +11,7 @@ function AvatarCus(props) {
   if (record.avatar) {
     const imageUrl =
       process.env.REACT_APP_STATIC_AVATARS + "/" + record.avatar;
-      console.log(imageUrl)
+
     return (
       <>
         <ModalGateway>
