@@ -6,6 +6,8 @@ let acceptRequestContactReceived = (io, data, clients, user) => {
     avatar: user.avatar,
     userName: user.userName,
     _id: user._id,
+    messages: [],
+    updatedAt: Date.now(),
   };
   // emit Data
   if (clients[data.id]) {

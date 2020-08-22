@@ -27,7 +27,7 @@ function ContactSent() {
           <List.Item className={`"border-1" border-1 px-4 py-3`}>
             <List.Item.Meta
               key={index}
-              avatar={<AvatarCus record={item.avatar} />}
+              avatar={<AvatarCus record={item} />}
               title={
                 <span
                   style={{
