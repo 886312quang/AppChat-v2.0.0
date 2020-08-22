@@ -54,7 +54,7 @@ const messageReducer = (state = initialState, { type, payload }) =>
       case constantsContact.LIST_USER_ONLINE:
         draft.messages.forEach((user) => {
           payload.forEach((i) => {
-            if (user._id === i) {
+            if (user._id == i) {
               user.online = true;
             }
           });
@@ -73,6 +73,17 @@ const messageReducer = (state = initialState, { type, payload }) =>
             user.online = false;
           }
         });
+        break;
+      case constantsContact.ON_ACCEPT_REQUEST_ADD:
+        draft.messages.unshift(payload);
+        break;
+      case constantsContact.ACCEPT_CONTACT_SUCCESS:
+        draft.messages.unshift(payload.userContact);
+        break;
+      case constantsContact.CONTACT_REMOVE_CONTACT_SUCCESS:
+        draft.messages = state.messages.filter(
+          (message) => message._id !== payload,
+        );
         break;
       default:
         break;

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import userActions from "../../../_actions/user";
 import userSelectors from "../../../_selectors/user";
 import { configSocket } from "../../../sockets/rootSocket";
+import { emitCheckStatus } from "../../../sockets/checkStatus";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const currentUser = useSelector(userSelectors.selectCurrentUser);
@@ -12,8 +13,20 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    /* async function configS() {
+      if (isAuthenticated()) {
+        await configSocket();
+        await emitCheckStatus();
+      }
+      // dispatch(socketActions.doConnect());
+      if (!currentUser && isAuthenticated()) {
+        await dispatch(userActions.getCurrentUser());
+      }
+    }
+    configS(); */
     if (isAuthenticated()) {
       configSocket();
+      emitCheckStatus();
     }
     // dispatch(socketActions.doConnect());
     if (!currentUser && isAuthenticated()) {

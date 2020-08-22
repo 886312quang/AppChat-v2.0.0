@@ -64,6 +64,9 @@ const userReducer = (state = initialState, { type, payload }) =>
           }
         });
         break;
+      case constantsContact.ON_ACCEPT_REQUEST_ADD:
+        draft.users = state.users.filter((user) => user._id !== payload._id);
+        break;
       case constants.USER_FIND_START:
         draft.findLoading = true;
         draft.error = null;

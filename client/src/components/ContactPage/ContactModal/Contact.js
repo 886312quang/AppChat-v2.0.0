@@ -2,7 +2,7 @@ import { Badge, Button, List } from "antd";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import actions from "../../../_actions/contact";
-import selector from "../../../_selectors/contact";
+import selector from "../../../_selectors/message";
 import AvatarCus from "../../Commons/AvatarCus";
 import ListUser from "./styles/ListUser";
 
@@ -10,7 +10,7 @@ function Contact() {
   const dispatch = useDispatch();
 
   // Selector
-  const contacts = useSelector(selector.selectContacts);
+  const contacts = useSelector(selector.selectMessages);
 
   const handleRemoveContactClick = (id) => {
     dispatch(actions.removeContact(id));

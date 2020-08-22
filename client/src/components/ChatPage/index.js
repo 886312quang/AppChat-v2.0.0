@@ -38,7 +38,9 @@ export default function ChatPage() {
   useEffect(() => {
     dispatch(actions.list());
     //dispatch(contactActions.listRequests());
-    if (isAuthenticated()) emitCheckStatus();
+    if (isAuthenticated() && currentUser) {
+      emitCheckStatus();
+    }
     windowOnResize(window.innerWidth);
     window.addEventListener("resize", windowOnResize);
     //dispatch(callActions.doGetIceServer());

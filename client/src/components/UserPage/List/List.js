@@ -46,7 +46,7 @@ const UserList = () => {
             <List.Item.Meta
               key={index}
               avatar={
-                <AvatarCus record={item.avatar} />
+                <AvatarCus record={item} />
               }
               title={
                 <span

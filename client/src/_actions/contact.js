@@ -149,7 +149,7 @@ const actions = {
       const response = await services.acceptContact(id);
 
       let data = {
-        userContact: response.data,
+        userContact: { ...response.data, messages: [], updatedAt: Date.now() },
         id,
       };
 

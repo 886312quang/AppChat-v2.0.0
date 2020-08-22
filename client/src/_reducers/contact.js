@@ -169,29 +169,6 @@ const contactReducer = (state = initialState, { type, payload }) =>
         draft.dataLoading = false;
         draft.error = payload;
         break;
-      case constants.LIST_USER_ONLINE:
-        draft.contacts.forEach((user) => {
-          payload.forEach((i) => {
-            if (user._id == i) {
-              user.online = true;
-            }
-          });
-        });
-        break;
-      case constants.NEW_USER_ONLINE:
-        draft.contacts.forEach((user) => {
-          if (user._id === payload) {
-            user.online = true;
-          }
-        });
-        break;
-      case constants.NEW_USER_OFFLINE:
-        draft.contacts.forEach((user) => {
-          if (user._id === payload) {
-            user.online = false;
-          }
-        });
-        break;
       default:
         break;
     }
