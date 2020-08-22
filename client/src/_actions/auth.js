@@ -9,8 +9,9 @@ import {
 } from "../services/auth";
 import Errors from "../components/Shared/error/errors";
 import Message from "../components/Shared/message";
-import { socketDisconnect } from "../sockets/rootSocket";
+import { socketDisconnect, configSocket } from "../sockets/rootSocket";
 import { initSetting } from "../components/Shared/settings";
+import { isAuthenticated } from "../components/Shared/Routes/permissionChecker";
 
 const actions = {
   doInitLoadingDone: () => {
@@ -38,16 +39,25 @@ const actions = {
         type: constants.UPDATE_INFO,
         payload: response.data,
       });
+
+      let token = isAuthenticated();
+      console.log(response.data);
+
       dispatch({
         type: constants.SIGNIN_SUCCESS,
-        payload: response.data.message,
+        payload: { token, message: response.data.message },
       });
 
       getHistory().push("/");
-     /*  configSocket(); */
+      configSocket();
       initSetting();
     } catch (error) {
-      Message.error("error");
+      if (error.response && error.response.data) {
+        Message.error(error.response.data.message);
+      } else {
+        Message.error("Error server");
+      }
+
       dispatch({
         type: constants.SIGNIN_ERROR,
         payload: Errors.selectMessage(error),

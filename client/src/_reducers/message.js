@@ -58,7 +58,6 @@ const messageReducer = (state = initialState, { type, payload }) =>
               user.online = true;
             }
           });
-         
         });
         break;
       case constantsContact.NEW_USER_ONLINE:

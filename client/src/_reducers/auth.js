@@ -30,7 +30,8 @@ const authReducer = (state = initialState, { type, payload }) =>
         break;
       case constants.SIGNIN_SUCCESS:
         draft.signinLoading = false;
-        draft.signinSuccess = payload;
+        draft.signinSuccess = payload.message;
+        draft.token = payload.token;
         draft.signinError = null;
         break;
       case constants.SIGNIN_ERROR:

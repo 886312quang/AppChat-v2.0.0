@@ -66,6 +66,8 @@ let initSockets = (io) => {
         );
         //Step 99 Emit to all another user when has user offline
         socket.broadcast.emit("server-send-when-new-user-offline", user._id);
+        console.log("disconnect")
+        console.log(clients)
       });
     } catch (error) {
       console.log(error);

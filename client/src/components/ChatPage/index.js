@@ -6,9 +6,12 @@ import actions from "../../_actions/message";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import selectors from "../../_selectors/message";
+import userSelectors from "../../_selectors/user";
 import layoutActions from "../../_actions/layout";
 import { emitCheckStatus } from "../../sockets/checkStatus";
 import RightSideBar from "./RightSidebar";
+import { isAuthenticated } from "../Shared/Routes/permissionChecker";
+import { configSocket } from "../../sockets/rootSocket";
 
 //import callActions from "../CallPage/actions";
 const Sidebar = lazy(() => import("./Sidebar"));
@@ -26,6 +29,7 @@ export default function ChatPage() {
   );
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
   const record = useSelector(selectors.selectRecord);
+  const currentUser = useSelector(userSelectors.selectCurrentUser);
 
   const windowOnResize = () => {
     dispatch(layoutActions.doWindowResize(window.innerWidth));
@@ -34,7 +38,7 @@ export default function ChatPage() {
   useEffect(() => {
     dispatch(actions.list());
     //dispatch(contactActions.listRequests());
-    emitCheckStatus();
+    if (isAuthenticated()) emitCheckStatus();
     windowOnResize(window.innerWidth);
     window.addEventListener("resize", windowOnResize);
     //dispatch(callActions.doGetIceServer());
