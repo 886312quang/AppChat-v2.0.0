@@ -2,12 +2,13 @@ import React, { useEffect, lazy } from "react";
 import { Layout, Row, Result } from "antd";
 import layoutSelectors from "../../_selectors/layout";
 import actions from "../../_actions/message";
+import layoutActions from "../../_actions/layout";
 //import contactActions from "../ContactPage/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import selectors from "../../_selectors/message";
 import userSelectors from "../../_selectors/user";
-import layoutActions from "../../_actions/layout";
+import constants from "../../constants/message";
 import { emitCheckStatus } from "../../sockets/checkStatus";
 import RightSideBar from "./RightSidebar";
 import { isAuthenticated } from "../Shared/Routes/permissionChecker";
@@ -31,6 +32,9 @@ export default function ChatPage() {
   const record = useSelector(selectors.selectRecord);
   const currentUser = useSelector(userSelectors.selectCurrentUser);
 
+  // Params
+  let userId = useParams();
+
   const windowOnResize = () => {
     dispatch(layoutActions.doWindowResize(window.innerWidth));
   };
@@ -48,11 +52,11 @@ export default function ChatPage() {
       window.removeEventListener("resize", windowOnResize);
     };
   }, []);
-  /* useEffect(() => {
+  useEffect(() => {
     if (userId) {
-      dispatch(actions.doFind(userId));
+      dispatch({ type: constants.TARGET_CONVERSATION, payload: userId });
     }
-  }, [userId]); */
+  }, [userId]);
 
   /* if (record) {
     // dispatch(layoutActions.doHideLeftSidebar());

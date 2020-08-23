@@ -8,7 +8,7 @@ import TypingIndicator from "../../components/Commons/TypingIndicator";
 import Carousel, { Modal, ModalGateway } from "react-images";
 import actions from "../../_actions/message";
 import InfiniteScroll from "react-infinite-scroller";
-import { round } from "lodash";
+import Moment from "react-moment";
 
 function Conversation({ messages }) {
   const dispatch = useDispatch();
@@ -32,18 +32,18 @@ function Conversation({ messages }) {
   };
 
   const getFullName = (record) => {
-    if (record && record.username) return record.userName;
+    if (record && record.userName) return record.userName;
     return "";
   };
 
   const renderConversation = (messages) => {
     if (!currentUser) return <span></span>;
-    return <div>Conversation</div>
-   /*  return messages.map((chat, index) => {
-      if (chat.type === "notification") {
+    return messages.map((message, index) => {
+      console.log(message);
+      if (message.conversationType === "notification") {
         return (
           <div key={index} className="notification-message">
-            <span>{chat.message}</span>
+            <span>{message}</span>
           </div>
         );
       }
@@ -56,19 +56,19 @@ function Conversation({ messages }) {
           }}
         >
           <div style={{ width: 30, marginRight: "5px" }}>
-            {currentUser && chat.sender._id !== currentUser.id && record && (
+            {currentUser && message.senderId !== currentUser._id && record && (
               <Tooltip
                 title={
-                  record.conversationType === "ChatGroup"
-                    ? getFullName(chat.sender)
-                    : getFullName(chat.receiver)
+                  message.conversationType === "ChatGroup"
+                    ? getFullName(message.sender)
+                    : getFullName(record)
                 }
               >
                 <AvatarCus
                   record={
-                    record.conversationType === "ChatGroup"
-                      ? chat.sender
-                      : record.receiver
+                    message.conversationType === "ChatGroup"
+                      ? message.sender
+                      : record
                   }
                   size={30}
                 />
@@ -79,24 +79,34 @@ function Conversation({ messages }) {
             key={index}
             className={`conversation
                        						 ${
-                                     chat.sender._id === currentUser.id
+                                     message.senderId === currentUser._id
                                        ? "conversation-sent"
                                        : "conversation-received"
                                    }`}
           >
-            {chat.sender._id === currentUser.id ? (
+            {message.senderId === currentUser._id ? (
               // Nếu người gửi là user hiện tại
               <>
-                {chat.type === "text" ? (
-                  <div className={`body body-sent`}>
-                    <span color="inherit">{chat.message}</span>
-                  </div>
-                ) : chat.type === "image" && chat.images.length > 0 ? (
-                  <div
-                    className={`body-sent-no-backdround`}
-                    style={{ maxWidth: "80%" }}
+                {message.messageType === "text" ? (
+                  <Tooltip
+                    placement="bottomRight"
+                    title={
+                      message.createdAt && (
+                        <Moment format="HH:mm DD//MM/YYYY">
+                          {message.createdAt}
+                        </Moment>
+                      )
+                    }
                   >
-                    {chat.images.map((image, key) => (
+                    <div className={`body body-sent`}>{message.text}</div>
+                  </Tooltip>
+                ) : message.messageType === "image" &&
+                  message.images.length > 0 ? (
+                  <div
+                    className={`body-sent-no-backGround`}
+                    style={{ maxWidth: "100%" }}
+                  >
+                    {message.images.map((image, key) => (
                       <div
                         key={key}
                         style={{
@@ -116,9 +126,9 @@ function Conversation({ messages }) {
                       ></div>
                     ))}
                   </div>
-                ) : chat.type === "file" ? (
+                ) : message.messageType === "file" ? (
                   <div className={`body body-sent`}>
-                    {chat.files.map((file, key) => (
+                    {message.files.map((file, key) => (
                       <div key={key}>
                         <a
                           key={key}
@@ -139,23 +149,35 @@ function Conversation({ messages }) {
             ) : (
               // Nếu người gửi không phải là user hiện tại
               <>
-                {chat.type === "text" ? (
-                  <div className={`body body-received text-body`}>
-                    {record.conversationType === "group" && (
-                      <p
-                        style={{
-                          color: "#868686",
-                          fontSize: "12px",
-                        }}
-                      >
-                        {chat.sender.firstname}
-                      </p>
-                    )}
-                    <p color="inherit">{chat.message}</p>
-                  </div>
-                ) : chat.type === "image" && chat.images.length > 0 ? (
+                {message.messageType === "text" ? (
+                  <Tooltip
+                    placement="bottomLeft"
+                    title={
+                      message.createdAt && (
+                        <Moment format="HH:mm DD//MM/YYYY">
+                          {message.createdAt}
+                        </Moment>
+                      )
+                    }
+                  >
+                    <div className={`body body-received text-body`}>
+                      {record.conversationType === "group" && (
+                        <p
+                          style={{
+                            color: "#868686",
+                            fontSize: "12px",
+                          }}
+                        >
+                          <div>Group</div>
+                        </p>
+                      )}
+                      {message.text}
+                    </div>
+                  </Tooltip>
+                ) : message.messageType === "image" &&
+                  message.images.length > 0 ? (
                   <div style={{ maxWidth: "80%" }}>
-                    {chat.images.map((image, key) => (
+                    {message.images.map((image, key) => (
                       <div
                         key={key}
                         style={{
@@ -175,9 +197,9 @@ function Conversation({ messages }) {
                       ></div>
                     ))}
                   </div>
-                ) : chat.type === "file" ? (
+                ) : message.messageType === "file" ? (
                   <div className={`body body-received`}>
-                    {chat.files.map((file, key) => (
+                    {message.files.map((file, key) => (
                       <div key={key}>
                         <a
                           key={key}
@@ -199,7 +221,7 @@ function Conversation({ messages }) {
           </div>
         </div>
       );
-    }); */
+    });
   };
 
   const typIndicator = (

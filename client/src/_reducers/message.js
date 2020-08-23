@@ -85,6 +85,26 @@ const messageReducer = (state = initialState, { type, payload }) =>
           (message) => message._id !== payload,
         );
         break;
+      case constants.TARGET_CONVERSATION_START:
+        draft.findLoading = true;
+        draft.typing = {};
+        draft.sending = false;
+        draft.hasMoreConversation = true;
+        break;
+      case constants.TARGET_CONVERSATION:
+        draft.findLoading = false;
+        if (payload) {
+          state.messages.forEach((message) => {
+            if (message._id === payload.userId) {
+              draft.record = message;
+              draft.hasMoreConversation = true;
+            }
+          });
+        } else {
+          draft.hasMoreConversation = false;
+          draft.record = null;
+        }
+        break;
       default:
         break;
     }
