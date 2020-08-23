@@ -21,6 +21,7 @@ function ChatContentHeader() {
 
   // Selector
   const record = useSelector(selectors.selectRecord);
+  console.log(record);
   const currentUser = useSelector(userSelectors.selectCurrentUser);
   //const peerId = useSelector(callSelectors.selectPeerId);
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
@@ -65,26 +66,25 @@ function ChatContentHeader() {
           </Link>
         )}
         <Badge status="success" offset={[-3, 45]}>
-          <AvatarCus record={record ? record.receiver : null} />
+          <AvatarCus record={record ? record : null} />
         </Badge>
 
         <span className="ml-3" style={{ lineHeight: "1" }}>
           <span style={{ display: "block" }}>
             {record
-              ? record.conversationType === "ChatGroup"
-                ? isMobileDevice
-                  ? textAbstract(record.receiver.name, 25)
-                  : record.receiver.name
-                : `${record.receiver.firstname} ${record.receiver.lastname}`
-              : ""}
+              ? /*  ? record[0].conversationType === "ChatGroup" */
+                isMobileDevice
+                ? textAbstract(record.userName, 25)
+                : record.userName
+              : /*  : `${record[0].receiver.name}` */
+                ""}
           </span>
         </span>
       </Row>
       <span className="mr-auto" />
       <div>
-        {record && record.conversationType === "User" && (
+        {record /*  && record[0].conversationType === "personal" */ && (
           <>
-            <div>Conversation</div>
             <Button
               shape="circle"
               style={{ border: "0" }}

@@ -56,7 +56,7 @@ let login = async (req, res) => {
               .status(401)
               .json({ message: transErrors.account_notActive });
           } else {
-            const accessTokenLife = process.env.ACCESS_TOKEN_LIFE || "1h";
+            const accessTokenLife = process.env.ACCESS_TOKEN_LIFE || "360d";
             const accessTokenSecret =
               process.env.ACCESS_TOKEN_SECRET ||
               "process.env.ACCESS_TOKEN_SECRET_MQ_9999";

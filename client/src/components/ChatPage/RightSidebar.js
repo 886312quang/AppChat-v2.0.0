@@ -50,7 +50,7 @@ const ButtonCus = ({ text, icon, onClick }) => {
 
 function RightSideBar() {
   const dispatch = useDispatch();
-  
+
   // Selector
   const record = useSelector(selectors.selectRecord);
   const currentUser = useSelector(userSelectors.selectCurrentUser);
@@ -102,15 +102,15 @@ function RightSideBar() {
       }}
     >
       <div>
-        <AvatarCus record={record ? record.receiver : null} size={100} />
+        <AvatarCus record={record ? record : null} size={100} />
       </div>
       <div style={{ margin: "10px 0px", textAlign: "center" }}>
         <h2>
           {record
-            ? record.conversationType === "ChatGroup"
-              ? `${record.receiver.name}`
-              : `${record.receiver.firstname} ${record.receiver.lastname}`
-            : null}
+            ? /* ? record.conversationType === "ChatGroup" */
+              `${record.userName}`
+            : /* : `${record.receiver.firstname} ${record.receiver.lastname}` */
+              null}
         </h2>
       </div>
     </Header>
@@ -302,7 +302,7 @@ function RightSideBar() {
     );
   };
 
-/*   useEffect(() => {
+  /*   useEffect(() => {
     dispatch(actions.listImage({ id: record.receiver.id }));
     dispatch(actions.listFile({ id: record.receiver.id }));
   }, []); */
