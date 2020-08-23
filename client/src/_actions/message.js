@@ -1,5 +1,5 @@
 import constants from "../constants/message";
-import { getHistory } from "../configs/configureStore";
+import getStore, { getHistory } from "../configs/configureStore";
 import services from "../services/messages";
 import Errors from "../components/Shared/error/errors";
 import Message from "../components/Shared/message";
@@ -27,6 +27,26 @@ const actions = {
         type: constants.CHAT_GET_ERROR,
       });
       getHistory().push("/");
+    }
+  },
+  doCreate: (data) => async (dispatch) => {
+    try {
+      dispatch({ type: constants.CHAT_CREATE_START });
+
+      const response = await services.createNewMessage(data);
+
+      let state = getStore().getState();
+      let currentUser = state.user.currentUser;
+
+      dispatch({
+        type: constants.CHAT_CREATE_SUCCESS,
+        payload: response.data.message,
+      });
+    } catch (error) {
+      Message.error("Send message fail!");
+      dispatch({
+        type: constants.CHAT_CREATE_ERROR,
+      });
     }
   },
 };

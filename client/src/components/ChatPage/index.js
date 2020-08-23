@@ -55,6 +55,7 @@ export default function ChatPage() {
   useEffect(() => {
     if (userId) {
       dispatch({ type: constants.TARGET_CONVERSATION, payload: userId });
+      dispatch({ type: constants.CHANGE_CONVERSATION });
     }
   }, [userId]);
 

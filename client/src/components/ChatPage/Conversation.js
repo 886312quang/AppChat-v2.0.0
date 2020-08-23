@@ -39,7 +39,6 @@ function Conversation({ messages }) {
   const renderConversation = (messages) => {
     if (!currentUser) return <span></span>;
     return messages.map((message, index) => {
-      console.log(message);
       if (message.conversationType === "notification") {
         return (
           <div key={index} className="notification-message">

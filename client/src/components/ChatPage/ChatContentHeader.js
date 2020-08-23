@@ -21,7 +21,6 @@ function ChatContentHeader() {
 
   // Selector
   const record = useSelector(selectors.selectRecord);
-  console.log(record);
   const currentUser = useSelector(userSelectors.selectCurrentUser);
   //const peerId = useSelector(callSelectors.selectPeerId);
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);

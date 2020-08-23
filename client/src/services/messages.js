@@ -7,6 +7,10 @@ const services = {
     );
     return response;
   },
+  createNewMessage: async (info) => {
+    const response = await api.post("/message", info);
+    return response;
+  },
 };
 
 export default services;

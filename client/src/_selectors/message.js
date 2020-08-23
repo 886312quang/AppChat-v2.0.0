@@ -48,7 +48,7 @@ const selectMessages = createSelector(
 
 const selectInputMessage = createSelector(
   [selectRaw],
-  (message) => message.inputMesage,
+  (message) => message.inputMessage,
 );
 
 const selectRightSidebarVisible = createSelector(
