@@ -27,11 +27,13 @@ function ChatContentFooter() {
   // State
   const [emojiVisible, setEmojiVisible] = useState(false);
   const [typing, setTyping] = useState(false);
+  const [textInput, setTextInput] = useState("");
 
   // Selector
   const record = useSelector(selectors.selectRecord);
   const currentUser = useSelector(userSelectors.selectCurrentUser);
   const inputMessage = useSelector(selectors.selectInputMessage);
+  // Layout
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
 
   const handleTypingOff = () => {
@@ -72,17 +74,18 @@ function ChatContentFooter() {
   };
 
   const sendText = () => {
-   /*  if (inputMessage.text.trim() !== "") {
-      // Gửi text và emoji
+    // Gửi text và emoji
+    if (inputMessage.text.trim() !== "") {
       dispatch(
         actions.doCreate({
           message: inputMessage.text,
-          receiver: record.receiver.id,
+          receiverId: record._id,
           conversationType: record.conversationType,
+          isChatGroup: null,
         }),
       );
       onInputMessageChange("");
-    } */
+    }
   };
 
   const sendImage = () => {
@@ -160,7 +163,7 @@ function ChatContentFooter() {
           accept="image/*"
           name="photos"
           multiple={true}
-          fileList/* ={inputMessage.images} */
+          fileList /* ={inputMessage.images} */
           headers={{
             Authorization: `Bearer ${isAuthenticated()}`,
           }}
@@ -182,7 +185,7 @@ function ChatContentFooter() {
           accept="text/plain, application/pdf, .csv, .docx, .xlsx"
           name="files"
           multiple={true}
-          fileList/* ={inputMessage.files} */
+          fileList /* ={inputMessage.files} */
           headers={{
             Authorization: `Bearer ${isAuthenticated()}`,
           }}
@@ -203,7 +206,7 @@ function ChatContentFooter() {
         <Input
           ref={inputMessageRef}
           placeholder="Type a message"
-          value/* ={inputMessage.text} */
+          value={inputMessage.text}
           onChange={(e) => {
             onInputMessageChange(e.target.value);
           }}
@@ -213,7 +216,7 @@ function ChatContentFooter() {
             if (!typing) {
               setTyping(true);
               if (inputMessage.text.trim() !== "") {
-                /* emitTypingOn({
+                /*  emitTypingOn({
                   info: currentUser,
                   receiver: record.receiver,
                   conversationType: record.conversationType,

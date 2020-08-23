@@ -65,7 +65,7 @@ function ChatContent() {
         <ChatStyled ref={scrollRef}>
           {record.messages && (
             <ChatStyled ref={scrollRef}>
-              <Conversation messages={record.messages} /> {/* Conversation */}
+              <Conversation messages={record.messages} />
             </ChatStyled>
           )}
         </ChatStyled>

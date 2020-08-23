@@ -29,6 +29,25 @@ const messageReducer = (state = initialState, { type, payload }) =>
   produce(state, (draft) => {
     let currentUser, message;
     switch (type) {
+      case constants.INPUT_MESSAGE_CHANGE:
+        draft.inputMessage.text = payload;
+        break;
+      case constants.CHANGE_CONVERSATION:
+        draft.inputMessage.text = "";
+        break;
+      case constants.CHAT_CREATE_START:
+        draft.sending = true;
+        draft.error = null;
+        break;
+      case constants.CHAT_CREATE_SUCCESS:
+        draft.record.messages.push(payload);
+        draft.sending = false;
+        draft.error = null;
+        break;
+      case constants.CHAT_CREATE_ERROR:
+        draft.sending = false;
+        draft.error = payload;
+        break;
       case constants.CHAT_GET_START:
         draft.messageListLoading = true;
         draft.hasMoreMessageList = true;
