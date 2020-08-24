@@ -10,6 +10,9 @@ const removeRequestContactReceived = require("./contact/removeRequestContactRece
 const removeRequestContactSent = require("./contact/removeRequestContactSent");
 const removeContact = require("./contact/removeContact");
 const checkStatus = require("./status/checkStatus");
+const sentMessage = require("./chat/sentMessage");
+const typingOn = require("./chat/typingOn");
+const typingOff = require("./chat/typingOff");
 
 let initSockets = (io) => {
   io.use(
@@ -56,6 +59,11 @@ let initSockets = (io) => {
       socket.on("remove-contact", (data) => {
         removeContact(io, data, clients, user);
       });
+      socket.on("sent-message", (data) => {
+        sentMessage(io, data, clients, user);
+      });
+      socket.on("typing-on", (data) => typingOn(io, data, clients, user));
+      socket.on("typing-off", (data) => typingOff(io, data, clients, user));
 
       //Disconnect socket
       socket.on("disconnect", () => {
@@ -66,8 +74,8 @@ let initSockets = (io) => {
         );
         //Step 99 Emit to all another user when has user offline
         socket.broadcast.emit("server-send-when-new-user-offline", user._id);
-        console.log("disconnect")
-        console.log(clients)
+        console.log("disconnect");
+        console.log(clients);
       });
     } catch (error) {
       console.log(error);

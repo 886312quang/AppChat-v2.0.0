@@ -13,6 +13,7 @@ import {
   onNewUserOffline,
 } from "./checkStatus";
 import { isAuthenticated } from "../components/Shared/Routes/permissionChecker";
+import { onSentMessage, onTypingOn, onTypingOff } from "./chat";
 
 const endpoint = process.env.REACT_APP_SOCKET_ENDPOINT;
 
@@ -54,6 +55,10 @@ export const configSocket = () => {
     socket.on("server-send-list-users-online", onListUserOnline);
     socket.on("server-send-when-new-user-online", onNewUserOnline);
     socket.on("server-send-when-new-user-offline", onNewUserOffline);
+    socket.on("response-sent-message", onSentMessage);
+    socket.on("response-typing-on", onTypingOn);
+    socket.on("response-typing-off", onTypingOff);
+
     return socket;
   } else {
     return;

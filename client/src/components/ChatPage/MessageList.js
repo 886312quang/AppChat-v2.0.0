@@ -119,39 +119,59 @@ const MessageList = () => {
                       description={
                         <p
                           style={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            width: "200px",
-                            textOverflow: "ellipsis",
+                            color: `${
+                              user.nSeen && user.nSeen === true ? "#3578E5" : ""
+                            }`,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            width: "100%",
                           }}
                         >
-                          {user.messages.length > 0 ? (
-                            user.messages[+(user.messages.length - 1)]
-                              .messageType === "text" ? (
+                          <span
+                            style={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              width: "200px",
+                              textOverflow: "ellipsis",
+                              flex: 1,
+                            }}
+                          >
+                            {user.messages.length > 0 ? (
                               user.messages[+(user.messages.length - 1)]
-                                .text ? (
-                                user.messages[+(user.messages.length - 1)].text
+                                .messageType === "text" ? (
+                                user.messages[+(user.messages.length - 1)]
+                                  .text ? (
+                                  user.messages[+(user.messages.length - 1)]
+                                    .text
+                                ) : (
+                                  ""
+                                )
+                              ) : user.messages[+(user.messages.length - 1)]
+                                  .messageType === "image" ? (
+                                <>
+                                  <Icon type="file-image" />
+                                  Photo(s)
+                                </>
+                              ) : user.messages[+(user.messages.length - 1)]
+                                  .messageType === "file" ? (
+                                <>
+                                  <Icon type="paper-clip" />
+                                  File(s)
+                                </>
                               ) : (
                                 ""
                               )
-                            ) : user.messages[+(user.messages.length - 1)]
-                                .messageType === "image" ? (
-                              <>
-                                <Icon type="file-image" />
-                                Photo(s)
-                              </>
-                            ) : user.messages[+(user.messages.length - 1)]
-                                .messageType === "file" ? (
-                              <>
-                                <Icon type="paper-clip" />
-                                File(s)
-                              </>
                             ) : (
                               ""
-                            )
-                          ) : (
-                            ""
-                          )}
+                            )}
+                          </span>
+                          <span>
+                            {user.nSeen && user.nSeen === true ? (
+                              <Badge color="#3578E5" />
+                            ) : (
+                              ""
+                            )}
+                          </span>
                         </p>
                       }
                     />

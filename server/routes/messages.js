@@ -12,7 +12,7 @@ router
   .route("/")
   .post(
     AuthMiddleware.isAuth,
-    //messageValid.checkMessageLength,
+    messageValid.checkMessageLength,
     messages.creatNewMessage,
   );
 

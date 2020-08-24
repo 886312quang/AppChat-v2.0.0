@@ -13,17 +13,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    /* async function configS() {
-      if (isAuthenticated()) {
-        await configSocket();
-        await emitCheckStatus();
-      }
-      // dispatch(socketActions.doConnect());
-      if (!currentUser && isAuthenticated()) {
-        await dispatch(userActions.getCurrentUser());
-      }
-    }
-    configS(); */
     if (isAuthenticated()) {
       configSocket();
       emitCheckStatus();

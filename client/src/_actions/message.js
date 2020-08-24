@@ -3,6 +3,7 @@ import getStore, { getHistory } from "../configs/configureStore";
 import services from "../services/messages";
 import Errors from "../components/Shared/error/errors";
 import Message from "../components/Shared/message";
+import { emitSentMessage } from "../sockets/chat";
 //import services from "../services/user";
 
 const actions = {
@@ -35,13 +36,13 @@ const actions = {
 
       const response = await services.createNewMessage(data);
 
-      let state = getStore().getState();
-      let currentUser = state.user.currentUser;
-
-      dispatch({
-        type: constants.CHAT_CREATE_SUCCESS,
-        payload: response.data.message,
-      });
+      if (response.data.message) {
+        dispatch({
+          type: constants.CHAT_CREATE_SUCCESS,
+          payload: response.data.message,
+        });
+        emitSentMessage(response.data.message);
+      }
     } catch (error) {
       Message.error("Send message fail!");
       dispatch({
