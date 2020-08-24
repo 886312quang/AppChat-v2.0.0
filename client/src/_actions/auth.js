@@ -41,7 +41,6 @@ const actions = {
       });
 
       let token = isAuthenticated();
-      console.log(response.data);
 
       dispatch({
         type: constants.SIGNIN_SUCCESS,

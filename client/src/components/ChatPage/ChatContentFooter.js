@@ -10,6 +10,7 @@ import layoutSelectors from "../../_selectors/layout";
 import { Picker } from "emoji-mart";
 //import { emitTypingOn, emitTypingOff } from "./socket";
 import { isAuthenticated } from "../../components/Shared/Routes/permissionChecker";
+import { emitTypingOff, emitTypingOn } from "../../sockets/chat";
 
 let typingTimer = null;
 
@@ -37,11 +38,11 @@ function ChatContentFooter() {
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
 
   const handleTypingOff = () => {
-    /* emitTypingOff({
+    emitTypingOff({
       info: currentUser,
-      receiver: record.receiver,
-      conversationType: record.conversationType,
-    }); */
+      receiverId: record._id,
+      //conversationType: record.conversationType,
+    });
   };
 
   const onInputMessageChange = (message) => {
@@ -216,11 +217,11 @@ function ChatContentFooter() {
             if (!typing) {
               setTyping(true);
               if (inputMessage.text.trim() !== "") {
-                /*  emitTypingOn({
+                emitTypingOn({
                   info: currentUser,
-                  receiver: record.receiver,
-                  conversationType: record.conversationType,
-                }); */
+                  receiverId: record._id,
+                  //conversationType: record.conversationType,
+                });
               }
             }
             delay(() => {

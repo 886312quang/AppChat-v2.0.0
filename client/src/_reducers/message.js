@@ -27,12 +27,60 @@ const initialState = {
 
 const messageReducer = (state = initialState, { type, payload }) =>
   produce(state, (draft) => {
-    let currentUser, message;
+    let indexMessage;
     switch (type) {
+      case constants.SOCKET_SENT_MESSAGE:
+        draft.messages.forEach((message, index) => {
+          if (
+            message._id === payload.senderId ||
+            message._id === payload.receiverId
+          ) {
+            draft.messages[index].messages.push(payload);
+            draft.messages[index].updatedAt = Date.now();
+            if (
+              (draft.record && draft.record._id !== payload.senderId) ||
+              !draft.record
+            ) {
+              message.nSeen = true;
+            }
+          }
+        });
+        if (draft.record && draft.record._id === payload.senderId) {
+          draft.record.messages.push(payload);
+        }
+        if (draft.record && draft.record._id === payload.senderId) {
+          playBell("sent");
+        } else {
+          playBell("new-message");
+        }
+        break;
+      case constants.SOCKET_TYPING_ON:
+        if (state.record) {
+          if (state.record._id === payload.info._id) {
+            draft.typing.status = true;
+            draft.typing.status = true;
+            draft.typing.info = payload.info;
+            draft.scrollToBottom = true;
+            playBell("typing");
+          }
+        }
+        break;
+      case constants.SOCKET_TYPING_OFF:
+        if (state.record) {
+          if (state.record._id === payload.info._id) {
+            draft.typing = {};
+          }
+        }
+        break;
       case constants.INPUT_MESSAGE_CHANGE:
         draft.inputMessage.text = payload;
         break;
       case constants.CHANGE_CONVERSATION:
+        draft.messages.forEach((message) => {
+          if (message._id === payload.userId) {
+            message.nSeen = false;
+          }
+        });
         draft.inputMessage.text = "";
         break;
       case constants.CHAT_CREATE_START:
@@ -41,6 +89,12 @@ const messageReducer = (state = initialState, { type, payload }) =>
         break;
       case constants.CHAT_CREATE_SUCCESS:
         draft.record.messages.push(payload);
+        draft.messages.forEach((message, index) => {
+          if (message._id === payload.receiverId) {
+            draft.messages[index].messages.push(payload);
+            draft.messages[index].updatedAt = Date.now();
+          }
+        });
         draft.sending = false;
         draft.error = null;
         break;
@@ -73,7 +127,7 @@ const messageReducer = (state = initialState, { type, payload }) =>
       case constantsContact.LIST_USER_ONLINE:
         draft.messages.forEach((user) => {
           payload.forEach((i) => {
-            if (user._id == i) {
+            if (user._id === i) {
               user.online = true;
             }
           });
