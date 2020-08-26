@@ -4,7 +4,7 @@ import "./picturewallStyle.css";
 import { Layout } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import selectors from "../../_selectors/message";
-//import ImageUploadList from "./ImageUploadList";
+import ImageUploadList from "./ImageUploadList";
 import constants from "../../constants/message";
 //import FileUploadList from "./FileUploadList";
 import Conversation from "./Conversation";
@@ -16,13 +16,13 @@ import actions from "../../_actions/message";
 import layoutSelectors from "../../_selectors/layout";
 
 function ChatContent() {
-  const scrollRef = useRef();
+  const scrollRef = useRef(0);
   const dispatch = useDispatch();
   let { userId } = useParams();
 
   const record = useSelector(selectors.selectRecord);
-  // const inputMessage = useSelector(selectors.selectInputMessage);
-  //const isScrollToBottom = useSelector(selectors.selectScrollToBottom);
+  const inputMessage = useSelector(selectors.selectInputMessage);
+  const isScrollToBottom = useSelector(selectors.selectScrollToBottom);
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
   const rightSidebarVisible = useSelector(
     layoutSelectors.selectRightSidebarVisible,
@@ -41,15 +41,21 @@ function ChatContent() {
     });
   };
 
-  const scrollToBottom = () => {
-    if (scrollRef.current)
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  const scrollToBottom = async () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      scrollRef.current.scrollTop = await (scrollRef.current.scrollHeight *
+        100000);
+    }
   };
 
-  /* if (isScrollToBottom) {
+  if (isScrollToBottom) {
     scrollToBottom();
     dispatch(actions.doToggleScrollToBottom());
-  } */
+  }
   useEffect(() => {
     scrollToBottom();
   }, [userId]);
@@ -63,22 +69,18 @@ function ChatContent() {
       <ChatContentHeader />
       {record.messages && (
         <ChatStyled ref={scrollRef}>
-          {record.messages && (
-            <ChatStyled ref={scrollRef}>
-              <Conversation messages={record.messages} />
-            </ChatStyled>
-          )}
+          <Conversation messages={record.messages} />
         </ChatStyled>
       )}
 
       <div className="px-3 py-2" style={{ background: "#f9f9f9" }}>
-        {/* {inputMessage && inputMessage.images.length > 0 && (
+        {inputMessage && inputMessage.images.length > 0 && (
           <ImageUploadList
             fileList={inputMessage.images}
             onDelete={(fileList) => onInputImageListChange({ fileList })}
           />
         )}
-        {inputMessage && inputMessage.files.length > 0 && (
+        {/* {inputMessage && inputMessage.files.length > 0 && (
           <FileUploadList
             onDelete={(fileList) => onInputFileListChange({ fileList })}
             fileList={inputMessage.files}

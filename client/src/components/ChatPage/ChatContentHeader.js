@@ -64,9 +64,8 @@ function ChatContentHeader() {
             </Button>
           </Link>
         )}
-        <Badge status="success" offset={[-3, 45]}>
-          <AvatarCus record={record ? record : null} />
-        </Badge>
+
+        <AvatarCus record={record ? record : null} />
 
         <span className="ml-3" style={{ lineHeight: "1" }}>
           <span style={{ display: "block" }}>

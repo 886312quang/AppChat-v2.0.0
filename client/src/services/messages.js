@@ -11,6 +11,11 @@ const services = {
     const response = await api.post("/message", info);
     return response;
   },
+  createNewMessageImages: async (info) => {
+    console.log(info);
+    const response = await api.post("/message/add-new-images", info);
+    return response;
+  },
 };
 
 export default services;

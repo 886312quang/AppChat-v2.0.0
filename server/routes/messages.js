@@ -16,4 +16,9 @@ router
     messages.creatNewMessage,
   );
 
+router.route("/photos").post(AuthMiddleware.isAuth, messages.addPhotos);
+router
+  .route("/add-new-images")
+  .post(AuthMiddleware.isAuth, messages.addNewImage);
+
 module.exports = router;

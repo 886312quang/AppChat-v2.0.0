@@ -1,9 +1,13 @@
 const multer = require("multer");
-const { app } = require("../config/app");
+const app = require("../config/app");
 const { transErrors, transSuccess } = require("../../lang/vi");
 const { validationResult } = require("express-validator/check");
 const { message } = require("../services/index");
 const fsExtra = require("fs-extra");
+const storagePhoto = require("../utils/storagePhoto");
+const { v4: uuidv4 } = require("uuid");
+const sharp = require("sharp");
+const fs = require("fs");
 
 let readMoreAllChat = async (req, res) => {
   try {
@@ -57,7 +61,83 @@ let creatNewMessage = async (req, res) => {
   }
 };
 
+// Sent images
+let photosUploadFile = multer(storagePhoto).single("photos");
+
+let addPhotos = (req, res, next) => {
+  photosUploadFile(req, res, async (err) => {
+    try {
+      if (!req.file) {
+        console.log(err);
+        return res.status(500).send(err);
+      }
+
+      let outputFile = req.file.path + ".jpg";
+
+      await sharp(req.file.path).jpeg({ quality: 80 }).toFile(outputFile);
+
+      // delete old file
+      /*   await fsExtra.removeSync(req.file.patch); */
+      await fs.unlinkSync(req.file.path);
+      /* await fsExtra.remove(
+        `${app.images_message_directory}/${req.file.filename}.jpg`,
+      ); */
+      let temp = {
+        uid: uuidv4(),
+        name: `${req.file.filename}.jpg`,
+        path: `/images/message/${req.file.filename}.jpg`,
+        status: "done",
+        response: { status: "success" },
+        linkProps: { download: "image" },
+        thumbUrl: `${process.env.REACT_APP_STATIC_URI}/images/message/${req.file.filename}.jpg`,
+        pathAdd: `${req.file.path}.jpg`,
+      };
+
+      return res.json(temp);
+    } catch (error) {
+      next(error);
+    }
+  });
+};
+
+let addNewImage = async (req, res) => {
+  photosUploadFile(req, res, async (err) => {
+    try {
+      let sender = {
+        id: req.user._id,
+        name: req.user.userName,
+        avatar: req.user.avatar,
+      };
+
+      let receiveId = req.body.receiver;
+      let messageVal = [];
+      req.body.images.forEach((image) => {
+        messageVal.push(image);
+      });
+      let isChatGroup = req.body.isChatGroup;
+
+      let newMessage = await message.addNewImage(
+        sender,
+        receiveId,
+        messageVal,
+        isChatGroup,
+      );
+
+      // Remove message value because saved in Mongoose
+      await fsExtra.remove(
+        `${app.images_message_directory}/${newMessage.file.fileName}`,
+      );
+
+      return res.status(200).send({ message: newMessage });
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  });
+};
+
 module.exports = {
   readMoreAllChat,
   creatNewMessage,
+  addPhotos,
+  addNewImage,
 };
