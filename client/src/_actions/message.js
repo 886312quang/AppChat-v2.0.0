@@ -7,6 +7,9 @@ import { emitSentMessage } from "../sockets/chat";
 //import services from "../services/user";
 
 const actions = {
+  doToggleScrollToBottom: () => ({
+    type: constants.CHAT_SCROLL_TO_BOTTOM_TOGGLE,
+  }),
   list: (data) => async (dispatch) => {
     try {
       dispatch({ type: constants.CHAT_GET_START });
@@ -35,6 +38,26 @@ const actions = {
       dispatch({ type: constants.CHAT_CREATE_START });
 
       const response = await services.createNewMessage(data);
+
+      if (response.data.message) {
+        dispatch({
+          type: constants.CHAT_CREATE_SUCCESS,
+          payload: response.data.message,
+        });
+        emitSentMessage(response.data.message);
+      }
+    } catch (error) {
+      Message.error("Send message fail!");
+      dispatch({
+        type: constants.CHAT_CREATE_ERROR,
+      });
+    }
+  },
+  doCreateImages: (data) => async (dispatch) => {
+    try {
+      dispatch({ type: constants.CHAT_CREATE_START });
+
+      const response = await services.createNewMessageImages(data);
 
       if (response.data.message) {
         dispatch({

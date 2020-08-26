@@ -28,12 +28,16 @@ function Conversation({ messages }) {
   let imagesList = [];
 
   const loadMoreConversation = () => {
-    dispatch(actions.doFind(record.receiver.id, record.messages.length));
+    //dispatch(actions.doFind(record.receiver.id, record.messages.length));
   };
 
   const getFullName = (record) => {
     if (record && record.userName) return record.userName;
     return "";
+  };
+
+  let bufferToBase64 = (bufferFrom) => {
+    return Buffer.from(bufferFrom).toString("base64");
   };
 
   const renderConversation = (messages) => {
@@ -100,30 +104,37 @@ function Conversation({ messages }) {
                     <div className={`body body-sent`}>{message.text}</div>
                   </Tooltip>
                 ) : message.messageType === "image" &&
-                  message.images.length > 0 ? (
-                  <div
-                    className={`body-sent-no-backGround`}
-                    style={{ maxWidth: "100%" }}
-                  >
-                    {message.images.map((image, key) => (
-                      <div
-                        key={key}
-                        style={{
-                          backgroundImage: `url(${process.env.REACT_APP_STATIC_PHOTOS}/${image})`,
-                        }}
-                        className="photo"
-                        onClick={() => {
-                          setImageViewModelVisible(true);
-                          setCurrentImageViewIndex(
-                            imagesList
-                              .map((e) => e.src)
-                              .indexOf(
-                                `${process.env.REACT_APP_STATIC_PHOTOS}/${image}`,
-                              ),
-                          );
-                        }}
-                      ></div>
-                    ))}
+                  message.file.length > 0 ? (
+                  <div style={{ maxWidth: "80%" }}>
+                    <div style={{ maxWidth: "50%", float: "right" }}>
+                      {message.file.map((image, key) => (
+                        <div
+                          key={key}
+                          /*  style={{
+                          backgroundImage: `url(${process.env.REACT_APP_STATIC_PHOTOS}`,
+                        }} */
+                          className="photo"
+                          onClick={() => {
+                            setImageViewModelVisible(true);
+                            /*  setCurrentImageViewIndex(
+                          imagesList
+                            .map((e) => e.src)
+                            .indexOf(
+                              `${process.env.REACT_APP_STATIC_PHOTOS}/${image}`,
+                            ),
+                        ); */
+                          }}
+                        >
+                          <img
+                            className="photo"
+                            src={`data: ${
+                              image.contentType
+                            }; base64, ${bufferToBase64(image.data)}
+                        `}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ) : message.messageType === "file" ? (
                   <div className={`body body-sent`}>
@@ -174,27 +185,40 @@ function Conversation({ messages }) {
                     </div>
                   </Tooltip>
                 ) : message.messageType === "image" &&
-                  message.images.length > 0 ? (
+                  message.file.length > 0 ? (
                   <div style={{ maxWidth: "80%" }}>
-                    {message.images.map((image, key) => (
-                      <div
-                        key={key}
-                        style={{
-                          backgroundImage: `url(${process.env.REACT_APP_STATIC_PHOTOS}/${image})`,
-                        }}
-                        className="photo"
-                        onClick={() => {
-                          setImageViewModelVisible(true);
-                          setCurrentImageViewIndex(
-                            imagesList
-                              .map((e) => e.src)
-                              .indexOf(
-                                `${process.env.REACT_APP_STATIC_PHOTOS}/${image}`,
-                              ),
-                          );
-                        }}
-                      ></div>
-                    ))}
+                    <div
+                      className={`body-sent-no-backGroundL`}
+                      style={{ maxWidth: "50%" }}
+                    >
+                      {message.file.map((image, key) => (
+                        <div
+                          key={key}
+                          style={{
+                            backgroundImage: `url(${process.env.REACT_APP_STATIC_PHOTOS}`,
+                          }}
+                          className="photo"
+                          onClick={() => {
+                            setImageViewModelVisible(true);
+                            setCurrentImageViewIndex(
+                              imagesList
+                                .map((e) => e.src)
+                                .indexOf(
+                                  `${process.env.REACT_APP_STATIC_PHOTOS}/${image}`,
+                                ),
+                            );
+                          }}
+                        >
+                          <img
+                            className="photo"
+                            src={`data: ${
+                              image.contentType
+                            }; base64, ${bufferToBase64(image.data)}
+                        `}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ) : message.messageType === "file" ? (
                   <div className={`body body-received`}>

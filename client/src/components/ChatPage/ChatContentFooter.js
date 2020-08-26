@@ -56,6 +56,7 @@ function ChatContentFooter() {
   };
 
   const onInputImageListChange = ({ fileList }) => {
+    console.log(fileList);
     dispatch({
       type: constants.INPUT_IMAGE_LIST_CHANGE,
       payload: [...fileList],
@@ -101,16 +102,17 @@ function ChatContentFooter() {
       let images = [];
       inputMessage.images.forEach((item) => {
         if (item.response.name) {
-          images.push(item.response.name);
+          images.push(item.response);
         }
       });
 
       dispatch(
-        actions.doCreate({
+        actions.doCreateImages({
           images,
           type: "image",
-          receiver: record.receiver.id,
+          receiver: record._id,
           conversationType: record.conversationType,
+          isChatGroup: null,
         }),
       );
       onInputImageListChange({ fileList: [] });
@@ -152,7 +154,7 @@ function ChatContentFooter() {
     sendText();
     sendImage();
     sendFile();
-    //   dispatch(actions.doToggleScrollToBottom());
+    dispatch(actions.doToggleScrollToBottom());
 
     handleTypingOff();
     inputMessageRef.current.focus();
@@ -164,9 +166,10 @@ function ChatContentFooter() {
           accept="image/*"
           name="photos"
           multiple={true}
-          fileList /* ={inputMessage.images} */
+          fileList={inputMessage.images}
           headers={{
             Authorization: `Bearer ${isAuthenticated()}`,
+            "x-access-token": isAuthenticated(),
           }}
           action={`${process.env.REACT_APP_API_URI}/message/photos`}
           showUploadList={false}
@@ -189,6 +192,7 @@ function ChatContentFooter() {
           fileList /* ={inputMessage.files} */
           headers={{
             Authorization: `Bearer ${isAuthenticated()}`,
+            "x-access-token": isAuthenticated(),
           }}
           action={`${process.env.REACT_APP_API_URI}/message/files`}
           showUploadList={false}

@@ -233,9 +233,25 @@ let addNewImage = (sender, receivedId, messageVal, isChatGroup) => {
           avatar: getUserReceiver.avatar,
         };
         //item message
-        let imageBuffer = await fsExtra.readFile(messageVal.path);
-        let imageContentType = messageVal.mimetype;
-        let imageName = messageVal.originalname;
+
+        console.log("read");
+        /*  let imageBuffer = await fsExtra.readFile(messageVal[0].pathAdd);
+
+        let imageContentType = "images";
+        let imageName = messageVal[0].name; */
+        const getNewMessage = async (item) => {
+          let messages = {
+            data: await fsExtra.readFile(item.pathAdd),
+            contentType: "images",
+            fileName: item.name,
+          };
+          return messages;
+        };
+
+        let fileCreatePromise = messageVal.map(getNewMessage);
+
+        let fileCreate = await Promise.all(fileCreatePromise);
+        console.log(fileCreate);
 
         let newMessageItem = {
           senderId: sender.id,
@@ -244,11 +260,7 @@ let addNewImage = (sender, receivedId, messageVal, isChatGroup) => {
           messageType: MessageModel.messageType.IMAGE,
           sender: sender,
           receiver: receiver,
-          file: {
-            data: imageBuffer,
-            contentType: imageContentType,
-            fileName: imageName,
-          },
+          file: fileCreate,
           createdAt: Date.now(),
         };
         // New message

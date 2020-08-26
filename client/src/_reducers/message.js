@@ -47,6 +47,7 @@ const messageReducer = (state = initialState, { type, payload }) =>
         });
         if (draft.record && draft.record._id === payload.senderId) {
           draft.record.messages.push(payload);
+          draft.scrollToBottom = true;
         }
         if (draft.record && draft.record._id === payload.senderId) {
           playBell("sent");
@@ -177,6 +178,14 @@ const messageReducer = (state = initialState, { type, payload }) =>
           draft.hasMoreConversation = false;
           draft.record = null;
         }
+        break;
+      // Send Photos
+      case constants.INPUT_IMAGE_LIST_CHANGE:
+        draft.inputMessage.images = payload;
+        break;
+      // Scroll_To_BOTTOM
+      case constants.CHAT_SCROLL_TO_BOTTOM_TOGGLE:
+        draft.scrollToBottom = !state.scrollToBottom;
         break;
       default:
         break;

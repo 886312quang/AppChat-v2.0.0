@@ -35,6 +35,10 @@ export default function ChatPage() {
   // Params
   let userId = useParams();
 
+  if (userId) {
+    dispatch({ type: constants.TARGET_CONVERSATION, payload: userId });
+  }
+
   const windowOnResize = () => {
     dispatch(layoutActions.doWindowResize(window.innerWidth));
   };
