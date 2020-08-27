@@ -21,4 +21,9 @@ router
   .route("/add-new-images")
   .post(AuthMiddleware.isAuth, messages.addNewImage);
 
+router.route("/files").post(AuthMiddleware.isAuth, messages.addFiles);
+router
+  .route("/add-new-files")
+  .post(AuthMiddleware.isAuth, messages.addNewFiles);
+
 module.exports = router;

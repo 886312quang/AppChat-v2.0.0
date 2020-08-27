@@ -5,6 +5,7 @@ const { validationResult } = require("express-validator/check");
 const { message } = require("../services/index");
 const fsExtra = require("fs-extra");
 const storagePhoto = require("../utils/storagePhoto");
+const storageFile = require("../utils/storageFile");
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
 const fs = require("fs");
@@ -135,9 +136,76 @@ let addNewImage = async (req, res) => {
   });
 };
 
+// Sent files
+let attachmentUploadFile = multer(storageFile).single("files");
+
+let addFiles = (req, res, next) => {
+  attachmentUploadFile(req, res, async (err) => {
+    try {
+      if (!req.file) {
+        console.log(err);
+        return res.status(500).send(err);
+      }
+
+      let temp = {
+        uid: uuidv4(),
+        name: req.file.filename,
+        path: `/images/files/${req.file.filename}`,
+        status: "done",
+        response: { status: "success" },
+        linkProps: { download: "file" },
+        pathAdd: `${req.file.path}`
+      };
+
+      return res.json(temp);
+    } catch (error) {
+      next(error);
+    }
+  });
+};
+
+let addNewFiles = async (req, res) => {
+  attachmentUploadFile(req, res, async (err) => {
+    try {
+      let sender = {
+        id: req.user._id,
+        name: req.user.userName,
+        avatar: req.user.avatar,
+      };
+
+      let receiveId = req.body.receiver;
+      let messageVal = [];
+
+      req.body.files.forEach((file) => {
+        messageVal.push(file);
+      });
+
+      let isChatGroup = req.body.isChatGroup;
+
+      let newMessage = await message.addNewAttachment(
+        sender,
+        receiveId,
+        messageVal,
+        isChatGroup,
+      );
+
+      // Remove message value because saved in Mongoose
+      await fsExtra.remove(
+        `${app.attachment_message_directory}/${newMessage.file.fileName}`,
+      );
+
+      return res.status(200).send({ message: newMessage });
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  });
+};
+
 module.exports = {
   readMoreAllChat,
   creatNewMessage,
   addPhotos,
+  addFiles,
   addNewImage,
+  addNewFiles,
 };

@@ -232,13 +232,8 @@ let addNewImage = (sender, receivedId, messageVal, isChatGroup) => {
           name: getUserReceiver.userName,
           avatar: getUserReceiver.avatar,
         };
+
         //item message
-
-        console.log("read");
-        /*  let imageBuffer = await fsExtra.readFile(messageVal[0].pathAdd);
-
-        let imageContentType = "images";
-        let imageName = messageVal[0].name; */
         const getNewMessage = async (item) => {
           let messages = {
             data: await fsExtra.readFile(item.pathAdd),
@@ -251,7 +246,6 @@ let addNewImage = (sender, receivedId, messageVal, isChatGroup) => {
         let fileCreatePromise = messageVal.map(getNewMessage);
 
         let fileCreate = await Promise.all(fileCreatePromise);
-        console.log(fileCreate);
 
         let newMessageItem = {
           senderId: sender.id,
@@ -331,9 +325,22 @@ let addNewAttachment = (sender, receivedId, messageVal, isChatGroup) => {
           avatar: getUserReceiver.avatar,
         };
         //item message
-        let attachmentBuffer = await fsExtra.readFile(messageVal.path);
-        let attachmentContentType = messageVal.mimetype;
-        let attachmentName = messageVal.originalname;
+        const getNewMessage = async (item) => {
+          let messages = {
+            data: await fsExtra.readFile(item.pathAdd),
+            contentType: "file",
+            fileName: item.name,
+          };
+          return messages;
+        };
+
+        console.log(messageVal);
+
+        let fileCreatePromise = messageVal.map(getNewMessage);
+
+        let fileCreate = await Promise.all(fileCreatePromise);
+
+        console.log(fileCreate);
 
         let newMessageItem = {
           senderId: sender.id,
@@ -342,11 +349,7 @@ let addNewAttachment = (sender, receivedId, messageVal, isChatGroup) => {
           messageType: MessageModel.messageType.FILE,
           sender: sender,
           receiver: receiver,
-          file: {
-            data: attachmentBuffer,
-            contentType: attachmentContentType,
-            fileName: attachmentName,
-          },
+          file: fileCreate,
           createdAt: Date.now(),
         };
         // New message

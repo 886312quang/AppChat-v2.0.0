@@ -1,8 +1,6 @@
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
-const path = require("path");
 const configApp = require("../config/app");
-const app = require("../config/app");
 
 module.exports = {
   storage: new multer.diskStorage({
@@ -19,5 +17,5 @@ module.exports = {
       callback(null, imageName);
     },
   }),
-  limits: { fileSize: app.imageMessage_limit_size },
+  limits: { fileSize: configApp.imageMessage_limit_size },
 };

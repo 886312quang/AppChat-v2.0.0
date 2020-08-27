@@ -83,6 +83,8 @@ const messageReducer = (state = initialState, { type, payload }) =>
           }
         });
         draft.inputMessage.text = "";
+        draft.inputMessage.files = [];
+        draft.inputMessage.images = [];
         break;
       case constants.CHAT_CREATE_START:
         draft.sending = true;
@@ -182,6 +184,9 @@ const messageReducer = (state = initialState, { type, payload }) =>
       // Send Photos
       case constants.INPUT_IMAGE_LIST_CHANGE:
         draft.inputMessage.images = payload;
+        break;
+      case constants.INPUT_FILE_LIST_CHANGE:
+        draft.inputMessage.files = payload;
         break;
       // Scroll_To_BOTTOM
       case constants.CHAT_SCROLL_TO_BOTTOM_TOGGLE:

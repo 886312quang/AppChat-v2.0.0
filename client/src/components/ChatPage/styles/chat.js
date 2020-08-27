@@ -59,12 +59,19 @@ const Chat = styled.div`
     // text-align: right;
   }
 
-  .body-sent-no-backGround {
+  .body-sent-no-backGroundR {
     position: relative;
     color: white;
     float: right;
     order: 1;
     text-align: right;
+  }
+  .body-sent-no-backGroundL {
+    position: relative;
+    color: white;
+    float: left;
+    order: 1;
+    text-align: left;
   }
   .body-received {
     background-color: #f1f0f0;

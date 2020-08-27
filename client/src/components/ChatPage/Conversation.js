@@ -105,8 +105,11 @@ function Conversation({ messages }) {
                   </Tooltip>
                 ) : message.messageType === "image" &&
                   message.file.length > 0 ? (
-                  <div style={{ maxWidth: "80%" }}>
-                    <div style={{ maxWidth: "50%", float: "right" }}>
+                  <div style={{ maxWidth: "40%" }}>
+                    <div
+                      className={`body-sent-no-backGroundR`}
+                      style={{ maxWidth: "100%" }}
+                    >
                       {message.file.map((image, key) => (
                         <div
                           key={key}
@@ -138,7 +141,7 @@ function Conversation({ messages }) {
                   </div>
                 ) : message.messageType === "file" ? (
                   <div className={`body body-sent`}>
-                    {message.files.map((file, key) => (
+                    {message.file.map((file, key) => (
                       <div key={key}>
                         <a
                           key={key}
@@ -147,9 +150,13 @@ function Conversation({ messages }) {
                             textDecoration: "underline",
                             color: "white",
                           }}
-                          href={`${process.env.REACT_APP_STATIC_FILES}/${file.path}`}
+                          href={`data: ${
+                            file.contentType
+                          }; base64, ${bufferToBase64(file.data)}
+                      `}
+                          download={`${file.fileName}`}
                         >
-                          <Icon type="paper-clip" /> {file.name}
+                          <Icon type="paper-clip" /> {file.fileName}
                         </a>
                       </div>
                     ))}
@@ -186,17 +193,14 @@ function Conversation({ messages }) {
                   </Tooltip>
                 ) : message.messageType === "image" &&
                   message.file.length > 0 ? (
-                  <div style={{ maxWidth: "80%" }}>
+                  <div style={{ maxWidth: "40%" }}>
                     <div
                       className={`body-sent-no-backGroundL`}
-                      style={{ maxWidth: "50%" }}
+                      style={{ maxWidth: "100%" }}
                     >
                       {message.file.map((image, key) => (
                         <div
                           key={key}
-                          style={{
-                            backgroundImage: `url(${process.env.REACT_APP_STATIC_PHOTOS}`,
-                          }}
                           className="photo"
                           onClick={() => {
                             setImageViewModelVisible(true);
@@ -222,18 +226,22 @@ function Conversation({ messages }) {
                   </div>
                 ) : message.messageType === "file" ? (
                   <div className={`body body-received`}>
-                    {message.files.map((file, key) => (
+                    {message.file.map((file, key) => (
                       <div key={key}>
                         <a
                           key={key}
                           target="_blank"
                           style={{
                             textDecoration: "underline",
-                            color: "rgba(0, 0, 0, 0.65)",
+                            color: "#34119f",
                           }}
-                          href={`${process.env.REACT_APP_STATIC_FILES}/${file.path}`}
+                          href={`data: ${
+                            file.contentType
+                          }; base64, ${bufferToBase64(file.data)}
+                      `}
+                          download={`${file.fileName}`}
                         >
-                          <Icon type="paper-clip" /> {file.name}
+                          <Icon type="paper-clip" /> {file.fileName}
                         </a>
                       </div>
                     ))}
