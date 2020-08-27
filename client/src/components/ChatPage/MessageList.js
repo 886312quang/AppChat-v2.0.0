@@ -3,6 +3,7 @@ import { Icon, List, Spin, Badge } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import selectors from "../../_selectors/message";
 import actions from "../../_actions/message";
+import constants from "../../constants/message";
 import { Link, useParams } from "react-router-dom";
 import userSelectors from "../../_selectors/user";
 import AvatarCus from "../Commons/AvatarCus";
@@ -68,6 +69,7 @@ const MessageList = () => {
                     className={`${
                       user._id === userId ? "" : "border-0"
                     } border-0 px-4 py-3`}
+                    onClick={() => dispatch({ type: constants.CLICK_TARGET })}
                   >
                     <List.Item.Meta
                       avatar={

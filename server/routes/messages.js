@@ -25,5 +25,9 @@ router.route("/files").post(AuthMiddleware.isAuth, messages.addFiles);
 router
   .route("/add-new-files")
   .post(AuthMiddleware.isAuth, messages.addNewFiles);
+router
+router
+  .route("/delete-list")
+  .post(AuthMiddleware.isAuth, messages.deleteListImages);
 
 module.exports = router;

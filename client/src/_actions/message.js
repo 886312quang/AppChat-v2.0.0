@@ -93,6 +93,10 @@ const actions = {
       });
     }
   },
+  doDeleteList: (data) => async () => {
+    const response = await services.deleteList(data);
+    return response;
+  },
 };
 
 export default actions;

@@ -13,7 +13,8 @@ const transValidation = {
 };
 
 const transErrors = {
-  account_in_use: "Email đã được sử dụng vui lòng tạo tài khoản với email khác.",
+  account_in_use:
+    "Email đã được sử dụng vui lòng tạo tài khoản với email khác.",
   account_removed:
     "Tài khoản này đã bị gỡ khỏi hệ thống vui lòng liên hệ với bộ phận hỗ trợ.",
   account_notActive:
@@ -46,6 +47,7 @@ const transSuccess = {
   updatedAvatar: "Cập nhật ảnh đại diện thành công.",
   updatedUserInfo: "Cập nhật thông tin thành công.",
   updatedPassword: "Cập nhật mật khẩu thành công.",
+  deleteFileSuccess: "Xóa thành công.",
 };
 
 const transMail = {

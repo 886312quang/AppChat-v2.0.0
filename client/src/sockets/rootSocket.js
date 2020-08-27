@@ -13,7 +13,7 @@ import {
   onNewUserOffline,
 } from "./checkStatus";
 import { isAuthenticated } from "../components/Shared/Routes/permissionChecker";
-import { onSentMessage, onTypingOn, onTypingOff } from "./chat";
+import { onSentMessage, onTypingOn, onTypingOff, onDisconnect } from "./chat";
 
 const endpoint = process.env.REACT_APP_SOCKET_ENDPOINT;
 
@@ -21,10 +21,7 @@ let socket = null;
 
 const onConnected = () => {};
 
-const onDisconnect = () => {};
-
 export const configSocket = () => {
-  console.log(socket);
   if (socket && socket.disconnected) {
     socket.connect();
   }

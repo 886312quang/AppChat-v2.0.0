@@ -1,7 +1,11 @@
 import React from "react";
 import { Icon } from "antd";
+import { useDispatch } from "react-redux";
+import actions from "../../_actions/message";
 
 function FileUploadList({ fileList, onDelete }) {
+  const dispatch = useDispatch();
+
   return (
     <div
       className="clearfix"
@@ -38,6 +42,13 @@ function FileUploadList({ fileList, onDelete }) {
                         onClick={() =>
                           onDelete(
                             fileList.filter((item) => item.uid !== file.uid),
+                            dispatch(
+                              actions.doDeleteList({
+                                fileList,
+                                id: file.uid,
+                                type: "files",
+                              }),
+                            ),
                           )
                         }
                         className="anticon anticon-delete"
