@@ -19,6 +19,10 @@ const services = {
     const response = await api.post("/message/add-new-files", info);
     return response;
   },
+  deleteList: async (info) => {
+    const response = await api.post("/message/delete-list", info);
+    return response;
+  },
 };
 
 export default services;

@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Icon, Row } from "antd";
+import { useDispatch } from "react-redux";
+import actions from "../../_actions/message";
 
 function ImageUploadList({ fileList, onDelete }) {
+  const dispatch = useDispatch();
+
   return (
     <div
       className="clearfix"
@@ -53,6 +57,13 @@ function ImageUploadList({ fileList, onDelete }) {
                               onDelete(
                                 fileList.filter(
                                   (item) => item.uid !== file.uid,
+                                ),
+                                dispatch(
+                                  actions.doDeleteList({
+                                    fileList,
+                                    id: file.uid,
+                                    type: "images",
+                                  }),
                                 ),
                               )
                             }

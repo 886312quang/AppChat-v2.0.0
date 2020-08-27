@@ -125,9 +125,11 @@ let addNewImage = async (req, res) => {
       );
 
       // Remove message value because saved in Mongoose
-      await fsExtra.remove(
-        `${app.images_message_directory}/${newMessage.file.fileName}`,
-      );
+      newMessage.file.forEach(async (file) => {
+        await fsExtra.remove(
+          `${app.images_message_directory}/${file.fileName}`,
+        );
+      });
 
       return res.status(200).send({ message: newMessage });
     } catch (error) {
@@ -154,7 +156,7 @@ let addFiles = (req, res, next) => {
         status: "done",
         response: { status: "success" },
         linkProps: { download: "file" },
-        pathAdd: `${req.file.path}`
+        pathAdd: `${req.file.path}`,
       };
 
       return res.json(temp);
@@ -190,15 +192,48 @@ let addNewFiles = async (req, res) => {
       );
 
       // Remove message value because saved in Mongoose
-      await fsExtra.remove(
-        `${app.attachment_message_directory}/${newMessage.file.fileName}`,
-      );
+      newMessage.file.forEach(async (file) => {
+        await fsExtra.remove(
+          `${app.attachment_message_directory}/${file.fileName}`,
+        );
+      });
 
       return res.status(200).send({ message: newMessage });
     } catch (error) {
       return res.status(500).send(error);
     }
   });
+};
+
+let deleteListImages = async (req, res) => {
+  try {
+    let data = req.body.fileList;
+    let id = req.body.id;
+    let directory;
+
+    if (req.body.type === "images") {
+      directory = app.images_message_directory;
+    } else if (req.body.type === "files") {
+      directory = app.attachment_message_directory;
+    }
+
+    data.forEach(async (item) => {
+      // Remove images
+      if (id) {
+        if (item.uid === id) {
+          await fsExtra.remove(`${directory}/${item.response.name}`);
+          return;
+        }
+      } else {
+        await fsExtra.remove(
+          `${app.images_message_directory}/${item.response.name}`,
+        );
+      }
+    });
+    return res.status(200).send({ message: transSuccess.deleteFileSuccess });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
 };
 
 module.exports = {
@@ -208,4 +243,5 @@ module.exports = {
   addFiles,
   addNewImage,
   addNewFiles,
+  deleteListImages,
 };

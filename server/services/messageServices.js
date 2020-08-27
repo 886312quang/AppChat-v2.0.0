@@ -334,13 +334,9 @@ let addNewAttachment = (sender, receivedId, messageVal, isChatGroup) => {
           return messages;
         };
 
-        console.log(messageVal);
-
         let fileCreatePromise = messageVal.map(getNewMessage);
 
         let fileCreate = await Promise.all(fileCreatePromise);
-
-        console.log(fileCreate);
 
         let newMessageItem = {
           senderId: sender.id,

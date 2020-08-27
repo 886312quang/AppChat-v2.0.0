@@ -12,6 +12,7 @@ const initialState = {
   findLoading: false,
   hasMoreConversation: false,
   getImageListLoading: false,
+  target: false,
   error: null,
   record: null,
   messages: [],
@@ -166,6 +167,9 @@ const messageReducer = (state = initialState, { type, payload }) =>
         draft.typing = {};
         draft.sending = false;
         draft.hasMoreConversation = true;
+        break;
+      case constants.CLICK_TARGET:
+        draft.target = true;
         break;
       case constants.TARGET_CONVERSATION:
         draft.findLoading = false;

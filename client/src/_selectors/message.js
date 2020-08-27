@@ -78,6 +78,11 @@ const selectScrollToBottom = createSelector(
   (message) => message.scrollToBottom,
 );
 
+const selectClickTarget = createSelector(
+  [selectRaw],
+  (message) => message.target,
+);
+
 const selectors = {
   selectFindLoading,
   selectMessageListLoading,
@@ -96,6 +101,7 @@ const selectors = {
   selectSending,
   selectSoundPlayStatus,
   selectCurrentSound,
+  selectClickTarget,
 };
 
 export default selectors;

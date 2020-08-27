@@ -31,3 +31,9 @@ export const onTypingOff = (payload) => {
     payload: payload,
   });
 };
+
+export const onDisconnect = () => {
+  getStore().dispatch({
+    type: constants.ON_DISCONNECT,
+  });
+};
