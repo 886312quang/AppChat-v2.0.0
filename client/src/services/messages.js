@@ -12,8 +12,11 @@ const services = {
     return response;
   },
   createNewMessageImages: async (info) => {
-    console.log(info);
     const response = await api.post("/message/add-new-images", info);
+    return response;
+  },
+  createNewMessageFiles: async (info) => {
+    const response = await api.post("/message/add-new-files", info);
     return response;
   },
 };

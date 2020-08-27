@@ -131,18 +131,15 @@ function ChatContentFooter() {
       let files = [];
       inputMessage.files.forEach((item) => {
         if (item.response.name) {
-          files.push({
-            name: item.name,
-            path: item.response.name,
-          });
+          files.push(item.response);
         }
       });
 
       dispatch(
-        actions.doCreate({
+        actions.doCreateFiles({
           files,
           type: "file",
-          receiver: record.receiver.id,
+          receiver: record._id,
           conversationType: record.conversationType,
         }),
       );
@@ -189,7 +186,7 @@ function ChatContentFooter() {
           accept="text/plain, application/pdf, .csv, .docx, .xlsx"
           name="files"
           multiple={true}
-          fileList /* ={inputMessage.files} */
+          fileList={inputMessage.files}
           headers={{
             Authorization: `Bearer ${isAuthenticated()}`,
             "x-access-token": isAuthenticated(),

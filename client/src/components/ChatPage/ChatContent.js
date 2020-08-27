@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import selectors from "../../_selectors/message";
 import ImageUploadList from "./ImageUploadList";
 import constants from "../../constants/message";
-//import FileUploadList from "./FileUploadList";
+import FileUploadList from "./FileUploadList";
 import Conversation from "./Conversation";
 import ChatContentFooter from "./ChatContentFooter";
 import ChatContentHeader from "./ChatContentHeader";
@@ -80,12 +80,12 @@ function ChatContent() {
             onDelete={(fileList) => onInputImageListChange({ fileList })}
           />
         )}
-        {/* {inputMessage && inputMessage.files.length > 0 && (
+        {inputMessage && inputMessage.files.length > 0 && (
           <FileUploadList
             onDelete={(fileList) => onInputFileListChange({ fileList })}
             fileList={inputMessage.files}
           />
-        )} */}
+        )}
         <ChatContentFooter />
       </div>
     </Layout>

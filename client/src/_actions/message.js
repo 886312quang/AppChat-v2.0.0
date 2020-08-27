@@ -73,6 +73,26 @@ const actions = {
       });
     }
   },
+  doCreateFiles: (data) => async (dispatch) => {
+    try {
+      dispatch({ type: constants.CHAT_CREATE_START });
+
+      const response = await services.createNewMessageFiles(data);
+
+      if (response.data.message) {
+        dispatch({
+          type: constants.CHAT_CREATE_SUCCESS,
+          payload: response.data.message,
+        });
+        emitSentMessage(response.data.message);
+      }
+    } catch (error) {
+      Message.error("Send message fail!");
+      dispatch({
+        type: constants.CHAT_CREATE_ERROR,
+      });
+    }
+  },
 };
 
 export default actions;
