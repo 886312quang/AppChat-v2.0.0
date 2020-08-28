@@ -482,6 +482,34 @@ let readMore = (currentUserId, skipMessage, targetId, chatInGroup) => {
     }
   });
 };
+
+/**
+ * List Images
+ * @param {string} userId
+ * @param {string} receivedId
+ * @param {number} skip
+ * @param {number} limit
+ */
+let listImageOrFile = (userId, receiverId, skip, limit, type) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let listImageOrFile = await MessageModel.model.getListImageOrFile(
+        userId,
+        receiverId,
+        skip,
+        limit,
+        type,
+      );
+
+      listImageOrFile = _.reverse(listImageOrFile);
+
+      return resolve(listImageOrFile);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
 module.exports = {
   getAllConversationItems: getAllConversationItems,
   addNewTextEmoji: addNewTextEmoji,
@@ -489,4 +517,5 @@ module.exports = {
   addNewAttachment: addNewAttachment,
   readMoreAllChat: readMoreAllChat,
   readMore: readMore,
+  listImageOrFile,
 };

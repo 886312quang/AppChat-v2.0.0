@@ -12,6 +12,7 @@ const initialState = {
   findLoading: false,
   hasMoreConversation: false,
   getImageListLoading: false,
+  getFileListLoading: false,
   target: false,
   error: null,
   record: null,
@@ -29,6 +30,9 @@ const initialState = {
 const messageReducer = (state = initialState, { type, payload }) =>
   produce(state, (draft) => {
     let indexMessage;
+    let bufferToBase64 = (bufferFrom) => {
+      return Buffer.from(bufferFrom).toString("base64");
+    };
     switch (type) {
       case constants.SOCKET_SENT_MESSAGE:
         draft.messages.forEach((message, index) => {
@@ -99,6 +103,15 @@ const messageReducer = (state = initialState, { type, payload }) =>
             draft.messages[index].updatedAt = Date.now();
           }
         });
+        console.log(payload);
+        if (payload.messageType === "image") {
+          payload.file.forEach((i) => {
+            draft.imageList.push({
+              src: `data: ${i.contentType}; base64, ${bufferToBase64(i.data)}
+        `,
+            });
+          });
+        }
         draft.sending = false;
         draft.error = null;
         break;
@@ -195,6 +208,59 @@ const messageReducer = (state = initialState, { type, payload }) =>
       // Scroll_To_BOTTOM
       case constants.CHAT_SCROLL_TO_BOTTOM_TOGGLE:
         draft.scrollToBottom = !state.scrollToBottom;
+        break;
+      // List
+      case constants.CHAT_GET_IMAGE_LIST_START:
+        draft.getImageListLoading = true;
+        break;
+      case constants.CHAT_GET_IMAGE_LIST_SUCCESS:
+        draft.getImageListLoading = false;
+        let tempImages = [];
+        payload.images.forEach((image) => {
+          image.file.forEach((i) => {
+            tempImages.push({
+              src: `data: ${i.contentType}; base64, ${bufferToBase64(i.data)}
+        `,
+            });
+          });
+        });
+        if (payload.skip) {
+          // Nếu tồn tại skip => xem thêm
+          draft.imageList = draft.imageList.concat(tempImages);
+        } else {
+          draft.imageList = tempImages;
+        }
+
+        break;
+      case constants.CHAT_GET_IMAGE_LIST_ERROR:
+        draft.getImageListLoading = false;
+        break;
+      case constants.CHAT_GET_FILE_LIST_START:
+        draft.getFileListLoading = true;
+        break;
+      case constants.CHAT_GET_FILE_LIST_SUCCESS:
+        draft.getFileListLoading = false;
+        let tempFile = [];
+        payload.files.forEach((file) => {
+          file.file.forEach((i) => {
+            tempFile.push({
+              href: `data: ${i.contentType}; base64, ${bufferToBase64(i.data)}
+          `,
+              download: `${i.fileName}`,
+              name: `${i.fileName}`,
+            });
+          });
+        });
+        if (payload.skip) {
+          // Nếu tồn tại skip => xem thêm
+          draft.fileList = draft.fileList.concat(tempFile);
+        } else {
+          draft.fileList = tempFile;
+        }
+
+        break;
+      case constants.CHAT_GET_FILE_LIST_ERROR:
+        draft.getFileListLoading = false;
         break;
       default:
         break;

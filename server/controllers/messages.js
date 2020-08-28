@@ -236,6 +236,49 @@ let deleteListImages = async (req, res) => {
   }
 };
 
+let listImage = async (req, res) => {
+  try {
+    let receiverId = req.query.id;
+    let skip = +req.query.skip;
+    let limit = +req.query.limit;
+    let userId = req.user._id;
+    let type = "" + req.query.type;
+
+    let listImageOrFile = await message.listImageOrFile(
+      userId,
+      receiverId,
+      skip,
+      limit,
+      type,
+    );
+
+    return res.status(200).send(listImageOrFile);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+let listFile = async (req, res) => {
+  try {
+    let receiverId = req.query.id;
+    let skip = +req.query.skip;
+    let limit = +req.query.limit;
+    let userId = req.user._id;
+    let type = "" + req.query.type;
+
+    let listImageOrFile = await message.listImageOrFile(
+      userId,
+      receiverId,
+      skip,
+      limit,
+      type,
+    );
+
+    return res.status(200).send(listImageOrFile);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
 module.exports = {
   readMoreAllChat,
   creatNewMessage,
@@ -244,4 +287,6 @@ module.exports = {
   addNewImage,
   addNewFiles,
   deleteListImages,
+  listImage,
+  listFile,
 };

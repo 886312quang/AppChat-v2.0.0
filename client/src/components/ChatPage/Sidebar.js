@@ -214,7 +214,7 @@ function ChatSidebar() {
           ? "100vw"
           : isMobileDevice && !leftSidebarVisible
           ? "0"
-          : "300"
+          : "320"
       }
     >
       <ModalCreateGroupChat

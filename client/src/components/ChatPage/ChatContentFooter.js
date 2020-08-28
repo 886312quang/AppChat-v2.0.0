@@ -56,7 +56,6 @@ function ChatContentFooter() {
   };
 
   const onInputImageListChange = ({ fileList }) => {
-    console.log(fileList);
     dispatch({
       type: constants.INPUT_IMAGE_LIST_CHANGE,
       payload: [...fileList],

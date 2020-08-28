@@ -97,6 +97,50 @@ const actions = {
     const response = await services.deleteList(data);
     return response;
   },
+  listImage: (data) => async (dispatch) => {
+    try {
+      dispatch({
+        type: constants.CHAT_GET_IMAGE_LIST_START,
+      });
+
+      const response = await services.listImageFn(data);
+
+      dispatch({
+        type: constants.CHAT_GET_IMAGE_LIST_SUCCESS,
+        payload: {
+          images: response.data,
+          skip: data.skip,
+        },
+      });
+    } catch (error) {
+      Message.error("Get list Image fail!");
+      dispatch({
+        type: constants.CHAT_GET_IMAGE_LIST_ERROR,
+      });
+    }
+  },
+  listFile: (data) => async (dispatch) => {
+    try {
+      dispatch({
+        type: constants.CHAT_GET_FILE_LIST_START,
+      });
+
+      const response = await services.listFileFn(data);
+
+      dispatch({
+        type: constants.CHAT_GET_FILE_LIST_SUCCESS,
+        payload: {
+          files: response.data,
+          skip: data.skip,
+        },
+      });
+    } catch (error) {
+      Message.error("Get list File fail!");
+      dispatch({
+        type: constants.CHAT_GET_FILE_LIST_ERROR,
+      });
+    }
+  },
 };
 
 export default actions;

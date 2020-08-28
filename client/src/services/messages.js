@@ -23,6 +23,18 @@ const services = {
     const response = await api.post("/message/delete-list", info);
     return response;
   },
+  listImageFn: async ({ id, skip = 0, limit = 20, type }) => {
+    const response = await api.get(
+      `/message/list?id=${id}&skip=${skip}&limit=${limit}&type=${type}`,
+    );
+    return response;
+  },
+  listFileFn: async ({ id, skip = 0, limit = 20, type }) => {
+    const response = await api.get(
+      `/message/listFile?id=${id}&skip=${skip}&limit=${limit}&type=${type}`,
+    );
+    return response;
+  },
 };
 
 export default services;

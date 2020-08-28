@@ -28,7 +28,7 @@ function Conversation({ messages }) {
   let imagesList = [];
 
   const loadMoreConversation = () => {
-    //dispatch(actions.doFind(record.receiver.id, record.messages.length));
+    dispatch(actions.doFind(record.receiver.id, record.messages.length));
   };
 
   const getFullName = (record) => {
@@ -119,13 +119,13 @@ function Conversation({ messages }) {
                           className="photo"
                           onClick={() => {
                             setImageViewModelVisible(true);
-                            /*  setCurrentImageViewIndex(
-                          imagesList
-                            .map((e) => e.src)
-                            .indexOf(
-                              `${process.env.REACT_APP_STATIC_PHOTOS}/${image}`,
-                            ),
-                        ); */
+                            setCurrentImageViewIndex(
+                              imagesList
+                                .map((e) => e.src)
+                                .indexOf(
+                                  `${process.env.REACT_APP_STATIC_PHOTOS}/${image}`,
+                                ),
+                            );
                           }}
                         >
                           <img
