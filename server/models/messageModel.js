@@ -80,6 +80,25 @@ MessageSchema.statics = {
       .limit(limit)
       .exec();
   },
+  getListImageOrFile(senderId, receiverId, skip, limit, type) {
+    return this.find({
+      $and: [
+        {
+          $or: [
+            { $and: [{ senderId: senderId }, { receiverId: receiverId }] },
+            { $and: [{ receiverId: senderId }, { senderId: receiverId }] },
+          ],
+        },
+        {
+          messageType: type,
+        },
+      ],
+    })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+  },
 };
 
 const MESSAGE_CONVERSATION_TYPES = {

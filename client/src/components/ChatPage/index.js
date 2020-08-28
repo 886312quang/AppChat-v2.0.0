@@ -13,8 +13,6 @@ import { emitCheckStatus, onListUserOnline } from "../../sockets/checkStatus";
 import RightSideBar from "./RightSidebar";
 import { isAuthenticated } from "../Shared/Routes/permissionChecker";
 import { configSocket } from "../../sockets/rootSocket";
-import { getHistory } from "../../configs/configureStore";
-import { stringify } from "uuid";
 
 //import callActions from "../CallPage/actions";
 const Sidebar = lazy(() => import("./Sidebar"));

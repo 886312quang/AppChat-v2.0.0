@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Layout,
   Collapse,
@@ -24,6 +24,7 @@ import ModalUpdateChatGroup from "./ModalUpdateChatGroup"; */
 import layoutSelectors from "../../_selectors/layout";
 import layoutActions from "../../_actions/layout";
 import { ArrowLeft } from "react-feather";
+import InfiniteScroll from "react-infinite-scroller";
 
 const { Sider, Header } = Layout;
 
@@ -86,6 +87,7 @@ function RightSideBar() {
       );
     }
   };
+
   const userInfo = (
     <Header
       style={{
@@ -112,6 +114,9 @@ function RightSideBar() {
             : /* : `${record.receiver.firstname} ${record.receiver.lastname}` */
               null}
         </h2>
+        <div>
+          Icon
+        </div>
       </div>
     </Header>
   );
@@ -177,17 +182,18 @@ function RightSideBar() {
       return null;
     }
     return source.map((image, key) => (
-      <div
+      <img
         key={key}
         style={{
           backgroundImage: `url(${image.src})`,
         }}
+        src={`${image.src}`}
         className="photo"
         onClick={() => {
           setCurrentImageIndex(key);
           setImageModalShow(true);
         }}
-      ></div>
+      />
     ));
   };
 
@@ -198,10 +204,7 @@ function RightSideBar() {
     return source.map((file, index) => (
       <div className="file" key={index}>
         <Icon type="file-text" />
-        <a
-          target="_blank"
-          href={`${process.env.REACT_APP_STATIC_FILES}/${file.path}`}
-        >
+        <a target="_blank" href={`${file.href}`} download={`${file.download}`}>
           {file.name}
         </a>
       </div>
@@ -302,10 +305,15 @@ function RightSideBar() {
     );
   };
 
-  /*   useEffect(() => {
-    dispatch(actions.listImage({ id: record.receiver.id }));
-    dispatch(actions.listFile({ id: record.receiver.id }));
-  }, []); */
+  const handleInfiniteOnLoad = () => {
+    getMoreImage();
+    console.log("nhan")
+  };
+
+  useEffect(() => {
+    dispatch(actions.listImage({ id: record._id, type: "image" }));
+    dispatch(actions.listFile({ id: record._id, type: "file" }));
+  }, []);
 
   return (
     <Sider
@@ -336,6 +344,7 @@ function RightSideBar() {
           info={record.receiver}
         />
       )} */}
+
       <div
         style={{
           display: "flex",
@@ -375,7 +384,19 @@ function RightSideBar() {
         </div>
 
         {userInfo}
-        {renderContent()}
+        <InfiniteScroll
+          initialLoad={false}
+          pageStart={0}
+          loadMore={handleInfiniteOnLoad}
+          hasMore={images.length > 0 || files.length > 0}
+          useWindow={false}
+          isReverse={false}
+        >
+          {/* <div style={{ textAlign: "center" }}>
+            <Spin spinning={images.length > 0 || files.length > 0}></Spin>
+          </div> */}
+          {renderContent()}
+        </InfiniteScroll>
       </div>
     </Sider>
   );
