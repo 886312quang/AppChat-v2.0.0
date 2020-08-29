@@ -28,6 +28,26 @@ let readMoreAllChat = async (req, res) => {
   }
 };
 
+let readMore = async (req, res) => {
+  try {
+    //Get skip number from query params
+    let skipMessage = +req.query.skip;
+    let targetId = req.query.id;
+    let chatInGroup = req.query.chatInGroup === "true"; //tips string ->> boolean
+    // Read more Contact
+    let newMessage = await message.readMore(
+      req.user._id,
+      skipMessage,
+      targetId,
+      chatInGroup,
+    );
+
+    return res.status(200).send(newMessage);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
 let creatNewMessage = async (req, res) => {
   let errorArr = [];
   let validationErr = validationResult(req);
@@ -281,6 +301,7 @@ let listFile = async (req, res) => {
 
 module.exports = {
   readMoreAllChat,
+  readMore,
   creatNewMessage,
   addPhotos,
   addFiles,

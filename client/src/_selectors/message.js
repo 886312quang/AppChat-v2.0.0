@@ -78,6 +78,14 @@ const selectScrollToBottom = createSelector(
   (message) => message.scrollToBottom,
 );
 
+const selectSkipImages = createSelector(
+  [selectRaw],
+  (message) => message.skipImageList,
+);
+const selectSkipFile = createSelector(
+  [selectRaw],
+  (message) => message.skipFileList,
+);
 const selectClickTarget = createSelector(
   [selectRaw],
   (message) => message.target,
@@ -102,6 +110,8 @@ const selectors = {
   selectSoundPlayStatus,
   selectCurrentSound,
   selectClickTarget,
+  selectSkipFile,
+  selectSkipImages,
 };
 
 export default selectors;

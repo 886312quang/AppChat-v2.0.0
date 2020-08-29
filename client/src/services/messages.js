@@ -23,15 +23,21 @@ const services = {
     const response = await api.post("/message/delete-list", info);
     return response;
   },
-  listImageFn: async ({ id, skip = 0, limit = 20, type }) => {
+  listImageFn: async ({ id, skip = 0, limit = 9, type }) => {
     const response = await api.get(
       `/message/list?id=${id}&skip=${skip}&limit=${limit}&type=${type}`,
     );
     return response;
   },
-  listFileFn: async ({ id, skip = 0, limit = 20, type }) => {
+  listFileFn: async ({ id, skip = 0, limit = 9, type }) => {
     const response = await api.get(
       `/message/listFile?id=${id}&skip=${skip}&limit=${limit}&type=${type}`,
+    );
+    return response;
+  },
+  readMore: async ({ id, skip, limit }) => {
+    const response = await api.get(
+      `/message/read-more?id=${id}&skip=${skip}&limit=${limit}`,
     );
     return response;
   },

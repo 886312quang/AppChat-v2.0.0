@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 const Chat = styled.div`
   flex: 1;
-  // overflow-y: auto;
   overflow: auto;
   overflow-x: hidden;
   position: relative;
@@ -30,7 +29,6 @@ const Chat = styled.div`
   }
   .conversation-sent {
     justify-content: flex-end;
-    
   }
   .conversation-received {
     justify-content: flex-start;

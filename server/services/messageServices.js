@@ -473,6 +473,7 @@ let readMore = (currentUserId, skipMessage, targetId, chatInGroup) => {
       let getMessages = await MessageModel.model.readMoreMessagesInPersonal(
         currentUserId,
         targetId,
+        skipMessage,
         LIMIT_MESSAGES_TAKEN,
       );
       getMessages = _.reverse(getMessages);

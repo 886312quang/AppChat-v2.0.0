@@ -13,6 +13,7 @@ import { emitCheckStatus, onListUserOnline } from "../../sockets/checkStatus";
 import RightSideBar from "./RightSidebar";
 import { isAuthenticated } from "../Shared/Routes/permissionChecker";
 import { configSocket } from "../../sockets/rootSocket";
+import InfiniteScroll from "react-infinite-scroller";
 
 //import callActions from "../CallPage/actions";
 const Sidebar = lazy(() => import("./Sidebar"));
@@ -39,6 +40,10 @@ export default function ChatPage() {
 
   const windowOnResize = () => {
     dispatch(layoutActions.doWindowResize(window.innerWidth));
+  };
+
+  const handleInfiniteOnLoad = () => {
+    console.log("Nhan");
   };
 
   useEffect(() => {

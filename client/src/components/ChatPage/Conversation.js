@@ -28,7 +28,7 @@ function Conversation({ messages }) {
   let imagesList = [];
 
   const loadMoreConversation = () => {
-    dispatch(actions.doFind(record.receiver.id, record.messages.length));
+    dispatch(actions.readMore(record._id, record.messages.length));
   };
 
   const getFullName = (record) => {
@@ -38,6 +38,11 @@ function Conversation({ messages }) {
 
   let bufferToBase64 = (bufferFrom) => {
     return Buffer.from(bufferFrom).toString("base64");
+  };
+
+  const indexImage = (src) => {
+    let image = [{ src: src }];
+    return image;
   };
 
   const renderConversation = (messages) => {
@@ -120,11 +125,12 @@ function Conversation({ messages }) {
                           onClick={() => {
                             setImageViewModelVisible(true);
                             setCurrentImageViewIndex(
-                              imagesList
-                                .map((e) => e.src)
-                                .indexOf(
-                                  `${process.env.REACT_APP_STATIC_PHOTOS}/${image}`,
-                                ),
+                              indexImage(
+                                `data: ${
+                                  image.contentType
+                                }; base64, ${bufferToBase64(image.data)}
+                          `,
+                              ),
                             );
                           }}
                         >
@@ -205,11 +211,12 @@ function Conversation({ messages }) {
                           onClick={() => {
                             setImageViewModelVisible(true);
                             setCurrentImageViewIndex(
-                              imagesList
-                                .map((e) => e.src)
-                                .indexOf(
-                                  `${process.env.REACT_APP_STATIC_PHOTOS}/${image}`,
-                                ),
+                              indexImage(
+                                `data: ${
+                                  image.contentType
+                                }; base64, ${bufferToBase64(image.data)}
+                          `,
+                              ),
                             );
                           }}
                         >
@@ -276,16 +283,22 @@ function Conversation({ messages }) {
     </div>
   );
 
-  if (record && record.messages) {
+  if (record && record.messages && record.messages.length > 0) {
     let tempList = [];
+
     record.messages.forEach((message, index) => {
-      if (message.images && message.images.length > 0) {
-        tempList = tempList.concat(message.images);
+      if (message.messageType === "image") {
+        tempList.push(message);
       }
     });
-    tempList = tempList.reverse();
-    imagesList = tempList.map((image) => {
-      return { src: `${process.env.REACT_APP_STATIC_PHOTOS}/${image}` };
+
+    tempList.forEach((temp) => {
+      temp.file.forEach((i) => {
+        imagesList.push({
+          src: `data: ${i.contentType}; base64, ${bufferToBase64(i.data)}
+        `,
+        });
+      });
     });
   }
 
@@ -299,9 +312,8 @@ function Conversation({ messages }) {
         {imageViewModelVisible ? (
           <Modal onClose={() => setImageViewModelVisible(false)}>
             <Carousel
-              currentIndex={currentImageViewIndex}
               components={{ FooterCaption: () => null }}
-              views={imagesList}
+              views={currentImageViewIndex}
             />
           </Modal>
         ) : null}
@@ -311,7 +323,9 @@ function Conversation({ messages }) {
         initialLoad={false}
         pageStart={0}
         loadMore={handleInfiniteOnLoad}
-        hasMore={!findLoading && hasMoreConversation}
+        hasMore={
+          !findLoading && hasMoreConversation && record.messages.length >= 30
+        }
         useWindow={false}
         isReverse={true}
       >

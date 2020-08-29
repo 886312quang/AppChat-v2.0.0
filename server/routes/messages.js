@@ -31,5 +31,7 @@ router
   .post(AuthMiddleware.isAuth, messages.deleteListImages);
 router.route("/list").get(AuthMiddleware.isAuth, messages.listImage);
 router.route("/listFile").get(AuthMiddleware.isAuth, messages.listFile);
+// Read more
+router.route("/read-more").get(AuthMiddleware.isAuth, messages.readMore);
 
 module.exports = router;
