@@ -5,6 +5,7 @@ import Errors from "../components/Shared/error/errors";
 import Message from "../components/Shared/message";
 import { emitSentMessage } from "../sockets/chat";
 //import services from "../services/user";
+import layoutActions from "../_actions/layout";
 
 const actions = {
   doToggleScrollToBottom: () => ({
@@ -138,6 +139,29 @@ const actions = {
       Message.error("Get list File fail!");
       dispatch({
         type: constants.CHAT_GET_FILE_LIST_ERROR,
+      });
+    }
+  },
+  readMore: (id, skip = 0, limit = 30) => async (dispatch) => {
+    try {
+      if (!id) {
+        return;
+      }
+      dispatch({
+        type: constants.READ_MORE_START,
+      });
+
+      const response = await services.readMore({id, skip, limit});
+  
+      dispatch({
+        type: constants.READ_MORE_SUCCESS,
+        payload: { data: response.data, skip },
+      });
+      //dispatch(layoutActions.doHideLeftSidebar());
+    } catch (error) {
+      Message.error("Read more message fail!");
+      dispatch({
+        type: constants.READ_MORE_ERROR,
       });
     }
   },

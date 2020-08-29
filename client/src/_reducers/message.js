@@ -24,7 +24,9 @@ const initialState = {
   },
   typing: {},
   imageList: [],
+  skipImageList: 0,
   fileList: [],
+  skipFileList: 0,
 };
 
 const messageReducer = (state = initialState, { type, payload }) =>
@@ -103,12 +105,21 @@ const messageReducer = (state = initialState, { type, payload }) =>
             draft.messages[index].updatedAt = Date.now();
           }
         });
-        console.log(payload);
         if (payload.messageType === "image") {
           payload.file.forEach((i) => {
             draft.imageList.push({
               src: `data: ${i.contentType}; base64, ${bufferToBase64(i.data)}
         `,
+            });
+          });
+        }
+        if (payload.messageType === "file") {
+          payload.file.forEach((i) => {
+            draft.fileList.push({
+              href: `data: ${i.contentType}; base64, ${bufferToBase64(i.data)}
+              `,
+              download: `${i.fileName}`,
+              name: `${i.fileName}`,
             });
           });
         }
@@ -230,6 +241,7 @@ const messageReducer = (state = initialState, { type, payload }) =>
         } else {
           draft.imageList = tempImages;
         }
+        draft.skipImageList = state.skipImageList + payload.images.length;
 
         break;
       case constants.CHAT_GET_IMAGE_LIST_ERROR:
@@ -257,10 +269,40 @@ const messageReducer = (state = initialState, { type, payload }) =>
         } else {
           draft.fileList = tempFile;
         }
+        draft.skipFileList = state.skipFileList + payload.files.length;
 
         break;
       case constants.CHAT_GET_FILE_LIST_ERROR:
         draft.getFileListLoading = false;
+        break;
+      // Read more
+      case constants.READ_MORE_START:
+        draft.findLoading = true;
+        draft.error = null;
+        draft.typing = {};
+        draft.sending = false;
+        draft.hasMoreConversation = true;
+        break;
+      case constants.READ_MORE_SUCCESS:
+        draft.findLoading = false;
+        if (payload && payload.skip && payload.data) {
+          if (payload.data.length === 0) {
+            draft.hasMoreConversation = false;
+          } else {
+            draft.record.messages = payload.data.concat(state.record.messages);
+          }
+        } else {
+          if (payload && payload.data) {
+            draft.record = payload.data;
+          }
+        }
+        draft.error = null;
+        break;
+      case constants.READ_MORE_ERROR:
+        draft.findLoading = false;
+        draft.record = null;
+        draft.hasMoreConversation = false;
+        draft.error = payload;
         break;
       default:
         break;

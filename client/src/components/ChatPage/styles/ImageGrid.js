@@ -7,7 +7,7 @@ const ImageGrid = styled.div`
         line-height: 80px;
         background-color: "#d9d4d4";
         display: inline-block;
-        margin: 0px 3px;
+        margin: 2px 3px;
         border-radius: 10px;
         background-position: center center;
         background-repeat: no-repeat;

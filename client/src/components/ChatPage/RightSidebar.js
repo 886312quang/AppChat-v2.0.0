@@ -23,8 +23,10 @@ import { Link } from "react-router-dom";
 import ModalUpdateChatGroup from "./ModalUpdateChatGroup"; */
 import layoutSelectors from "../../_selectors/layout";
 import layoutActions from "../../_actions/layout";
+import authActions from "../../_actions/auth";
 import { ArrowLeft } from "react-feather";
 import InfiniteScroll from "react-infinite-scroller";
+import Logout from "react-feather/dist/icons/log-out";
 
 const { Sider, Header } = Layout;
 
@@ -58,7 +60,9 @@ function RightSideBar() {
   const getImageListLoading = useSelector(selectors.selectGetImageListLoading);
   const getFileListLoading = useSelector(selectors.selectGetFileListLoading);
   const images = useSelector(selectors.selectImageList);
+  const skipImages = useSelector(selectors.selectSkipImages);
   const files = useSelector(selectors.selectFileList);
+  const skipFiles = useSelector(selectors.selectSkipFile);
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
   const rightSidebarVisible = useSelector(
     layoutSelectors.selectRightSidebarVisible,
@@ -68,13 +72,15 @@ function RightSideBar() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [modalAddmemberVisible, setModalAddmemberVisible] = useState(false);
   const [modalUpdateChatGroup, setModalUpdateChatGroup] = useState(false);
+  const [LoadList, setLoadList] = useState(false);
 
   const getMoreImage = () => {
     if (images) {
       dispatch(
         actions.listImage({
-          id: record.receiver.id,
-          skip: images.length,
+          id: record._id,
+          type: "image",
+          skip: skipImages,
         }),
       );
     }
@@ -83,7 +89,7 @@ function RightSideBar() {
   const getMoreFile = () => {
     if (files) {
       dispatch(
-        actions.listFile({ id: record.receiver.id, skip: files.length }),
+        actions.listFile({ id: record._id, type: "file", skip: skipFiles }),
       );
     }
   };
@@ -114,9 +120,15 @@ function RightSideBar() {
             : /* : `${record.receiver.firstname} ${record.receiver.lastname}` */
               null}
         </h2>
-        <div>
-          Icon
-        </div>
+        <Button
+          style={{ border: "0" }}
+          shape="circle"
+          onClick={() => {
+            dispatch(authActions.doSignOut());
+          }}
+        >
+          <Logout size={20} strokeWidth={1} />
+        </Button>
       </div>
     </Header>
   );
@@ -307,7 +319,6 @@ function RightSideBar() {
 
   const handleInfiniteOnLoad = () => {
     getMoreImage();
-    console.log("nhan")
   };
 
   useEffect(() => {
@@ -384,19 +395,11 @@ function RightSideBar() {
         </div>
 
         {userInfo}
-        <InfiniteScroll
-          initialLoad={false}
-          pageStart={0}
-          loadMore={handleInfiniteOnLoad}
-          hasMore={images.length > 0 || files.length > 0}
-          useWindow={false}
-          isReverse={false}
-        >
-          {/* <div style={{ textAlign: "center" }}>
+
+        {/* <div style={{ textAlign: "center" }}>
             <Spin spinning={images.length > 0 || files.length > 0}></Spin>
           </div> */}
-          {renderContent()}
-        </InfiniteScroll>
+        {renderContent()}
       </div>
     </Sider>
   );

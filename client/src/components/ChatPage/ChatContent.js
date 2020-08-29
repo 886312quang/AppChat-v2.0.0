@@ -69,7 +69,7 @@ function ChatContent() {
       <ChatContentHeader />
       {record.messages && (
         <ChatStyled ref={scrollRef}>
-          <Conversation messages={record.messages} />
+          <Conversation messages={record.messages}/>
         </ChatStyled>
       )}
 
