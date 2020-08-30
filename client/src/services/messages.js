@@ -41,6 +41,10 @@ const services = {
     );
     return response;
   },
+  createGroup: async (data) => {
+    const response = await api.post(`group/add-new`, data);
+    return response;
+  },
 };
 
 export default services;

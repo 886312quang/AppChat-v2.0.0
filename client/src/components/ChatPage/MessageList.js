@@ -49,8 +49,8 @@ const MessageList = () => {
             renderItem={(item, index) => {
               if (!currentUser) return <span></span>;
               let user = "";
-              if (item.conversationType === "ChatGroup") {
-                user = item.receiver;
+              if (item.members && item.members.length > 1) {
+                user = item;
               } else {
                 /*  user =
                   item.sender._id === currentUser._id
@@ -61,6 +61,7 @@ const MessageList = () => {
               return (
                 <Link to={`/m/${user._id}`}>
                   <List.Item
+                    key={index}
                     style={{
                       backgroundColor: user._id === userId ? "#e6f7ff" : "#fff",
                       cursor: "pointer",
@@ -102,8 +103,8 @@ const MessageList = () => {
                               textOverflow: "ellipsis",
                             }}
                           >
-                            {user.conversationType === "ChatGroup"
-                              ? textAbstract(user.messages.receiver.name, 20)
+                            {user.members && user.members.length > 1
+                              ? textAbstract(user.name, 20)
                               : textAbstract(user.userName, 20)}
                           </span>
                           <small>
@@ -138,7 +139,7 @@ const MessageList = () => {
                               flex: 1,
                             }}
                           >
-                            {user.messages.length > 0 ? (
+                            {user.messages && user.messages.length > 0 ? (
                               user.messages[+(user.messages.length - 1)]
                                 .messageType === "text" ? (
                                 user.messages[+(user.messages.length - 1)]

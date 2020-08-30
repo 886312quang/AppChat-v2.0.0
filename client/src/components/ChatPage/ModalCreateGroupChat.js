@@ -18,7 +18,7 @@ function ModalCreateGroupChat({ visible, doToggle }) {
 
   const idNewMemberAdded = (userId) => {
     // Check new members
-    const memberExists = newMembers.find((item) => item.id === userId);
+    const memberExists = newMembers.find((item) => item._id === userId);
     return memberExists ? true : false;
   };
   const renderUsers = (users) => {
@@ -27,12 +27,12 @@ function ModalCreateGroupChat({ visible, doToggle }) {
         className="list-item list-item-hover"
         key={key}
         onClick={() => {
-          if (!idNewMemberAdded(user.id)) {
+          if (!idNewMemberAdded(user._id)) {
             setNewMembers([...newMembers, user]);
           } else {
             let tempNewMembers = newMembers;
             tempNewMembers = tempNewMembers.filter(
-              (item) => item.id !== user.id,
+              (item) => item._id !== user._id,
             );
             setNewMembers(tempNewMembers);
           }
@@ -43,7 +43,7 @@ function ModalCreateGroupChat({ visible, doToggle }) {
           {`${user.userName}`}
         </div>
         <div style={{ lineHeight: "40px", marginRight: "5px" }}>
-          {idNewMemberAdded(user.id) && (
+          {idNewMemberAdded(user._id) && (
             <Icon type="check" style={{ color: "#1890ff" }} />
           )}
         </div>
@@ -51,9 +51,12 @@ function ModalCreateGroupChat({ visible, doToggle }) {
     ));
   };
 
-  const onCreateGroup = () => {
+  const onCreateGroup = async () => {
     if (newMembers.length > 1) {
-      let membersListId = newMembers.map((item) => item.id);
+      let membersListId = [];
+      newMembers.forEach((m) => {
+        membersListId.push({ userId: m._id });
+      });
       dispatch(
         actions.doCreateGroup({
           name: groupName,
@@ -66,9 +69,9 @@ function ModalCreateGroupChat({ visible, doToggle }) {
     }
     doToggle();
   };
-  useEffect(() => {
+  /* useEffect(() => {
     dispatch(contactActions.getContacts());
-  }, []);
+  }, []); */
   if (!currentUser) return <span></span>;
   return (
     <div>

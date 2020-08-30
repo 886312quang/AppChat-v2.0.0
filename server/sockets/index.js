@@ -4,6 +4,7 @@ const {
   removeSocketIdFromArray,
 } = require("../helpers/socketHelper");
 const getCurrentUserInfo = require("../helpers/getCurrentUserInfo");
+const getChatGroupIds = require("../helpers/getChatGroupIds");
 const acceptRequestContactReceived = require("./contact/acceptRequestContactReceived");
 const addContact = require("./contact/addContact");
 const removeRequestContactReceived = require("./contact/removeRequestContactReceived");
@@ -13,6 +14,7 @@ const checkStatus = require("./status/checkStatus");
 const sentMessage = require("./chat/sentMessage");
 const typingOn = require("./chat/typingOn");
 const typingOff = require("./chat/typingOff");
+const createGroup = require("./chat/createGroup");
 
 let initSockets = (io) => {
   io.use(
@@ -25,10 +27,13 @@ let initSockets = (io) => {
   );
   //Reload will listen
   let clients = {};
+  let newGroupChatId = "";
+
   //Connection
   io.on("connection", async (socket) => {
     try {
       const user = await getCurrentUserInfo(socket.decoded_token.data._id);
+      let chatGroupIds = await getChatGroupIds(user._id);
       if (user) {
         clients = pushSocketIdToArry(
           clients,
@@ -36,6 +41,26 @@ let initSockets = (io) => {
           socket.id,
         );
       }
+      if (chatGroupIds) {
+        chatGroupIds.forEach((group) => {
+          clients = pushSocketIdToArry(clients, group._id, socket.id);
+        });
+      }
+
+      // New Group Chat
+      socket.on("create-new-group", (data) => {
+        clients = pushSocketIdToArry(clients, data._id, socket.id);
+        console.log(clients);
+        createGroup(io, data, clients, user);
+      });
+
+      socket.on("member-received-group-chat", (data) => {
+        newGroupChatId = data.groupChatId;
+        clients = pushSocketIdToArry(clients, data.groupChatId, socket.id);
+        console.log("received")
+        console.log(clients)
+      });
+
       console.log(clients);
       // Config Socket
 
@@ -64,6 +89,7 @@ let initSockets = (io) => {
       });
       socket.on("typing-on", (data) => typingOn(io, data, clients, user));
       socket.on("typing-off", (data) => typingOff(io, data, clients, user));
+      socket.on("create-group", (data) => createGroup(io, data, clients, user));
 
       //Disconnect socket
       socket.on("disconnect", () => {
@@ -72,6 +98,12 @@ let initSockets = (io) => {
           socket.decoded_token.data._id,
           socket,
         );
+        if (newGroupChatId) {
+          clients = removeSocketIdFromArray(clients, newGroupChatId, socket);
+        }
+        chatGroupIds.forEach((group) => {
+          clients = removeSocketIdFromArray(clients, group._id, socket);
+        });
         //Step 99 Emit to all another user when has user offline
         socket.broadcast.emit("server-send-when-new-user-offline", user._id);
         console.log("disconnect");

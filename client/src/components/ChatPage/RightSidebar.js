@@ -115,10 +115,10 @@ function RightSideBar() {
       <div style={{ margin: "10px 0px", textAlign: "center" }}>
         <h2>
           {record
-            ? /* ? record.conversationType === "ChatGroup" */
-              `${record.userName}`
-            : /* : `${record.receiver.firstname} ${record.receiver.lastname}` */
-              null}
+            ? record.members
+              ? `${record.name}`
+              : `${record.userName}`
+            : null}
         </h2>
         <Button
           style={{ border: "0" }}
