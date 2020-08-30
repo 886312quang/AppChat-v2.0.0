@@ -10,7 +10,11 @@ function Contact() {
   const dispatch = useDispatch();
 
   // Selector
-  const contacts = useSelector(selector.selectMessages);
+  const allConversation = useSelector(selector.selectMessages);
+
+  const contacts = allConversation.filter((item) => {
+    return item.conversationType !== "ChatGroup";
+  });
 
   const handleRemoveContactClick = (id) => {
     dispatch(actions.removeContact(id));

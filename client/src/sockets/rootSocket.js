@@ -13,7 +13,7 @@ import {
   onNewUserOffline,
 } from "./checkStatus";
 import { isAuthenticated } from "../components/Shared/Routes/permissionChecker";
-import { onSentMessage, onTypingOn, onTypingOff, onDisconnect } from "./chat";
+import { onSentMessage, onTypingOn, onTypingOff, onDisconnect, onCreateGroup } from "./chat";
 
 const endpoint = process.env.REACT_APP_SOCKET_ENDPOINT;
 
@@ -55,6 +55,9 @@ export const configSocket = () => {
     socket.on("response-sent-message", onSentMessage);
     socket.on("response-typing-on", onTypingOn);
     socket.on("response-typing-off", onTypingOff);
+
+    // Group Chat
+    socket.on("response-new-group-created", onCreateGroup);
 
     return socket;
   } else {

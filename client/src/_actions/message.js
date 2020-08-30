@@ -3,7 +3,7 @@ import getStore, { getHistory } from "../configs/configureStore";
 import services from "../services/messages";
 import Errors from "../components/Shared/error/errors";
 import Message from "../components/Shared/message";
-import { emitSentMessage } from "../sockets/chat";
+import { emitSentMessage, emitCreateGroup } from "../sockets/chat";
 //import services from "../services/user";
 import layoutActions from "../_actions/layout";
 
@@ -151,17 +151,43 @@ const actions = {
         type: constants.READ_MORE_START,
       });
 
-      const response = await services.readMore({id, skip, limit});
-  
+      const response = await services.readMore({ id, skip, limit });
+
       dispatch({
         type: constants.READ_MORE_SUCCESS,
         payload: { data: response.data, skip },
       });
-      //dispatch(layoutActions.doHideLeftSidebar());
+      dispatch(layoutActions.doHideLeftSidebar());
     } catch (error) {
       Message.error("Read more message fail!");
       dispatch({
         type: constants.READ_MORE_ERROR,
+      });
+    }
+  },
+  doCreateGroup: (data) => async (dispatch) => {
+    try {
+      dispatch({
+        type: constants.CHAT_CREATE_GROUP_START,
+      });
+
+      const response = await services.createGroup(data);
+      let messages = response.data;
+
+      console.log(messages);
+
+      emitCreateGroup(messages);
+
+      dispatch({
+        type: constants.CHAT_CREATE_GROUP_SUCCESS,
+        payload: messages,
+      });
+
+      getHistory().push(`/m/${response.data._id}`);
+    } catch (error) {
+      Message.error("Create group fail!");
+      dispatch({
+        type: constants.CHAT_CREATE_GROUP_ERROR,
       });
     }
   },

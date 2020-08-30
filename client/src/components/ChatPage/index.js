@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import selectors from "../../_selectors/message";
 import userSelectors from "../../_selectors/user";
 import constants from "../../constants/message";
+import * as constantLayout from "../../constants/layout";
 import { emitCheckStatus, onListUserOnline } from "../../sockets/checkStatus";
 import RightSideBar from "./RightSidebar";
 import { isAuthenticated } from "../Shared/Routes/permissionChecker";
@@ -72,6 +73,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (lengthObjUserId > 0 && target) {
+      dispatch({ type: constantLayout.LAYOUT_RIGHT_SIDEBAR_HIDE });
       dispatch({ type: constants.TARGET_CONVERSATION, payload: userId });
       dispatch({ type: constants.CHANGE_CONVERSATION, payload: userId });
     }

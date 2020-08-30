@@ -31,7 +31,6 @@ const initialState = {
 
 const messageReducer = (state = initialState, { type, payload }) =>
   produce(state, (draft) => {
-    let indexMessage;
     let bufferToBase64 = (bufferFrom) => {
       return Buffer.from(bufferFrom).toString("base64");
     };
@@ -303,6 +302,22 @@ const messageReducer = (state = initialState, { type, payload }) =>
         draft.record = null;
         draft.hasMoreConversation = false;
         draft.error = payload;
+        break;
+      // Group
+      case constants.CHAT_CREATE_GROUP_START:
+        draft.findLoading = false;
+        break;
+      case constants.CHAT_CREATE_GROUP_SUCCESS:
+        draft.findLoading = false;
+        draft.messages.unshift(payload);
+        break;
+      case constants.CHAT_CREATE_GROUP_ERROR:
+        draft.findLoading = false;
+        break;
+      case constants.ON_CREATE_GROUP_SUCCESS:
+        if (payload) {
+          draft.messages.unshift(payload);
+        }
         break;
       default:
         break;

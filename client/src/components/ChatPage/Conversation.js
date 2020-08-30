@@ -28,7 +28,8 @@ function Conversation({ messages }) {
   let imagesList = [];
 
   const loadMoreConversation = () => {
-    dispatch(actions.readMore(record._id, record.messages.length));
+    if (record && record.messages && record.messages.length >= 30)
+      dispatch(actions.readMore(record._id, record.messages.length));
   };
 
   const getFullName = (record) => {
@@ -323,9 +324,7 @@ function Conversation({ messages }) {
         initialLoad={false}
         pageStart={0}
         loadMore={handleInfiniteOnLoad}
-        hasMore={
-          !findLoading && hasMoreConversation && record.messages.length >= 30
-        }
+        hasMore={!findLoading && hasMoreConversation}
         useWindow={false}
         isReverse={true}
       >

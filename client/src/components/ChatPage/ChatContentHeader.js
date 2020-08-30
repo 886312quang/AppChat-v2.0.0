@@ -21,7 +21,6 @@ function ChatContentHeader() {
 
   // Selector
   const record = useSelector(selectors.selectRecord);
-  const currentUser = useSelector(userSelectors.selectCurrentUser);
   //const peerId = useSelector(callSelectors.selectPeerId);
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
 
@@ -70,12 +69,12 @@ function ChatContentHeader() {
         <span className="ml-3" style={{ lineHeight: "1" }}>
           <span style={{ display: "block" }}>
             {record
-              ? /*  ? record[0].conversationType === "ChatGroup" */
-                isMobileDevice
-                ? textAbstract(record.userName, 25)
+              ? record.members
+                ? isMobileDevice
+                  ? textAbstract(record.userName, 25)
+                  : record.name
                 : record.userName
-              : /*  : `${record[0].receiver.name}` */
-                ""}
+              : ""}
           </span>
         </span>
       </Row>

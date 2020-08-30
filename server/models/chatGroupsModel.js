@@ -11,6 +11,8 @@ let ChatGroupSchema = new Schema({
   createdAt: { type: Number, default: Date.now },
   updatedAt: { type: Number, default: Date.now },
   deletedAt: { type: Number, default: null },
+  messages: [],
+  conversationType: { type: String, default: "ChatGroup" },
 });
 
 ChatGroupSchema.statics = {
