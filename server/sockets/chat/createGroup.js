@@ -6,10 +6,10 @@ let createGroup = (io, data, clients, user) => {
   };
 
   data.members.forEach((member) => {
-    if (clients[member.userId] && member.userId != user._id) {
+    if (clients[member._id] && member._id != user._id) {
       emitNotifyToArray(
         clients,
-        member.userId,
+        member._id,
         io,
         "response-new-group-created",
         response,

@@ -19,8 +19,8 @@ import FileList from "./styles/FileList";
 import Carousel, { Modal, ModalGateway } from "react-images";
 import ListUser from "./styles/ListUser";
 import { Link } from "react-router-dom";
-/* import ModalAddMemberToGroup from "./ModalAddMemberToGroup";
-import ModalUpdateChatGroup from "./ModalUpdateChatGroup"; */
+import ModalAddMemberToGroup from "./ModalAddMemberToGroup";
+/* import ModalUpdateChatGroup from "./ModalUpdateChatGroup"; */
 import layoutSelectors from "../../_selectors/layout";
 import layoutActions from "../../_actions/layout";
 import authActions from "../../_actions/auth";
@@ -136,8 +136,8 @@ function RightSideBar() {
   const handleRemoveMember = (member) => {
     dispatch(
       actions.doRemoveMember({
-        userId: member.id,
-        groupId: record.receiver.id,
+        userId: member._id,
+        chatGroupId: record._id,
         currentUser: currentUser,
         member: member,
       }),
@@ -148,10 +148,9 @@ function RightSideBar() {
     return (
       <Menu>
         <Menu.Item key="0">
-          <Link to={`/m/${member.id}`}>Message</Link>
+          <Link to={`/m/${member.userId}`}>Message</Link>
         </Menu.Item>
-        {members.filter((item) => item.admin === true)[0].id ===
-          currentUser.id && (
+        {record && record.userId === currentUser._id && (
           <Menu.Item key="1" onClick={() => handleRemoveMember(member)}>
             Remove from group
           </Menu.Item>
@@ -165,24 +164,26 @@ function RightSideBar() {
       <div className="list-item" key={key}>
         <div>
           <AvatarCus className="avatar" record={member} />
-          {`${member.firstname} ${member.lastname}`}
-          {member.admin ? (
+          {`${member.userName}`}
+          {member._id === record.userId ? (
             <span style={{ color: "#959595" }}> (admin)</span>
           ) : (
             ""
           )}
         </div>
         <div style={{ lineHeight: "40px" }}>
-          {currentUser && currentUser.id === member.id ? (
-            ""
+          {currentUser && currentUser._id === record.userId && currentUser._id !== member._id ? (
+            <Button
+              style={{ border: "0" }}
+              shape="circle"
+              onClick={() => {
+                handleRemoveMember(member);
+              }}
+            >
+              <Icon type="delete" />
+            </Button>
           ) : (
-            <Dropdown overlay={() => menu(member, members)} trigger={["click"]}>
-              <Button
-                style={{ border: "0px" }}
-                shape="circle"
-                icon="ellipsis"
-              ></Button>
-            </Dropdown>
+            ""
           )}
         </div>
       </div>
@@ -226,10 +227,10 @@ function RightSideBar() {
   const leaveGroupChat = () => {
     dispatch(
       actions.doRemoveMember({
-        userId: currentUser.id,
-        groupId: record.receiver.id,
+        userId: currentUser._id,
+        chatGroupId: record._id,
         currentUser: currentUser,
-        receiver: record.receiver,
+        receiver: record._id,
       }),
     );
   };
@@ -244,7 +245,7 @@ function RightSideBar() {
         )}
         expandIconPosition="right"
       >
-        {record && record.receiver && record.receiver.members && (
+        {record && record.members && (
           <Collapse.Panel
             header={
               <span style={{ color: "rgba(126, 126, 126, 0.85)" }}>
@@ -263,15 +264,17 @@ function RightSideBar() {
             </Popconfirm>
           </Collapse.Panel>
         )}
-        {record && record.receiver && record.receiver.members && (
+        {record && record.members && (
           <Collapse.Panel
             header={
-              <span style={{ color: "rgba(126, 126, 126, 0.85)" }}>PEOPLE</span>
+              <span style={{ color: "rgba(126, 126, 126, 0.85)" }}>
+                Members
+              </span>
             }
             key="4"
           >
             <ListUser>
-              {renderPeople(record.receiver.members)}
+              {renderPeople(record.members)}
               <Button block onClick={() => setModalAddmemberVisible(true)}>
                 Add people
               </Button>
@@ -342,12 +345,12 @@ function RightSideBar() {
           </Modal>
         ) : null}
       </ModalGateway>
-      {/* {modalAddmemberVisible && (
+      {modalAddmemberVisible && (
         <ModalAddMemberToGroup
           visible={modalAddmemberVisible}
           doToggle={() => setModalAddmemberVisible(!modalAddmemberVisible)}
         />
-      )} */}
+      )}
       {/* {modalUpdateChatGroup && (
         <ModalUpdateChatGroup
           visible={modalUpdateChatGroup}

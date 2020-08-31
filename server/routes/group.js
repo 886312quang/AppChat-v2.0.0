@@ -6,5 +6,9 @@ const { contactValid } = require("../validation/index");
 const router = express.Router();
 
 router.route("/add-new").post(AuthMiddleware.isAuth, group.addNew);
+router
+  .route('/member')
+  .patch(AuthMiddleware.isAuth, group.addMember)
+  .delete(AuthMiddleware.isAuth, group.removeMember)
 
 module.exports = router;

@@ -174,8 +174,6 @@ const actions = {
       const response = await services.createGroup(data);
       let messages = response.data;
 
-      console.log(messages);
-
       emitCreateGroup(messages);
 
       dispatch({
@@ -189,6 +187,60 @@ const actions = {
       dispatch({
         type: constants.CHAT_CREATE_GROUP_ERROR,
       });
+    }
+  },
+  doRemoveMember: (data) => async (dispatch) => {
+    try {
+      await services.removeMember(data);
+      dispatch({
+        type: constants.CHAT_GROUP_REMOVE_MEMBER_SUCCESS,
+        payload: { id: data.userId, chatGroupId: data.chatGroupId },
+      });
+      if (data.currentUser.id !== data.userId) {
+        /*  dispatch(
+          actions.doCreate({
+            type: "notification",
+            message: `${
+              data.currentUser.firstname + " " + data.currentUser.lastname
+            } removed ${
+              data.member.firstname + " " + data.member.lastname
+            } from the group.`,
+            receiver: data.groupId,
+            conversationType: "ChatGroup",
+          }),
+        ); */
+      } else {
+        dispatch({
+          type: constants.CHAT_GROUP_LEAVE,
+          payload: data.groupId,
+        });
+        getHistory().push("/");
+        /*  dispatch({
+          type: layoutConstants.LAYOUT_LEFT_SIDEBAR_SHOW,
+        }); */
+      }
+    } catch (error) {
+      Message.error("Delete member fail!");
+    }
+  },
+  doAddNewMembers: (data) => async (dispatch) => {
+    try {
+      let usersId = data.members.map((item) => item._id);
+      await services.addMembers({ ...data, member: usersId });
+      dispatch({
+        type: constants.CHAT_GROUP_ADD_MEMBERS_SUCCESS,
+        payload: { member: data.members, chatGroupId: data.chatGroupId },
+      });
+      /* dispatch(
+        actions.doCreate({
+          type: "notification",
+          message: data.message,
+          receiver: data.groupId,
+          conversationType: "ChatGroup",
+        }),
+      ); */
+    } catch (error) {
+      Message.error("Add member fail!");
     }
   },
 };

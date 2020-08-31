@@ -45,6 +45,17 @@ const services = {
     const response = await api.post(`group/add-new`, data);
     return response;
   },
+  removeMember: async ({ chatGroupId, userId }) => {
+    const response = await api.delete(
+      `/group/member?group=${chatGroupId}&user=${userId}`,
+    );
+    return response;
+  },
+
+  addMembers: async (data) => {
+    const response = await api.patch(`/group/member`, data);
+    return response;
+  },
 };
 
 export default services;
