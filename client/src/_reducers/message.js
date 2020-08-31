@@ -341,6 +341,25 @@ const messageReducer = (state = initialState, { type, payload }) =>
           }
         });
         break;
+      case constants.CHAT_GROUP_KICK:
+        draft.messages = state.messages.filter(
+          (message) => message._id !== payload.chatGroupId,
+        );
+        if (draft.record && draft.record._id === payload.chatGroupId) {
+          draft.record = null;
+        }
+        break;
+      case constants.CHAT_GROUP_LEAVE:
+        if (draft.record && draft.record._id === payload.chatGroupId) {
+          draft.record = null;
+        }
+        draft.messages = state.messages.filter(
+          (message) => message._id !== payload.id,
+        );
+        break;
+      case constants.ON_ADDED_TO_GROUP:
+        draft.messages.unshift(payload);
+        break;
       default:
         break;
     }

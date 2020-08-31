@@ -140,6 +140,7 @@ function RightSideBar() {
         chatGroupId: record._id,
         currentUser: currentUser,
         member: member,
+        members: record.members,
       }),
     );
   };
@@ -172,7 +173,9 @@ function RightSideBar() {
           )}
         </div>
         <div style={{ lineHeight: "40px" }}>
-          {currentUser && currentUser._id === record.userId && currentUser._id !== member._id ? (
+          {currentUser &&
+          currentUser._id === record.userId &&
+          currentUser._id !== member._id ? (
             <Button
               style={{ border: "0" }}
               shape="circle"
@@ -230,7 +233,7 @@ function RightSideBar() {
         userId: currentUser._id,
         chatGroupId: record._id,
         currentUser: currentUser,
-        receiver: record._id,
+        members: record.members,
       }),
     );
   };

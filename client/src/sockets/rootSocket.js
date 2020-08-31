@@ -13,7 +13,16 @@ import {
   onNewUserOffline,
 } from "./checkStatus";
 import { isAuthenticated } from "../components/Shared/Routes/permissionChecker";
-import { onSentMessage, onTypingOn, onTypingOff, onDisconnect, onCreateGroup } from "./chat";
+import {
+  onSentMessage,
+  onTypingOn,
+  onTypingOff,
+  onDisconnect,
+  onCreateGroup,
+  onAddMemberToGroup,
+  onRemoveMemberToGroup,
+  onAddedToGroup,
+} from "./chat";
 
 const endpoint = process.env.REACT_APP_SOCKET_ENDPOINT;
 
@@ -58,6 +67,9 @@ export const configSocket = () => {
 
     // Group Chat
     socket.on("response-new-group-created", onCreateGroup);
+    socket.on("response-add-member-to-group", onAddMemberToGroup);
+    socket.on("response-remove-member-in-group", onRemoveMemberToGroup);
+    socket.on("response-added-to-group", onAddedToGroup);
 
     return socket;
   } else {
