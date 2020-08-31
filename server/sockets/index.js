@@ -15,6 +15,8 @@ const sentMessage = require("./chat/sentMessage");
 const typingOn = require("./chat/typingOn");
 const typingOff = require("./chat/typingOff");
 const createGroup = require("./chat/createGroup");
+const addMemberToGroup = require("./chat/addMemberToGroup");
+const removeMemberInGroup = require("./chat/removeMemberInGroup");
 
 let initSockets = (io) => {
   io.use(
@@ -57,8 +59,6 @@ let initSockets = (io) => {
       socket.on("member-received-group-chat", (data) => {
         newGroupChatId = data.groupChatId;
         clients = pushSocketIdToArry(clients, data.groupChatId, socket.id);
-        console.log("received")
-        console.log(clients)
       });
 
       console.log(clients);
@@ -89,7 +89,15 @@ let initSockets = (io) => {
       });
       socket.on("typing-on", (data) => typingOn(io, data, clients, user));
       socket.on("typing-off", (data) => typingOff(io, data, clients, user));
+
+      // Group
       socket.on("create-group", (data) => createGroup(io, data, clients, user));
+      socket.on("add-member-to-group", (data) =>
+        addMemberToGroup(io, data, clients, user),
+      );
+      socket.on("remove-member-in-group", (data) =>
+        removeMemberInGroup(io, data, clients, user),
+      );
 
       //Disconnect socket
       socket.on("disconnect", () => {

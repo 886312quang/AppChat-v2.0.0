@@ -3,7 +3,12 @@ import getStore, { getHistory } from "../configs/configureStore";
 import services from "../services/messages";
 import Errors from "../components/Shared/error/errors";
 import Message from "../components/Shared/message";
-import { emitSentMessage, emitCreateGroup } from "../sockets/chat";
+import {
+  emitSentMessage,
+  emitCreateGroup,
+  emitAddMemberToGroup,
+  emitRemoveMemberInGroup,
+} from "../sockets/chat";
 //import services from "../services/user";
 import layoutActions from "../_actions/layout";
 
@@ -196,6 +201,20 @@ const actions = {
         type: constants.CHAT_GROUP_REMOVE_MEMBER_SUCCESS,
         payload: { id: data.userId, chatGroupId: data.chatGroupId },
       });
+      if (data.userId === data.currentUser._id) {
+        getHistory().push("/");
+        dispatch({
+          type: constants.CHAT_GROUP_LEAVE,
+          payload: {id: data.userId, chatGroupId: data.chatGroupId},
+        });
+      }
+      emitRemoveMemberInGroup({
+        id: data.userId,
+        member: data.member,
+        chatGroupId: data.chatGroupId,
+        members: data.members,
+      });
+
       if (data.currentUser.id !== data.userId) {
         /*  dispatch(
           actions.doCreate({
@@ -230,6 +249,11 @@ const actions = {
       dispatch({
         type: constants.CHAT_GROUP_ADD_MEMBERS_SUCCESS,
         payload: { member: data.members, chatGroupId: data.chatGroupId },
+      });
+      emitAddMemberToGroup({
+        member: data.members,
+        chatGroupId: data.chatGroupId,
+        messages: data.membersSocket,
       });
       /* dispatch(
         actions.doCreate({

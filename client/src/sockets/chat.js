@@ -1,7 +1,50 @@
 import getSocket from "./rootSocket";
 import constants from "../constants/message";
-import getStore from "../configs/configureStore";
+import getStore, { getHistory } from "../configs/configureStore";
+import { toast } from "react-toastify";
 
+export const onAddedToGroup = (payload) => {
+  console.log(payload);
+  getStore().dispatch({ type: constants.ON_ADDED_TO_GROUP, payload });
+};
+
+export const emitRemoveMemberInGroup = (payload) => {
+  getSocket().emit("remove-member-in-group", payload);
+};
+
+export const onRemoveMemberToGroup = (payload) => {
+  if (!payload.deleted) {
+    getStore().dispatch({
+      type: constants.CHAT_GROUP_REMOVE_MEMBER_SUCCESS,
+      payload,
+    });
+  } else {
+    toast.warn("Bạn đã bị kích khỏi nhóm chat!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    getStore().dispatch({
+      type: constants.CHAT_GROUP_KICK,
+      payload,
+    });
+    getHistory().push("/");
+  }
+};
+
+export const emitAddMemberToGroup = (payload) => {
+  getSocket().emit("add-member-to-group", payload);
+};
+export const onAddMemberToGroup = (payload) => {
+  getStore().dispatch({
+    type: constants.CHAT_GROUP_ADD_MEMBERS_SUCCESS,
+    payload,
+  });
+};
 export const emitCreateGroup = (payload) => {
   getSocket().emit("create-new-group", payload);
 };
