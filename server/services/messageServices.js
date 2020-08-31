@@ -43,7 +43,6 @@ let getAllConversationItems = (currentUserId) => {
         }
       });
       let userConversations = await Promise.all(userConversationsPromise);
-
       let groupConversations = await ChatGroupModel.getChatGroups(
         currentUserId,
         LIMIT_CONVERSATIONS_TAKEN,

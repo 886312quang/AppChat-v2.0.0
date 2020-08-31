@@ -7,7 +7,15 @@ let ChatGroupSchema = new Schema({
   userAmount: { type: Number, min: 3, max: 999 },
   messageAmount: { type: Number, default: 0 },
   userId: String,
-  members: [{ userId: String }],
+  members: [
+    {
+      _id: String,
+      phone: String,
+      address: String,
+      avatar: String,
+      userName: String,
+    },
+  ],
   createdAt: { type: Number, default: Date.now },
   updatedAt: { type: Number, default: Date.now },
   deletedAt: { type: Number, default: null },
@@ -27,7 +35,7 @@ ChatGroupSchema.statics = {
    */
   getChatGroups(userId, limit) {
     //$elemMatch truy van mang trong mongoesDB
-    return this.find({ members: { $elemMatch: { userId: userId } } })
+    return this.find({ members: { $elemMatch: { _id: userId } } })
       .sort({ updatedAt: -1 }) // sap xeo tu cao xuong thap cao la thang thoi gian gan nhat
       .limit(limit)
       .exec();
@@ -50,13 +58,13 @@ ChatGroupSchema.statics = {
 
   getChatGroupIdsByUser(userId) {
     return this.find(
-      { members: { $elemMatch: { userId: userId } } },
+      { members: { $elemMatch: { _id: userId } } },
       { _id: 1 },
     ).exec();
   },
   readMoreChatGroup(userId, skip, limit) {
     //$elemMatch truy van mang trong mongoesDB
-    return this.find({ members: { $elemMatch: { userId: userId } } })
+    return this.find({ members: { $elemMatch: { _id: userId } } })
       .sort({ updatedAt: -1 }) // sap xeo tu cao xuong thap cao la thang thoi gian gan nhat
       .skip(skip)
       .limit(limit)

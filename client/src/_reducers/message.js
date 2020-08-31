@@ -319,6 +319,28 @@ const messageReducer = (state = initialState, { type, payload }) =>
           draft.messages.unshift(payload);
         }
         break;
+      case constants.CHAT_GROUP_REMOVE_MEMBER_SUCCESS:
+        draft.record.members = draft.record.members.filter(
+          (item) => item._id !== payload.id,
+        );
+        state.messages.forEach((message, index) => {
+          if (message._id === payload.chatGroupId) {
+            draft.messages[index].members = draft.messages[
+              index
+            ].members.filter((item) => item._id !== payload.id);
+          }
+        });
+        break;
+      case constants.CHAT_GROUP_ADD_MEMBERS_SUCCESS:
+        draft.record.members = draft.record.members.concat(payload.member);
+        state.messages.forEach((message, index) => {
+          if (message._id === payload.chatGroupId) {
+            draft.messages[index].members = payload.member.concat(
+              state.messages[index].members,
+            );
+          }
+        });
+        break;
       default:
         break;
     }
