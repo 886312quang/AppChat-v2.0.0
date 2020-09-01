@@ -37,6 +37,9 @@ function ChatContentFooter() {
   // Layout
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
 
+  const isChatGroup = record && record.members ? true : false;
+  const members = record&& record.members ? record.members : null;
+
   const handleTypingOff = () => {
     emitTypingOff({
       info: currentUser,
@@ -82,7 +85,8 @@ function ChatContentFooter() {
           message: inputMessage.text,
           receiverId: record._id,
           conversationType: record.conversationType,
-          isChatGroup: null,
+          isChatGroup: isChatGroup,
+          members: members,
         }),
       );
       onInputMessageChange("");
@@ -111,7 +115,8 @@ function ChatContentFooter() {
           type: "image",
           receiver: record._id,
           conversationType: record.conversationType,
-          isChatGroup: null,
+          isChatGroup: isChatGroup,
+          members: members,
         }),
       );
       onInputImageListChange({ fileList: [] });
@@ -140,6 +145,8 @@ function ChatContentFooter() {
           type: "file",
           receiver: record._id,
           conversationType: record.conversationType,
+          isChatGroup,
+          members,
         }),
       );
       onInputFileListChange({ fileList: [] });

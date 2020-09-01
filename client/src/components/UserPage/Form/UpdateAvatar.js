@@ -14,7 +14,9 @@ const UpdateAvatar = ({
 
   const dispatch = useDispatch();
 
+
   useEffect(() => {
+    console.log(avatar)
     setImageUrl(avatar);
     return () => {};
   }, [avatar]);
@@ -52,7 +54,7 @@ const UpdateAvatar = ({
       });
     }
    
-    dispatch({ type: constants.USER_GET_CURRENT_SUCCESS });
+    //dispatch({ type: constants.USER_GET_CURRENT_SUCCESS });
   };
 
   const uploadButton = (

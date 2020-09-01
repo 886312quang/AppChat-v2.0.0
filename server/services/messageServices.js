@@ -112,33 +112,45 @@ let getAllConversationItems = (currentUserId) => {
  * @param {string} messageVal val
  * @param {boolean} isChatGroup check group
  */
-let addNewTextEmoji = (sender, receivedId, messageVal, isChatGroup) => {
+let addNewTextEmoji = (sender, receivedId, messageVal, isChatGroup, type) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (isChatGroup) {
         let getChatGroupReceiver = await ChatGroupModel.getChatGroupById(
           receivedId,
         );
+
         if (!getChatGroupReceiver) {
           reject(transErrors.conversation_not_found);
         }
+        let conversationType;
+        if (type === "notification") {
+          conversationType = MessageModel.conversationType.NOTIFICATION;
+        } else {
+          conversationType = MessageModel.conversationType.GROUP;
+        }
+
+        console.log(conversationType)
         let receiver = {
           id: getChatGroupReceiver._id,
           name: getChatGroupReceiver.name,
-          avatar: app.general_avatar_group_chat,
+          avatar: getChatGroupReceiver.avatar,
         };
 
         let newMessageItem = {
           senderId: sender.id,
           receiverId: receiver.id,
-          conversationType: MessageModel.conversationType.GROUP,
+          conversationType: conversationType,
           messageType: MessageModel.messageType.TEXT,
           sender: sender,
           receiver: receiver,
           text: messageVal,
           createdAt: Date.now(),
         };
+
         let newMessage = await MessageModel.model.createNew(newMessageItem);
+
+        console.log(newMessage);
         // update group chat
         await ChatGroupModel.updateWhenAddNewMessage(
           getChatGroupReceiver._id,
@@ -195,12 +207,26 @@ let addNewImage = (sender, receivedId, messageVal, isChatGroup) => {
         let receiver = {
           id: getChatGroupReceiver._id,
           name: getChatGroupReceiver.name,
-          avatar: app.general_avatar_group_chat,
+          avatar: getChatGroupReceiver.avatar,
         };
 
-        let imageBuffer = await fsExtra.readFile(messageVal.path);
+        /* let imageBuffer = await fsExtra.readFile(messageVal.path);
         let imageContentType = messageVal.mimetype;
-        let imageName = messageVal.originalname;
+        let imageName = messageVal.originalname; */
+        //item message
+        const getNewMessage = async (item) => {
+          let messages = {
+            data: await fsExtra.readFile(item.pathAdd),
+            contentType: "images",
+            fileName: item.name,
+          };
+          return messages;
+        };
+
+        let fileCreatePromise = messageVal.map(getNewMessage);
+
+        let fileCreate = await Promise.all(fileCreatePromise);
+        console.log(fileCreate);
 
         let newMessageItem = {
           senderId: sender.id,
@@ -209,11 +235,7 @@ let addNewImage = (sender, receivedId, messageVal, isChatGroup) => {
           messageType: MessageModel.messageType.IMAGE,
           sender: sender,
           receiver: receiver,
-          file: {
-            data: imageBuffer,
-            contentType: imageContentType,
-            fileName: imageName,
-          },
+          file: fileCreate,
           createdAt: Date.now(),
         };
         let newMessage = await MessageModel.model.createNew(newMessageItem);
@@ -287,12 +309,22 @@ let addNewAttachment = (sender, receivedId, messageVal, isChatGroup) => {
         let receiver = {
           id: getChatGroupReceiver._id,
           name: getChatGroupReceiver.name,
-          avatar: app.general_avatar_group_chat,
+          avatar: getChatGroupReceiver.avatar,
         };
 
-        let attachmentBuffer = await fsExtra.readFile(messageVal.path);
-        let attachmentContentType = messageVal.mimetype;
-        let attachmentName = messageVal.originalname;
+        //item files
+        const getNewMessage = async (item) => {
+          let messages = {
+            data: await fsExtra.readFile(item.pathAdd),
+            contentType: "file",
+            fileName: item.name,
+          };
+          return messages;
+        };
+
+        let fileCreatePromise = messageVal.map(getNewMessage);
+
+        let fileCreate = await Promise.all(fileCreatePromise);
 
         let newMessageItem = {
           senderId: sender.id,
@@ -301,11 +333,7 @@ let addNewAttachment = (sender, receivedId, messageVal, isChatGroup) => {
           messageType: MessageModel.messageType.FILE,
           sender: sender,
           receiver: receiver,
-          file: {
-            data: attachmentBuffer,
-            contentType: attachmentContentType,
-            fileName: attachmentName,
-          },
+          file: fileCreate,
           createdAt: Date.now(),
         };
         let newMessage = await MessageModel.model.createNew(newMessageItem);
@@ -323,7 +351,7 @@ let addNewAttachment = (sender, receivedId, messageVal, isChatGroup) => {
           name: getUserReceiver.userName,
           avatar: getUserReceiver.avatar,
         };
-        //item message
+        //item files
         const getNewMessage = async (item) => {
           let messages = {
             data: await fsExtra.readFile(item.pathAdd),

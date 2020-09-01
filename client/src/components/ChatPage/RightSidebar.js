@@ -20,12 +20,11 @@ import Carousel, { Modal, ModalGateway } from "react-images";
 import ListUser from "./styles/ListUser";
 import { Link } from "react-router-dom";
 import ModalAddMemberToGroup from "./ModalAddMemberToGroup";
-/* import ModalUpdateChatGroup from "./ModalUpdateChatGroup"; */
+import ModalUpdateChatGroup from "./ModalUpdateChatGroup";
 import layoutSelectors from "../../_selectors/layout";
 import layoutActions from "../../_actions/layout";
 import authActions from "../../_actions/auth";
 import { ArrowLeft } from "react-feather";
-import InfiniteScroll from "react-infinite-scroller";
 import Logout from "react-feather/dist/icons/log-out";
 
 const { Sider, Header } = Layout;
@@ -354,13 +353,13 @@ function RightSideBar() {
           doToggle={() => setModalAddmemberVisible(!modalAddmemberVisible)}
         />
       )}
-      {/* {modalUpdateChatGroup && (
+      {modalUpdateChatGroup && (
         <ModalUpdateChatGroup
           visible={modalUpdateChatGroup}
           doToggle={() => setModalUpdateChatGroup(!modalUpdateChatGroup)}
-          info={record.receiver}
+          info={record}
         />
-      )} */}
+      )}
 
       <div
         style={{

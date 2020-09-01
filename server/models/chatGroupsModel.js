@@ -7,6 +7,7 @@ let ChatGroupSchema = new Schema({
   userAmount: { type: Number, min: 3, max: 999 },
   messageAmount: { type: Number, default: 0 },
   userId: String,
+  avatar: { type: String, default: "avatar-group.jpg" },
   members: [
     {
       _id: String,

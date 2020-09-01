@@ -2,6 +2,7 @@ import constants from "../constants/message";
 import * as constantsContact from "../constants/contact";
 import produce from "immer";
 import playBell from "../components/Shared/sound/bell";
+import message from "../constants/message";
 
 const initialState = {
   initLoading: true,
@@ -36,29 +37,53 @@ const messageReducer = (state = initialState, { type, payload }) =>
     };
     switch (type) {
       case constants.SOCKET_SENT_MESSAGE:
-        draft.messages.forEach((message, index) => {
-          if (
-            message._id === payload.senderId ||
-            message._id === payload.receiverId
-          ) {
-            draft.messages[index].messages.push(payload);
-            draft.messages[index].updatedAt = Date.now();
+        if (payload.conversationType === "personal") {
+          draft.messages.forEach((message, index) => {
             if (
-              (draft.record && draft.record._id !== payload.senderId) ||
-              !draft.record
+              message._id === payload.senderId ||
+              message._id === payload.receiverId
             ) {
-              message.nSeen = true;
+              draft.messages[index].messages.push(payload);
+              draft.messages[index].updatedAt = Date.now();
+              if (
+                (draft.record && draft.record._id !== payload.senderId) ||
+                !draft.record
+              ) {
+                message.nSeen = true;
+              }
             }
+          });
+          if (draft.record && draft.record._id === payload.senderId) {
+            draft.record.messages.push(payload);
+            draft.scrollToBottom = true;
           }
-        });
-        if (draft.record && draft.record._id === payload.senderId) {
-          draft.record.messages.push(payload);
-          draft.scrollToBottom = true;
-        }
-        if (draft.record && draft.record._id === payload.senderId) {
-          playBell("sent");
-        } else {
-          playBell("new-message");
+          if (draft.record && draft.record._id === payload.senderId) {
+            playBell("sent");
+          } else {
+            playBell("new-message");
+          }
+        } else if (payload.conversationType === "group" || payload.conversationType === "notification") {
+          draft.messages.forEach((message, index) => {
+            if (message._id === payload.receiverId) {
+              draft.messages[index].messages.push(payload);
+              draft.messages[index].updatedAt = Date.now();
+              if (
+                (draft.record && draft.record._id !== payload.receiverId) ||
+                !draft.record
+              ) {
+                message.nSeen = true;
+              }
+            }
+          });
+          if (draft.record && draft.record._id === payload.receiverId) {
+            draft.record.messages.push(payload);
+            draft.scrollToBottom = true;
+          }
+          if (draft.record && draft.record._id === payload.receiverId) {
+            playBell("sent");
+          } else {
+            playBell("new-message");
+          }
         }
         break;
       case constants.SOCKET_TYPING_ON:
@@ -359,6 +384,25 @@ const messageReducer = (state = initialState, { type, payload }) =>
         break;
       case constants.ON_ADDED_TO_GROUP:
         draft.messages.unshift(payload);
+        break;
+      case constants.CHAT_GROUP_CHANGE_AVATAR:
+        console.log(payload);
+        draft.record.avatar = payload.avatar;
+        state.messages.forEach((item, index) => {
+          if (item._id === payload.chatGroupId) {
+            draft.messages[index].avatar = payload.avatar;
+            return;
+          }
+        });
+        break;
+      case constants.CHAT_GROUP_UPDATE_SUCCESS:
+        draft.updateChatGroupLoading = false;
+        draft.record.name = payload.name;
+        state.messages.forEach((item, index) => {
+          if (item._id === payload.id) {
+            draft.messages[index].name = payload.name;
+          }
+        });
         break;
       default:
         break;
