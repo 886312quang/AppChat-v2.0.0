@@ -2,6 +2,11 @@ const { group } = require("../services/index");
 const { validationResult } = require("express-validator/check");
 const GroupModel = require("./../models/chatGroupsModel");
 const UserModel = require("./../models/userModel");
+const multer = require("multer");
+const app = require("../config/app");
+const fsExtra = require("fs-extra");
+const { v4: uuidv4 } = require("uuid");
+const { transSuccess, transErrors } = require("../../lang/vi");
 
 let addNew = async (req, res) => {
   let errorArr = [];
@@ -95,8 +100,80 @@ let addMember = async (req, res, next) => {
   }
 };
 
+// Update Avatar
+let storageAvatar = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, app.avatar_directory);
+  },
+  filename: (req, file, callback) => {
+    let math = app.avatar_type;
+    if (math.indexOf(file.mimetype) === -1) {
+      return callback(transErrors.avatar_type_errors);
+    }
+    let avatarName = `${Date.now()}-${uuidv4()}-${file.originalname}`;
+    callback(null, avatarName);
+  },
+});
+
+let avatarUploadFile = multer({
+  storage: storageAvatar,
+  limits: { fileSize: app.avatar_limit_size },
+}).single("avatar");
+
+let updateAvatar = (req, res) => {
+  avatarUploadFile(req, res, async (error) => {
+    if (!req.file) {
+      return res.status(500).send(error);
+    }
+    if (error) {
+      console.log(error);
+      if (error.message) {
+        return res.status(500).send(transErrors.avatar_size_errors);
+      }
+      return res.status(500).send(error);
+    }
+    try {
+      let chatGroupUpdate = await GroupModel.findOneAndUpdate(
+        { _id: req.params.chatGroupId },
+        { avatar: req.file.filename },
+      );
+
+      // Remove old
+      if (chatGroupUpdate.avatar !== "avatar-group.jpg") {
+        await fsExtra.remove(
+          `${app.avatar_directory}/${chatGroupUpdate.avatar}`,
+        );
+      }
+
+      let result = {
+        message: transSuccess.updatedUserInfo,
+        imageSrc: `${req.file.filename}`,
+      };
+
+      return res.send(result);
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  });
+};
+
+let updateInfo = async (req, res) => {
+  try {
+    await GroupModel.findOneAndUpdate(
+      { _id: req.body.id },
+      { name: req.body.name },
+    );
+
+    return res.status(200).send({ message: transSuccess.updatedUserInfo });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
 module.exports = {
   addNew: addNew,
   addMember,
   removeMember,
+  updateAvatar,
+  updateInfo,
 };

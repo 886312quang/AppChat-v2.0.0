@@ -104,6 +104,7 @@ MessageSchema.statics = {
 const MESSAGE_CONVERSATION_TYPES = {
   PERSONAL: "personal",
   GROUP: "group",
+  NOTIFICATION: "notification",
 };
 
 const MESSAGE_TYPES = {

@@ -33,7 +33,8 @@ function Conversation({ messages }) {
   };
 
   const getFullName = (record) => {
-    if (record && record.userName) return record.userName;
+    if ((record && record.userName) || record.name)
+      return record.userName || record.name;
     return "";
   };
 
@@ -52,7 +53,7 @@ function Conversation({ messages }) {
       if (message.conversationType === "notification") {
         return (
           <div key={index} className="notification-message">
-            <span>{message}</span>
+            <span>{message.text}</span>
           </div>
         );
       }
@@ -68,14 +69,14 @@ function Conversation({ messages }) {
             {currentUser && message.senderId !== currentUser._id && record && (
               <Tooltip
                 title={
-                  message.conversationType === "ChatGroup"
+                  message.conversationType === "group"
                     ? getFullName(message.sender)
                     : getFullName(record)
                 }
               >
                 <AvatarCus
                   record={
-                    message.conversationType === "ChatGroup"
+                    message.conversationType === "group"
                       ? message.sender
                       : record
                   }

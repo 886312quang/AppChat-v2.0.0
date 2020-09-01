@@ -69,12 +69,14 @@ let creatNewMessage = async (req, res) => {
     let receiveId = req.body.receiverId;
     let messageVal = req.body.message;
     let isChatGroup = req.body.isChatGroup;
+    let type = req.body.type;
 
     let newMessage = await message.addNewTextEmoji(
       sender,
       receiveId,
       messageVal,
       isChatGroup,
+      type
     );
     return res.status(200).send({ message: newMessage });
   } catch (error) {

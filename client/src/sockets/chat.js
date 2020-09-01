@@ -63,6 +63,7 @@ export const emitSentMessage = (payload) => {
 };
 
 export const onSentMessage = (payload) => {
+  console.log(payload)
   getStore().dispatch({ type: constants.SOCKET_SENT_MESSAGE, payload });
 };
 

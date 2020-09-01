@@ -56,6 +56,10 @@ const services = {
     const response = await api.patch(`/group/member`, data);
     return response;
   },
+  updateChatGroup: async (info) => {
+    const response = await api.put(`/group`, info);
+    return response
+  },
 };
 
 export default services;

@@ -38,6 +38,8 @@ function ModalAddMemberToGroup({ visible, doToggle }) {
         chatGroupId: record._id,
         members: newMembers,
         membersSocket: record,
+        currentUser: currentUser,
+        memberMessage: record.members,
         /* message: `${
                     currentUser.firstname + " " + currentUser.lastname
                 } added ${notifMessage} to the group.` */

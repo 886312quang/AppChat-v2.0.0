@@ -1,4 +1,5 @@
 import constants from "../constants/message";
+import * as constantLayout from "../constants/layout";
 import getStore, { getHistory } from "../configs/configureStore";
 import services from "../services/messages";
 import Errors from "../components/Shared/error/errors";
@@ -50,7 +51,10 @@ const actions = {
           type: constants.CHAT_CREATE_SUCCESS,
           payload: response.data.message,
         });
-        emitSentMessage(response.data.message);
+        emitSentMessage({
+          message: response.data.message,
+          members: data.members,
+        });
       }
     } catch (error) {
       Message.error("Send message fail!");
@@ -70,7 +74,10 @@ const actions = {
           type: constants.CHAT_CREATE_SUCCESS,
           payload: response.data.message,
         });
-        emitSentMessage(response.data.message);
+        emitSentMessage({
+          message: response.data.message,
+          members: data.members,
+        });
       }
     } catch (error) {
       Message.error("Send message fail!");
@@ -90,7 +97,10 @@ const actions = {
           type: constants.CHAT_CREATE_SUCCESS,
           payload: response.data.message,
         });
-        emitSentMessage(response.data.message);
+        emitSentMessage({
+          message: response.data.message,
+          members: data.members,
+        });
       }
     } catch (error) {
       Message.error("Send message fail!");
@@ -181,11 +191,35 @@ const actions = {
 
       emitCreateGroup(messages);
 
+      let lengthGroup = response.data.members.length;
+      let nameCaption = response.data.members[+lengthGroup - 1].userName;
+
+      dispatch(
+        actions.doCreate({
+          type: "notification",
+          message: `${nameCaption} created the group.`,
+          receiverId: response.data._id,
+          sender: response.data.userId,
+          conversationType: "ChatGroup",
+          isChatGroup: true,
+          members: response.data.members,
+        }),
+      );
+
       dispatch({
         type: constants.CHAT_CREATE_GROUP_SUCCESS,
         payload: messages,
       });
 
+      dispatch({ type: constantLayout.LAYOUT_RIGHT_SIDEBAR_HIDE });
+      dispatch({
+        type: constants.CHANGE_CONVERSATION,
+        payload: response.data._id,
+      });
+      dispatch({
+        type: constants.TARGET_CONVERSATION,
+        payload: response.data._id,
+      });
       getHistory().push(`/m/${response.data._id}`);
     } catch (error) {
       Message.error("Create group fail!");
@@ -205,7 +239,7 @@ const actions = {
         getHistory().push("/");
         dispatch({
           type: constants.CHAT_GROUP_LEAVE,
-          payload: {id: data.userId, chatGroupId: data.chatGroupId},
+          payload: { id: data.userId, chatGroupId: data.chatGroupId },
         });
       }
       emitRemoveMemberInGroup({
@@ -215,19 +249,18 @@ const actions = {
         members: data.members,
       });
 
-      if (data.currentUser.id !== data.userId) {
-        /*  dispatch(
+      if (data.currentUser._id !== data.userId) {
+        dispatch(
           actions.doCreate({
             type: "notification",
-            message: `${
-              data.currentUser.firstname + " " + data.currentUser.lastname
-            } removed ${
-              data.member.firstname + " " + data.member.lastname
-            } from the group.`,
-            receiver: data.groupId,
+            message: `${data.currentUser.userName} removed ${data.member.userName}`,
+            receiverId: data.chatGroupId,
+            sender: data.currentUser._id,
             conversationType: "ChatGroup",
+            isChatGroup: true,
+            members: data.members,
           }),
-        ); */
+        );
       } else {
         dispatch({
           type: constants.CHAT_GROUP_LEAVE,
@@ -255,16 +288,63 @@ const actions = {
         chatGroupId: data.chatGroupId,
         messages: data.membersSocket,
       });
-      /* dispatch(
+      let message = "";
+      data.members.forEach((member) => {
+        message += `${member.userName}`;
+      });
+
+      dispatch(
+        actions.doCreate({
+          type: "notification",
+          message: `${data.currentUser.userName} added ${message}`,
+          receiverId: data.chatGroupId,
+          sender: data.currentUser._id,
+          conversationType: "ChatGroup",
+          isChatGroup: true,
+          members: data.memberMessage,
+        }),
+      );
+    } catch (error) {
+      Message.error("Add member fail!");
+    }
+  },
+  doChatGroupChangeAvatar: (data) => async (dispatch) => {
+    dispatch({
+      type: constants.CHAT_GROUP_CHANGE_AVATAR,
+      payload: data,
+    });
+    /* dispatch(
+      actions.doCreate({
+        type: "notification",
+        message: data.message,
+        receiver: data.groupId,
+        conversationType: "ChatGroup",
+      }),
+    ); */
+  },
+  doChatGroupUpdate: (data) => async (dispatch) => {
+    try {
+      await services.updateChatGroup({
+        name: data.name,
+        id: data.id,
+      });
+      dispatch({
+        type: constants.CHAT_GROUP_UPDATE_SUCCESS,
+        payload: { name: data.name, id: data.id },
+      });
+      dispatch(
         actions.doCreate({
           type: "notification",
           message: data.message,
-          receiver: data.groupId,
+          receiverId: data.id,
+          sender: data.currentUser._id,
           conversationType: "ChatGroup",
+          isChatGroup: true,
+          members: data.members,
         }),
-      ); */
+      );
     } catch (error) {
-      Message.error("Add member fail!");
+      Message.error("Update group fail!");
     }
   },
 };
