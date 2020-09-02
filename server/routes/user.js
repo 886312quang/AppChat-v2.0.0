@@ -17,7 +17,7 @@ router
   .put(AuthMiddleware.isAuth, userValid.updatePassword, user.updatePassword);
 router
   .route("/")
-  .put(AuthMiddleware.isAuth, userValid.updateInfo, user.updateInfo);
+  .put(AuthMiddleware.isAuth, user.updateInfo);
 router.route("/updateAvatar").post(AuthMiddleware.isAuth, user.updateAvatar);
 
 module.exports = router;

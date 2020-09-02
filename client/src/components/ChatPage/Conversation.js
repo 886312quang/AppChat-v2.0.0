@@ -62,7 +62,7 @@ function Conversation({ messages }) {
           key={index}
           style={{
             display: "flex",
-            justifyContent: "flex-start",
+            wordWrap: "break-word",
           }}
         >
           <div style={{ width: 30, marginRight: "5px" }}>
@@ -112,11 +112,8 @@ function Conversation({ messages }) {
                   </Tooltip>
                 ) : message.messageType === "image" &&
                   message.file.length > 0 ? (
-                  <div style={{ maxWidth: "40%" }}>
-                    <div
-                      className={`body-sent-no-backGroundR`}
-                      style={{ maxWidth: "100%" }}
-                    >
+                  <div>
+                    <div className={`body-sent-no-backGroundR`}>
                       {message.file.map((image, key) => (
                         <div
                           key={key}
@@ -201,11 +198,8 @@ function Conversation({ messages }) {
                   </Tooltip>
                 ) : message.messageType === "image" &&
                   message.file.length > 0 ? (
-                  <div style={{ maxWidth: "40%" }}>
-                    <div
-                      className={`body-sent-no-backGroundL`}
-                      style={{ maxWidth: "100%" }}
-                    >
+                  <div>
+                    <div className={`body-sent-no-backGroundL`}>
                       {message.file.map((image, key) => (
                         <div
                           key={key}

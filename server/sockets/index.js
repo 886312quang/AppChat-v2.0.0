@@ -17,6 +17,7 @@ const typingOff = require("./chat/typingOff");
 const createGroup = require("./chat/createGroup");
 const addMemberToGroup = require("./chat/addMemberToGroup");
 const removeMemberInGroup = require("./chat/removeMemberInGroup");
+const changeNameGroup = require("./chat/changeNameGroup")
 
 let initSockets = (io) => {
   io.use(
@@ -98,6 +99,10 @@ let initSockets = (io) => {
       socket.on("remove-member-in-group", (data) =>
         removeMemberInGroup(io, data, clients, user),
       );
+      socket.on("change-name-group", (data) =>
+        changeNameGroup(io, data, clients, user),
+      );
+
 
       //Disconnect socket
       socket.on("disconnect", () => {

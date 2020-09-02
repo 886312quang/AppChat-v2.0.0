@@ -5,13 +5,14 @@ import { useSelector, useDispatch } from "react-redux";
 import actions from "../../_actions/message";
 import userSelectors from "../../_selectors/user";
 import selectors from "../../_selectors/message";
+import { emitChangeNameGroup } from "../../sockets/chat";
 
 function ModalUpdateChatGroup({ visible, doToggle, info }) {
   const dispatch = useDispatch();
 
   // Selector
   const currentUser = useSelector(userSelectors.selectCurrentUser);
-  const record = useSelector(selectors.selectRecord)
+  const record = useSelector(selectors.selectRecord);
 
   // State
   const [groupName, setGroupName] = useState(info.name);
@@ -22,14 +23,17 @@ function ModalUpdateChatGroup({ visible, doToggle, info }) {
       actions.doChatGroupUpdate({
         name: groupName,
         id: info._id,
-        message: `${
-          currentUser.userName
-        } named the conversation: ${groupName}.`,
+        message: `${currentUser.userName} named the conversation: ${groupName}.`,
         members: info.members,
         currentUser,
       }),
     );
     doToggle();
+    emitChangeNameGroup({
+      name: groupName,
+      members: info.members,
+      id: info._id,
+    });
   };
 
   return (

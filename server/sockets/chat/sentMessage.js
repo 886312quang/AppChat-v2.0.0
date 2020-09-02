@@ -1,7 +1,6 @@
 const { emitNotifyToArray } = require("../../helpers/socketHelper");
 
 let sentMessage = (io, data, clients, user) => {
-  console.log(data);
   if (data.message.conversationType === "personal") {
     if (data.message.receiverId) {
       let response = data.message;

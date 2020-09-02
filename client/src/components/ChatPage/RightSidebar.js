@@ -297,7 +297,7 @@ function RightSideBar() {
             </Spin>
 
             <Button type="link" block onClick={getMoreFile}>
-              More
+              ...
             </Button>
           </Collapse.Panel>
         )}
@@ -314,7 +314,7 @@ function RightSideBar() {
               <ImageGrid>{renderImagesGrid(images)}</ImageGrid>
             </Spin>
             <Button type="link" block onClick={getMoreImage}>
-              More
+              ...
             </Button>
           </Collapse.Panel>
         )}

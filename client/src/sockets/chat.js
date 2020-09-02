@@ -8,6 +8,13 @@ export const onAddedToGroup = (payload) => {
   getStore().dispatch({ type: constants.ON_ADDED_TO_GROUP, payload });
 };
 
+export const emitChangeNameGroup = (payload) => {
+  getSocket().emit("change-name-group", payload);
+};
+export const onChangeNameGroup = (payload) => {
+  getStore().dispatch({ type: constants.ON_CHANGE_NAME_GROUP, payload });
+};
+
 export const emitRemoveMemberInGroup = (payload) => {
   getSocket().emit("remove-member-in-group", payload);
 };
@@ -63,7 +70,6 @@ export const emitSentMessage = (payload) => {
 };
 
 export const onSentMessage = (payload) => {
-  console.log(payload)
   getStore().dispatch({ type: constants.SOCKET_SENT_MESSAGE, payload });
 };
 

@@ -48,7 +48,7 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
-    async function firstTarget(userId) {
+    async function load(userId) {
       await dispatch(actions.list());
       if (lengthObjUserId > 0 && !target) {
         await dispatch({
@@ -58,11 +58,8 @@ export default function ChatPage() {
       }
     }
 
-    firstTarget(userId);
-    //dispatch(contactActions.listRequests());
-    if (isAuthenticated() && currentUser) {
-      emitCheckStatus();
-    }
+    load(userId);
+    
     windowOnResize(window.innerWidth);
     window.addEventListener("resize", windowOnResize);
     //dispatch(callActions.doGetIceServer());
