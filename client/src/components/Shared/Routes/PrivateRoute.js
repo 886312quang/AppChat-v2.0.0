@@ -15,7 +15,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   useEffect(() => {
     if (isAuthenticated()) {
       configSocket();
-      emitCheckStatus();
+      //emitCheckStatus();
     }
     // dispatch(socketActions.doConnect());
     if (!currentUser && isAuthenticated()) {

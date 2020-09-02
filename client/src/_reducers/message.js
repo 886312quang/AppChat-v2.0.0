@@ -62,7 +62,10 @@ const messageReducer = (state = initialState, { type, payload }) =>
           } else {
             playBell("new-message");
           }
-        } else if (payload.conversationType === "group" || payload.conversationType === "notification") {
+        } else if (
+          payload.conversationType === "group" ||
+          payload.conversationType === "notification"
+        ) {
           draft.messages.forEach((message, index) => {
             if (message._id === payload.receiverId) {
               draft.messages[index].messages.push(payload);
@@ -403,6 +406,17 @@ const messageReducer = (state = initialState, { type, payload }) =>
             draft.messages[index].name = payload.name;
           }
         });
+        break;
+      case constants.ON_CHANGE_NAME_GROUP:
+        if (draft.record && draft.record._id === payload.id) {
+          draft.record.name = payload.name;
+        } else {
+          state.messages.forEach((item, index) => {
+            if (item._id === payload.id) {
+              draft.messages[index].name = payload.name;
+            }
+          });
+        }
         break;
       default:
         break;

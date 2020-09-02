@@ -14,9 +14,9 @@ const UpdateAvatar = ({
 
   const dispatch = useDispatch();
 
+  console.log(imageUrl)
 
   useEffect(() => {
-    console.log(avatar)
     setImageUrl(avatar);
     return () => {};
   }, [avatar]);

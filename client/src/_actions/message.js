@@ -12,6 +12,7 @@ import {
 } from "../sockets/chat";
 //import services from "../services/user";
 import layoutActions from "../_actions/layout";
+import { emitCheckStatus } from "../sockets/checkStatus";
 
 const actions = {
   doToggleScrollToBottom: () => ({
@@ -25,13 +26,14 @@ const actions = {
       let personSkip = data && data.personSkip ? data.personSkip : 0;
       let response = await services.getList({ groupSkip, personSkip });
 
-      dispatch({
+      await dispatch({
         type: constants.CHAT_GET_SUCCESS,
         payload: {
           messages: response.data,
           skip: groupSkip + personSkip,
         },
       });
+      emitCheckStatus();
     } catch (error) {
       Message.error("Get message fail!");
       dispatch({

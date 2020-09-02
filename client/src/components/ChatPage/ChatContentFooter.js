@@ -38,7 +38,7 @@ function ChatContentFooter() {
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
 
   const isChatGroup = record && record.members ? true : false;
-  const members = record&& record.members ? record.members : null;
+  const members = record && record.members ? record.members : null;
 
   const handleTypingOff = () => {
     emitTypingOff({
@@ -223,12 +223,14 @@ function ChatContentFooter() {
           onKeyUp={() => {
             if (!typing) {
               setTyping(true);
-              if (inputMessage.text.trim() !== "") {
-                emitTypingOn({
-                  info: currentUser,
-                  receiverId: record._id,
-                  //conversationType: record.conversationType,
-                });
+              if (record && !record.members) {
+                if (inputMessage.text.trim() !== "") {
+                  emitTypingOn({
+                    info: currentUser,
+                    receiverId: record._id,
+                    //conversationType: record.conversationType,
+                  });
+                }
               }
             }
             delay(() => {

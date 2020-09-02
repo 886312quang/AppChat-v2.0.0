@@ -64,6 +64,7 @@ function ChatContent() {
       style={{
         position: "relative",
         width: isMobileDevice && rightSidebarVisible ? 0 : "auto",
+        width: "100%"
       }}
     >
       <ChatContentHeader />

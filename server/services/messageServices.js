@@ -130,7 +130,6 @@ let addNewTextEmoji = (sender, receivedId, messageVal, isChatGroup, type) => {
           conversationType = MessageModel.conversationType.GROUP;
         }
 
-        console.log(conversationType)
         let receiver = {
           id: getChatGroupReceiver._id,
           name: getChatGroupReceiver.name,
@@ -150,7 +149,6 @@ let addNewTextEmoji = (sender, receivedId, messageVal, isChatGroup, type) => {
 
         let newMessage = await MessageModel.model.createNew(newMessageItem);
 
-        console.log(newMessage);
         // update group chat
         await ChatGroupModel.updateWhenAddNewMessage(
           getChatGroupReceiver._id,
@@ -226,7 +224,6 @@ let addNewImage = (sender, receivedId, messageVal, isChatGroup) => {
         let fileCreatePromise = messageVal.map(getNewMessage);
 
         let fileCreate = await Promise.all(fileCreatePromise);
-        console.log(fileCreate);
 
         let newMessageItem = {
           senderId: sender.id,
