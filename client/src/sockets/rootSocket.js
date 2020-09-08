@@ -23,6 +23,7 @@ import {
   onRemoveMemberToGroup,
   onAddedToGroup,
   onChangeNameGroup,
+  onChangAvatarGroup,
 } from "./chat";
 
 const endpoint = process.env.REACT_APP_SOCKET_ENDPOINT;
@@ -72,6 +73,7 @@ export const configSocket = () => {
     socket.on("response-remove-member-in-group", onRemoveMemberToGroup);
     socket.on("response-added-to-group", onAddedToGroup);
     socket.on("response-change-name-group", onChangeNameGroup);
+    socket.on("response-change-avatar-group", onChangAvatarGroup);
 
     return socket;
   } else {

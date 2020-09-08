@@ -25,6 +25,7 @@ import authActions from "../../_actions/auth";
 import layoutSelectors from "../../_selectors/layout";
 import userSelectors from "../../_selectors/user";
 import contactSelectors from "../../_selectors/contact";
+import constants from "../../constants/message";
 import AvatarCus from "../Commons/AvatarCus";
 import UserList from "../UserPage/List/List";
 import ModalCreateGroupChat from "./ModalCreateGroupChat";
@@ -80,7 +81,12 @@ function ChatSidebar() {
   const menu = (
     <Menu style={{ width: "150px" }}>
       {currentUser && (
-        <Menu.Item key="0">
+        <Menu.Item
+          key="0"
+          onClick={() => {
+            dispatch({ type: constants.TARGET_UPDATE_USER });
+          }}
+        >
           <Link to={`/user/${currentUser._id}/update`}>Update info</Link>
         </Menu.Item>
       )}

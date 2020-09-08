@@ -117,26 +117,7 @@ const actions = {
       });
     }
   },
- /*  doChangeAvatar: (avatar) => async (dispatch) => {
-    try {
-      dispatch({ type: constants.USER_UPDATE_AVATAR_START });
 
-      const response = await services.updateAvatar(avatar);
-      console.log("nhan")
-      console.log(response)
-
-      dispatch({
-        type: constants.USER_UPDATE_AVATAR_SUCCESS,
-        payload: response.data,
-      });
-      Message.success("Change avatar success!");
-    } catch (error) {
-      Message.error("Change avatar error!");
-      dispatch({
-        type: constants.USER_UPDATE_AVATAR_ERROR,
-      });
-    }
-  }, */
 };
 
 export default actions;

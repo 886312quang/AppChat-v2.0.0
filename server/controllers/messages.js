@@ -65,7 +65,7 @@ let creatNewMessage = async (req, res) => {
       name: req.user.userName,
       avatar: req.user.avatar,
     };
-
+    
     let receiveId = req.body.receiverId;
     let messageVal = req.body.message;
     let isChatGroup = req.body.isChatGroup;
@@ -76,7 +76,7 @@ let creatNewMessage = async (req, res) => {
       receiveId,
       messageVal,
       isChatGroup,
-      type
+      type,
     );
     return res.status(200).send({ message: newMessage });
   } catch (error) {
@@ -131,6 +131,7 @@ let addNewImage = async (req, res) => {
         name: req.user.userName,
         avatar: req.user.avatar,
       };
+      console.log(avatar);
 
       let receiveId = req.body.receiver;
       let messageVal = [];

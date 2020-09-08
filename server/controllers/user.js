@@ -1,11 +1,13 @@
 const { validationResult } = require("express-validator/check");
 const UserModel = require("../models/userModel");
+const GroupModel = require("../models/chatGroupsModel");
 const { transSuccess, transErrors } = require("../../lang/vi");
 const { user } = require("../services/index");
 const multer = require("multer");
 const fsExtra = require("fs-extra");
 const { v4: uuidv4 } = require("uuid");
 const app = require("../config/app");
+const group = require("./group");
 
 let load = async (req, res, next, id) => {
   try {
@@ -61,6 +63,9 @@ let updateInfo = async (req, res) => {
   try {
     let updateUserItem = req.body;
     await user.updateUser(req.user._id, updateUserItem);
+
+    await GroupModel.updateUserInfo(req.user._id, updateUserItem);
+
     let result = {
       message: transSuccess.updatedUserInfo,
     };
@@ -113,9 +118,11 @@ let updateAvatar = (req, res) => {
         await fsExtra.remove(`${app.avatar_directory}/${userUpdate.avatar}`);
       }
 
+      await GroupModel.updateUserAvatar(req.user._id, req.file.filename);
+
       let result = {
         message: transSuccess.updatedUserInfo,
-        imageSrc: `/image/users/${req.file.filename}`,
+        imageSrc: `/${req.file.filename}`,
       };
 
       return res.status(200).send(result);

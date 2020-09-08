@@ -2,7 +2,12 @@ import { Form, Icon, Upload, message, Avatar } from "antd";
 import React, { useEffect, useState } from "react";
 import { isAuthenticated } from "../../../components/Shared/Routes/permissionChecker";
 import * as constants from "../../../constants/user";
-import { useDispatch } from "react-redux";
+import constantsMessages from "../../../constants/message";
+import { useDispatch, useSelector } from "react-redux";
+import selector from "../../../_selectors/message";
+import userSelector from "../../../_selectors/user";
+import actions from "../../../_actions/message";
+import { emitChangeAvatarGroup } from "../../../sockets/chat";
 
 const UpdateAvatar = ({
   avatar,
@@ -11,10 +16,10 @@ const UpdateAvatar = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(avatar ? avatar : "");
+  const record = useSelector(selector.selectRecord);
+  const currentUser = useSelector(userSelector.selectCurrentUser);
 
   const dispatch = useDispatch();
-
-  console.log(imageUrl)
 
   useEffect(() => {
     setImageUrl(avatar);
@@ -43,6 +48,33 @@ const UpdateAvatar = ({
       setLoading(true);
       return;
     }
+    if (record && record.members) {
+      dispatch({
+        type: constantsMessages.GROUP_CHANGE_AVATAR,
+        payload: { avatar: info.file.response.imageSrc, id: record._id },
+      });
+      dispatch(
+        actions.doCreate({
+          type: "notification",
+          message: `${currentUser.userName} changed the group avatar`,
+          receiverId: record._id,
+          sender: currentUser._id,
+          conversationType: "ChatGroup",
+          isChatGroup: true,
+          members: record.members,
+        }),
+      );
+      emitChangeAvatarGroup({
+        avatar: info.file.response.imageSrc,
+        members: record.members,
+        id: record._id,
+      });
+    } else if (!record || (record && record.userName)) {
+      dispatch({
+        type: constants.USER_CHANGE_AVATAR,
+        payload: info.file.response.imageSrc,
+      });
+    }
     if (info.file.status === "done") {
       // Get this url from response in real world.
       if (info.file.response.message === "success") {
@@ -50,11 +82,10 @@ const UpdateAvatar = ({
       }
       getBase64(info.file.originFileObj, (imageUrl) => {
         setImageUrl(imageUrl);
+
         setLoading(false);
       });
     }
-   
-    //dispatch({ type: constants.USER_GET_CURRENT_SUCCESS });
   };
 
   const uploadButton = (
