@@ -3,8 +3,16 @@ import constants from "../constants/message";
 import getStore, { getHistory } from "../configs/configureStore";
 import { toast } from "react-toastify";
 
-export const onAddedToGroup = (payload) => {
+export const emitChangeAvatarGroup = (payload) => {
+  getSocket().emit("change-avatar-group", payload);
+};
+
+export const onChangAvatarGroup = (payload) => {
   console.log(payload);
+  getStore().dispatch({ type: constants.GROUP_CHANGE_AVATAR, payload });
+};
+
+export const onAddedToGroup = (payload) => {
   getStore().dispatch({ type: constants.ON_ADDED_TO_GROUP, payload });
 };
 

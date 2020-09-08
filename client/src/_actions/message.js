@@ -310,20 +310,6 @@ const actions = {
       Message.error("Add member fail!");
     }
   },
-  doChatGroupChangeAvatar: (data) => async (dispatch) => {
-    dispatch({
-      type: constants.CHAT_GROUP_CHANGE_AVATAR,
-      payload: data,
-    });
-    /* dispatch(
-      actions.doCreate({
-        type: "notification",
-        message: data.message,
-        receiver: data.groupId,
-        conversationType: "ChatGroup",
-      }),
-    ); */
-  },
   doChatGroupUpdate: (data) => async (dispatch) => {
     try {
       await services.updateChatGroup({

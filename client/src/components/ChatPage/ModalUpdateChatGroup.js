@@ -64,15 +64,7 @@ function ModalUpdateChatGroup({ visible, doToggle, info }) {
                 : null
             }
             action={`${process.env.REACT_APP_API_URI}/group/avatar/${info._id}`}
-            onSuccess={(avatar) =>
-              dispatch(
-                actions.doChatGroupChangeAvatar({
-                  avatar,
-                  chatGroupId: info._id,
-                  message: `${currentUser.userName} changed the group photo.`,
-                }),
-              )
-            }
+            onSuccess
           />
         </div>
         <div style={{ width: "100%", marginTop: "10px" }}>

@@ -21,6 +21,7 @@ const FormComp = ({ form }) => {
       phone: values.phone ? values.phone : user.phone,
       address: values.address ? values.address : user.address,
       _id: user._id,
+      avatar: values.avatar ? values.avatar : user.avatar,
     };
     dispatch(actions.doUpdateInfo(values, userInfoNow));
   };

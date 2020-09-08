@@ -213,6 +213,11 @@ const messageReducer = (state = initialState, { type, payload }) =>
           (message) => message._id !== payload,
         );
         break;
+      case constants.TARGET_UPDATE_USER:
+        if (draft.record) {
+          draft.record = null;
+        }
+        break;
       case constants.TARGET_CONVERSATION_START:
         draft.findLoading = true;
         draft.typing = {};
@@ -348,9 +353,11 @@ const messageReducer = (state = initialState, { type, payload }) =>
         }
         break;
       case constants.CHAT_GROUP_REMOVE_MEMBER_SUCCESS:
-        draft.record.members = draft.record.members.filter(
-          (item) => item._id !== payload.id,
-        );
+        if (draft.record && draft.record.members) {
+          draft.record.members = draft.record.members.filter(
+            (item) => item._id !== payload.id,
+          );
+        }
         state.messages.forEach((message, index) => {
           if (message._id === payload.chatGroupId) {
             draft.messages[index].members = draft.messages[
@@ -360,7 +367,9 @@ const messageReducer = (state = initialState, { type, payload }) =>
         });
         break;
       case constants.CHAT_GROUP_ADD_MEMBERS_SUCCESS:
-        draft.record.members = draft.record.members.concat(payload.member);
+        if (draft.record && draft.record.members) {
+          draft.record.members = draft.record.members.concat(payload.member);
+        }
         state.messages.forEach((message, index) => {
           if (message._id === payload.chatGroupId) {
             draft.messages[index].members = payload.member.concat(
@@ -389,7 +398,6 @@ const messageReducer = (state = initialState, { type, payload }) =>
         draft.messages.unshift(payload);
         break;
       case constants.CHAT_GROUP_CHANGE_AVATAR:
-        console.log(payload);
         draft.record.avatar = payload.avatar;
         state.messages.forEach((item, index) => {
           if (item._id === payload.chatGroupId) {
@@ -416,6 +424,16 @@ const messageReducer = (state = initialState, { type, payload }) =>
               draft.messages[index].name = payload.name;
             }
           });
+        }
+        break;
+      case constants.GROUP_CHANGE_AVATAR:
+        state.messages.forEach((item, index) => {
+          if (item._id === payload.id) {
+            draft.messages[index].avatar = payload.avatar;
+          }
+        });
+        if (draft.record && draft.record._id === payload.id) {
+          draft.record.avatar = payload.avatar;
         }
         break;
       default:
