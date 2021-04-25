@@ -19,6 +19,13 @@ const addMemberToGroup = require("./chat/addMemberToGroup");
 const removeMemberInGroup = require("./chat/removeMemberInGroup");
 const changeNameGroup = require("./chat/changeNameGroup");
 const changeAvatarGroup = require("./chat/changAvatarGroup");
+const checkListenerStatus = require("./call/checkListenerStatus");
+const listenerEmitPeerId = require("./call/listenerEmitPeerId");
+const callerRequestCall = require("./call/callerRequestCall");
+const callerCancelRequestCall = require("./call/callerCancelRequestCall");
+const listenerRejectCall = require("./call/listenerRejectCall");
+const listenerAnswerCall = require("./call/listenerAnwserCall");
+const callEnded = require('./call/callEnded');
 
 let initSockets = (io) => {
   io.use(
@@ -86,6 +93,8 @@ let initSockets = (io) => {
       socket.on("remove-contact", (data) => {
         removeContact(io, data, clients, user);
       });
+
+      // Chat
       socket.on("sent-message", (data) => {
         sentMessage(io, data, clients, user);
       });
@@ -107,6 +116,35 @@ let initSockets = (io) => {
         changeAvatarGroup(io, data, clients, user),
       );
 
+      // Call
+      // Step 01: check status
+      socket.on("caller-server-check-listener-status", (data) => {
+        checkListenerStatus(io, data, clients, user);
+      });
+      //Step 04: listener send peerId to server
+      socket.on("listener-send-server-peer-id", (data) =>
+        listenerEmitPeerId(io, data, clients, user),
+      );
+      //Step 06: caller request call
+      socket.on("caller-server-request-call", (data) =>
+        callerRequestCall(io, data, clients, user),
+      );
+      //Step 07: caller request cancel call
+      socket.on("caller-server-cancel-request-call", (data) =>
+        callerCancelRequestCall(io, data, clients, user),
+      );
+      //Step 10: listener reject call
+      socket.on("listener-server-reject-call", (data) =>
+        listenerRejectCall(io, data, clients, user),
+      );
+      //Step 11: listener accept call
+      socket.on("listener-server-answer-call", (data) =>
+        listenerAnswerCall(io, data, clients, user),
+      );
+      //Step End: on end call caller or listener
+      socket.on("--server-call-ended", (data) =>
+        callEnded(io, data, clients, user),
+      );
 
       //Disconnect socket
       socket.on("disconnect", () => {

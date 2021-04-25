@@ -15,9 +15,9 @@ router.route("/current").get(AuthMiddleware.isAuth, user.getCurrentUser);
 router
   .route("/updatePassword")
   .put(AuthMiddleware.isAuth, userValid.updatePassword, user.updatePassword);
-router
-  .route("/")
-  .put(AuthMiddleware.isAuth, user.updateInfo);
+router.route("/").put(AuthMiddleware.isAuth, user.updateInfo);
 router.route("/updateAvatar").post(AuthMiddleware.isAuth, user.updateAvatar);
+
+router.route("/iceServerList").get(AuthMiddleware.isAuth, user.iceServersList);
 
 module.exports = router;

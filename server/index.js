@@ -72,8 +72,8 @@ if (process.env.NODE_ENV === "production") {
   });
 } */
 
-const port = process.env.APP_PORT || 5000;
+  const port = process.env.APP_PORT || 5000;
 
-server.listen(port, () => {
-  console.log(`Server Listening on ${port} @@`);
-});
+  server.listen(port, () => {
+    console.log(`Server Listening on ${port} @@`);
+  });

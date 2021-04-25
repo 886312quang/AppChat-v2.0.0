@@ -8,6 +8,7 @@ const fsExtra = require("fs-extra");
 const { v4: uuidv4 } = require("uuid");
 const app = require("../config/app");
 const group = require("./group");
+const request = require("request");
 
 let load = async (req, res, next, id) => {
   try {
@@ -132,10 +133,57 @@ let updateAvatar = (req, res) => {
   });
 };
 
+let getICETurnServer = () => {
+  return new Promise(async (resolve, reject) => {
+    // Node Get ICE STUN and TURN list
+    let o = {
+      format: "urls",
+    };
+
+    let bodyString = JSON.stringify(o);
+
+    let options = {
+      url: "https://global.xirsys.net/_turn/ahoo-chat",
+      method: "PUT",
+      headers: {
+        Authorization:
+          "Basic " +
+          Buffer.from(
+            "dasdaha123456:ab1cfb58-c7f8-11ea-95a2-0242ac150003",
+          ).toString("base64"),
+        "Content-Type": "application/json",
+        "Content-Length": bodyString.length,
+      },
+    };
+
+    // Call a request to get ICE of turn server
+    request(options, (error, response, body) => {
+      if (error) {
+        console.log("Error when get ICE");
+        return reject(error);
+      }
+      // body la 1 string gui ve client la Json nen chuyen qua Json
+      let bodyJson = JSON.parse(body);
+      resolve(bodyJson.v.iceServers);
+    });
+    //resolve([]);
+  });
+};
+
+let iceServersList = async (req, res) => {
+  try {
+    const listIce = await getICETurnServer();
+    return res.status(200).json(listIce);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getCurrentUser,
   load,
   updatePassword,
   updateInfo,
   updateAvatar,
+  iceServersList,
 };

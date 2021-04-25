@@ -25,7 +25,17 @@ import {
   onChangeNameGroup,
   onChangAvatarGroup,
 } from "./chat";
-
+import {
+  onListenerStatus,
+  onRequestPeerId,
+  onResponseListenerPeerId,
+  onCancelRequestCall,
+  onRejectCall,
+  onRequestCall,
+  onListenerAnswerCall,
+  onCallerAnswerCall,
+  onCallEnded,
+} from "./call";
 const endpoint = process.env.REACT_APP_SOCKET_ENDPOINT;
 
 let socket = null;
@@ -75,6 +85,26 @@ export const configSocket = () => {
     socket.on("response-change-name-group", onChangeNameGroup);
     socket.on("response-change-avatar-group", onChangAvatarGroup);
 
+    // Call
+    //Step 1,2
+    socket.on("server-caller-listener-status", onListenerStatus);
+    //Step 3,4
+    socket.on("server-listener-request-peer-id", onRequestPeerId);
+    //Step 5,6
+    socket.on("server-caller-listener-peer-id", onResponseListenerPeerId);
+    //Step 08: server send request call to listener
+    socket.on("server-listener-request-call", onRequestCall);
+    //Step 7: on event server send caller cancel rq call
+    socket.on("server-listener-cancel-request-call", onCancelRequestCall);
+    //Step 10: on event server send listener cancel rq call
+    socket.on("server-caller-reject-call", onRejectCall);
+    //Step 13: on event call success to caller
+    socket.on("server-caller-answer-call", onCallerAnswerCall);
+    //Step 14: on event call success to listener
+    socket.on("server-listener-answer-call", onListenerAnswerCall);
+    //Step 15: on cancel 2 phia
+    socket.on("server--call-ended", onCallEnded);
+    
     return socket;
   } else {
     return;
