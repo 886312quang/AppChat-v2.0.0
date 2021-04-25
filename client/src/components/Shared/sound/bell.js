@@ -1,7 +1,7 @@
 import UIfx from "uifx";
 import new_message from "./stairs.mp3";
 // import new_message from "./new-message.mp3";
-import new_message1 from "./new-message1.mp3";
+import call from "./nhac-chuong.mp3";
 import notification from "./definite.mp3";
 import sent from "./all-eyes-on-me.mp3";
 import typing from "./guess-what.mp3";
@@ -12,7 +12,7 @@ const bellNewMessage = new UIfx(new_message, {
     throttleMs: 100,
 });
 
-const bellNewMessage1 = new UIfx(new_message1, {
+const callVideo = new UIfx(call, {
     volume: 0.4, // number between 0.0 ~ 1.0
     throttleMs: 100,
 });
@@ -38,8 +38,8 @@ const playBell = (type = "") => {
         case "new-message":
             bellNewMessage.play();
             break;
-        case "new-message1":
-            bellNewMessage1.play();
+        case "call":
+            callVideo.play();
             break;
         case "notification":
             bellNotification.play();

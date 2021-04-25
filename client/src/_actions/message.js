@@ -1,18 +1,17 @@
-import constants from "../constants/message";
-import * as constantLayout from "../constants/layout";
-import getStore, { getHistory } from "../configs/configureStore";
-import services from "../services/messages";
-import Errors from "../components/Shared/error/errors";
 import Message from "../components/Shared/message";
+import { getHistory } from "../configs/configureStore";
+import * as constantLayout from "../constants/layout";
+import constants from "../constants/message";
+import services from "../services/messages";
 import {
-  emitSentMessage,
-  emitCreateGroup,
   emitAddMemberToGroup,
+  emitCreateGroup,
   emitRemoveMemberInGroup,
+  emitSentMessage,
 } from "../sockets/chat";
+import { emitCheckStatus } from "../sockets/checkStatus";
 //import services from "../services/user";
 import layoutActions from "../_actions/layout";
-import { emitCheckStatus } from "../sockets/checkStatus";
 
 const actions = {
   doToggleScrollToBottom: () => ({

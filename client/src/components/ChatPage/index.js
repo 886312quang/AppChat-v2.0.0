@@ -10,13 +10,8 @@ import selectors from "../../_selectors/message";
 import userSelectors from "../../_selectors/user";
 import constants from "../../constants/message";
 import * as constantLayout from "../../constants/layout";
-import { emitCheckStatus, onListUserOnline } from "../../sockets/checkStatus";
 import RightSideBar from "./RightSidebar";
-import { isAuthenticated } from "../Shared/Routes/permissionChecker";
-import { configSocket } from "../../sockets/rootSocket";
-import InfiniteScroll from "react-infinite-scroller";
-
-//import callActions from "../CallPage/actions";
+import callActions from "../../_actions/call";
 const Sidebar = lazy(() => import("./Sidebar"));
 const ChatContent = lazy(() => import("./ChatContent"));
 //const RightSideBar = lazy(() => import("./RightSidebar"));
@@ -39,13 +34,15 @@ export default function ChatPage() {
   let userId = useParams();
   let lengthObjUserId = Object.entries(userId).length;
 
+  const getPeerId = async () => {
+    await dispatch(callActions.doGetIceServer());
+  };
+
   const windowOnResize = () => {
     dispatch(layoutActions.doWindowResize(window.innerWidth));
   };
 
-  const handleInfiniteOnLoad = () => {
-    console.log("Nhan");
-  };
+  const handleInfiniteOnLoad = () => {};
 
   useEffect(() => {
     async function load(userId) {
@@ -58,11 +55,16 @@ export default function ChatPage() {
       }
     }
 
+    async function getPeer() {
+      await getPeerId();
+    }
+
     load(userId);
-    
+
     windowOnResize(window.innerWidth);
     window.addEventListener("resize", windowOnResize);
-    //dispatch(callActions.doGetIceServer());
+
+    getPeer();
     return () => {
       window.removeEventListener("resize", windowOnResize);
     };

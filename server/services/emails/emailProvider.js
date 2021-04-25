@@ -6,8 +6,8 @@ const transporter = nodemailer.createTransport(
   smtpTransport({
     service: "gmail",
     auth: {
-      user: "quanlyahoochat9999@gmail.com",
-      pass: "sealp[ple",
+      user: "quanlyahoochat8888@gmail.com",
+      pass: "ahoochat#9999999",
     },
     secure: false, // upgrades later with STARTTLS -- change this based on the PORT
   }),
@@ -25,7 +25,7 @@ exports.sendPasswordReset = async (passwordResetObject) => {
   const email = new Email({
     views: { root: __dirname },
     message: {
-      from: "quanlyahoochat9999@gmail.com",
+      from: "quanlyahoochat8888@gmail.com",
     },
     // uncomment below to send emails in development/test env:
     send: true,
@@ -55,7 +55,7 @@ exports.sendPasswordChangeEmail = async (user) => {
   const email = new Email({
     views: { root: __dirname },
     message: {
-      from: "quanlyahoochat9999@gmail.com",
+      from: "quanlyahoochat8888@gmail.com",
     },
     // uncomment below to send emails in development/test env:
     send: true,
@@ -84,7 +84,7 @@ exports.verifyEmailAccount = async (user) => {
   const email = new Email({
     views: { root: __dirname },
     message: {
-      from: "quanlyahoochat9999@gmail.com",
+      from: "quanlyahoochat8888@gmail.com",
     },
     // uncomment below to send emails in development/test env:
     send: true,

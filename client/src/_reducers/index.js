@@ -5,6 +5,7 @@ import auth from "./auth";
 import user from "./user";
 import message from "./message";
 import contact from "./contact";
+import call from "./call";
 
 export default (history) =>
   combineReducers({
@@ -14,4 +15,5 @@ export default (history) =>
     contact,
     user,
     message,
+    call,
   });

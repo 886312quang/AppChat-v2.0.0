@@ -1,18 +1,18 @@
-import React from "react";
-import { Video, Info, ArrowLeft, Phone } from "react-feather";
-import actions from "../../_actions/message";
-import selectors from "../../_selectors/message";
-//import callSelectors from "../CallPage/selectors";
-import userSelectors from "../../_selectors/user";
-import { Button, Row, Layout, Badge } from "antd";
-import AvatarCus from "../../components/Commons/AvatarCus";
-import { useSelector, useDispatch } from "react-redux";
-//import { emitCheckListenerStatus } from "../CallPage/socket";
-import layoutActions from "../../_actions/layout";
-import layoutSelectors from "../../_selectors/layout";
+import { Button, Layout, Row } from "antd";
+import React, { useEffect } from "react";
+import { ArrowLeft, Info, Video } from "react-feather";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { textAbstract } from "../Shared/helper";
+import AvatarCus from "../../components/Commons/AvatarCus";
 import * as constantLayout from "../../constants/layout";
+import { emitCheckListenerStatus } from "../../sockets/call";
+import layoutActions from "../../_actions/layout";
+import actions from "../../_actions/message";
+import callSelectors from "../../_selectors/call";
+import layoutSelectors from "../../_selectors/layout";
+import selectors from "../../_selectors/message";
+import userSelectors from "../../_selectors/user";
+import { textAbstract } from "../Shared/helper";
 
 const { Header } = Layout;
 
@@ -21,18 +21,25 @@ function ChatContentHeader() {
 
   // Selector
   const record = useSelector(selectors.selectRecord);
-  //const peerId = useSelector(callSelectors.selectPeerId);
+  const currentUser = useSelector(userSelectors.selectCurrentUser);
+  const peerId = useSelector(callSelectors.selectPeerId);
   const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
 
-  const handleCallVideoClick = () => {
-    // b01. kiểm trả listener có online hay không
-    /* let caller = {
-      id: currentUser.id,
-      firstname: currentUser.firstname,
-      lastname: currentUser.lastname,
-      picture: currentUser.picture,
+  const handleCallVideoClick = async () => {
+    // Step 01. Check user
+    let caller = {
+      id: currentUser._id,
+      userName: currentUser.userName,
+      avatar: currentUser.avatar,
     };
-    emitCheckListenerStatus({ caller, listener: record.receiver }); */
+    let listener = {
+      id: record._id,
+      userName: record.userName,
+      avatar: record.avatar,
+      address: record.address,
+      phone: record.phone,
+    };
+    emitCheckListenerStatus({ caller, listener });
   };
 
   return (
@@ -82,13 +89,6 @@ function ChatContentHeader() {
       <div>
         {record /*  && record[0].conversationType === "personal" */ && (
           <>
-            <Button
-              shape="circle"
-              style={{ border: "0" }}
-              onClick={() => alert("Ban da nhan vao link")}
-            >
-              <Phone size={20} strokeWidth={1} />
-            </Button>
             <Button
               style={{ border: "0" }}
               shape="circle"

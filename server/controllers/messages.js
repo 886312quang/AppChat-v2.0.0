@@ -105,6 +105,7 @@ let addPhotos = (req, res, next) => {
       /* await fsExtra.remove(
         `${app.images_message_directory}/${req.file.filename}.jpg`,
       ); */
+
       let temp = {
         uid: uuidv4(),
         name: `${req.file.filename}.jpg`,
@@ -131,7 +132,6 @@ let addNewImage = async (req, res) => {
         name: req.user.userName,
         avatar: req.user.avatar,
       };
-      console.log(avatar);
 
       let receiveId = req.body.receiver;
       let messageVal = [];
