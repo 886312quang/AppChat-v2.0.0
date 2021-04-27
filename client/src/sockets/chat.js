@@ -8,12 +8,21 @@ export const emitChangeAvatarGroup = (payload) => {
 };
 
 export const onChangAvatarGroup = (payload) => {
-  console.log(payload);
   getStore().dispatch({ type: constants.GROUP_CHANGE_AVATAR, payload });
 };
 
 export const onAddedToGroup = (payload) => {
   getStore().dispatch({ type: constants.ON_ADDED_TO_GROUP, payload });
+  console.log(payload)
+  toast.success(`Bạn đã được thêm vào nhóm chat! ${payload.name}`, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
 };
 
 export const emitChangeNameGroup = (payload) => {

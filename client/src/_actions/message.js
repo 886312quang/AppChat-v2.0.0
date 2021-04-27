@@ -273,7 +273,7 @@ const actions = {
         }); */
       }
     } catch (error) {
-      Message.error("Delete member fail!");
+      Message.error("Leave group");
     }
   },
   doAddNewMembers: (data) => async (dispatch) => {
