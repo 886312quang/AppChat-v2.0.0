@@ -34,6 +34,7 @@ const actions = {
       dispatch({ type: constants.SIGNIN_START });
 
       let response = await fetchSignin(userInfo);
+      console.log(response);
       window.localStorage.setItem("asauth", JSON.stringify(response.data));
       dispatch({
         type: constants.UPDATE_INFO,
@@ -51,6 +52,7 @@ const actions = {
       configSocket();
       initSetting();
     } catch (error) {
+      console.log(error)
       if (error.response && error.response.data) {
         Message.error(error.response.data.message);
       } else {
