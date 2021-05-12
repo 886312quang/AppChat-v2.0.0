@@ -10,7 +10,6 @@ import AvatarCus from "../Commons/AvatarCus";
 import InfiniteScroll from "react-infinite-scroller";
 import { formatDistanceToNowStrict } from "date-fns";
 import { textAbstract } from "../Shared/helper";
-import { last } from "lodash";
 
 const MessageList = () => {
   const dispatch = useDispatch();

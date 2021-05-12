@@ -25,7 +25,10 @@ const callerRequestCall = require("./call/callerRequestCall");
 const callerCancelRequestCall = require("./call/callerCancelRequestCall");
 const listenerRejectCall = require("./call/listenerRejectCall");
 const listenerAnswerCall = require("./call/listenerAnwserCall");
-const callEnded = require('./call/callEnded');
+const callEnded = require("./call/callEnded");
+// Logger
+const logger = require("../config/winton");
+const { isObject } = require("lodash");
 
 let initSockets = (io) => {
   io.use(
@@ -71,6 +74,8 @@ let initSockets = (io) => {
       });
 
       console.log(clients);
+      logger.info(`Connect socket: ${Object.entries(clients)}`);
+
       // Config Socket
 
       // Check Status
@@ -163,6 +168,7 @@ let initSockets = (io) => {
         socket.broadcast.emit("server-send-when-new-user-offline", user._id);
         console.log("disconnect");
         console.log(clients);
+        logger.info(`Disconnect socket: ${Object.entries(clients)}`);
       });
     } catch (error) {
       console.log(error);
