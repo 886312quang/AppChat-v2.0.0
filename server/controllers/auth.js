@@ -10,33 +10,33 @@ const bcrypt = require("bcrypt");
 
 const tokenList = [];
 
-  let register = async (req, res) => {
-    let errorArr = [];
-    let successArr = [];
-    let validationErr = validationResult(req);
-    if (!validationErr.isEmpty()) {
-      let errors = Object.values(validationErr.mapped());
-      errors.forEach((item) => {
-        errorArr.push(item.msg);
-      });
+let register = async (req, res) => {
+  let errorArr = [];
+  let successArr = [];
+  let validationErr = validationResult(req);
+  if (!validationErr.isEmpty()) {
+    let errors = Object.values(validationErr.mapped());
+    errors.forEach((item) => {
+      errorArr.push(item.msg);
+    });
 
-      return res.status(401).send({ success: false, message: errorArr });
-    }
-    try {
-      let createUserSuccess = await auth.register(
-        req.body.email,
-        req.body.gender,
-        req.body.password,
-        req.body.userName,
-        req.protocol,
-        req.get("host"),
-      );
-      successArr.push(createUserSuccess);
-      return res.status(200).json({ success: true, message: successArr });
-    } catch (error) {
-      return res.status(500).json(error);
-    }
-  };
+    return res.status(401).send({ success: false, message: errorArr });
+  }
+  try {
+    let createUserSuccess = await auth.register(
+      req.body.email,
+      req.body.gender,
+      req.body.password,
+      req.body.userName,
+      req.protocol,
+      req.get("host"),
+    );
+    successArr.push(createUserSuccess);
+    return res.status(200).json({ success: true, message: successArr });
+  } catch (error) {
+    return res.status(500).json();
+  }
+};
 
 let login = async (req, res) => {
   const { email, password } = req.body;
@@ -91,7 +91,13 @@ let login = async (req, res) => {
               refreshToken,
             };
 
-            return res.status(200).json({ token, user: userData, message: transSuccess.loginSuccess(user.userName) });
+            return res
+              .status(200)
+              .json({
+                token,
+                user: userData,
+                message: transSuccess.loginSuccess(user.userName),
+              });
           }
         } else {
           return res
@@ -173,8 +179,6 @@ let resetPassword = async (req, res, next) => {
     const user = await UserModel.findOne({
       "local.email": resetTokenObject.userEmail,
     }).exec();
-
-    console.log(user);
 
     if (!user) {
       return res.status(401).json({ message: "User error" });

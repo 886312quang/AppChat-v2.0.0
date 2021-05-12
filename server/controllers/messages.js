@@ -65,7 +65,7 @@ let creatNewMessage = async (req, res) => {
       name: req.user.userName,
       avatar: req.user.avatar,
     };
-    
+
     let receiveId = req.body.receiverId;
     let messageVal = req.body.message;
     let isChatGroup = req.body.isChatGroup;

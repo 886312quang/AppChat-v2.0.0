@@ -2,7 +2,7 @@ import axios from "axios";
 import { isAuthenticated } from "../components/Shared/Routes/permissionChecker";
 
 const api = axios.create({
-  baseURL: "https://server-app-chat-v2.herokuapp.com/api",
+  baseURL: "http://localhost:5000/api",
 });
 
 api.interceptors.request.use(

@@ -16,7 +16,7 @@ let emitNotifyToArray = (clients, userId, io, eventName, data) => {
 let removeSocketIdFromArray = (clients, userId, socket) => {
   clients[userId] = clients[userId].filter(
     (socketId) => socketId !== socket.id,
-  ); // Delete nhung thang khac no no se disconnect va xoa
+  );
 
   if (!clients[userId].length) {
     delete clients[userId];
