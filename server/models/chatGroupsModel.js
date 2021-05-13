@@ -67,6 +67,18 @@ ChatGroupSchema.statics = {
       { arrayFilters: [{ "element._id": userId }] },
     ).exec();
   },
+  updateUserAvatar(userId, avatar) {
+    //$elemMatch truy van mang trong mongoesDB
+    return this.updateMany(
+      {
+        members: { $elemMatch: { _id: userId } },
+      },
+      {
+        $set: { "members.$[element].avatar": avatar },
+      },
+      { arrayFilters: [{ "element._id": userId }] },
+    ).exec();
+  },
   getChatGroupById(id) {
     //$elemMatch truy van mang trong mongoesDB
     return this.findById(id).exec();

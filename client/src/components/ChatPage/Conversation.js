@@ -47,6 +47,15 @@ function Conversation({ messages }) {
     return image;
   };
 
+  const getInfo = (id) => {
+    let memberInfo;
+
+    const members = record.members;
+    memberInfo = members.filter((member) => member._id === id);
+
+    return memberInfo[0];
+  };
+
   const renderConversation = (messages) => {
     if (!currentUser) return <span></span>;
     return messages.map((message, index) => {
@@ -70,14 +79,14 @@ function Conversation({ messages }) {
               <Tooltip
                 title={
                   message.conversationType === "group"
-                    ? getFullName(message.sender)
+                    ? getFullName(getInfo(message.sender.id))
                     : getFullName(record)
                 }
               >
                 <AvatarCus
                   record={
                     message.conversationType === "group"
-                      ? message.sender
+                      ? getInfo(message.sender.id)
                       : record
                   }
                   size={30}
