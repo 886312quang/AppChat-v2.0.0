@@ -9,6 +9,13 @@ const moment = require("moment");
 const bcrypt = require("bcrypt");
 
 const tokenList = [];
+const accessTokenLife = process.env.ACCESS_TOKEN_LIFE || "24h";
+const accessTokenSecret =
+  process.env.ACCESS_TOKEN_SECRET || "process.env.ACCESS_TOKEN_SECRET_MQ_9999";
+const refreshTokenLife = process.env.REFRESH_TOKEN_LIFE || "24h";
+const refreshTokenSecret =
+  process.env.REFRESH_TOKEN_SECRET ||
+  "process.env.REFRESH_TOKEN_SECRET_MQ_9999";
 
 let register = async (req, res) => {
   let errorArr = [];
@@ -56,15 +63,6 @@ let login = async (req, res) => {
               .status(401)
               .json({ message: transErrors.account_notActive });
           } else {
-            const accessTokenLife = process.env.ACCESS_TOKEN_LIFE || "360d";
-            const accessTokenSecret =
-              process.env.ACCESS_TOKEN_SECRET ||
-              "process.env.ACCESS_TOKEN_SECRET_MQ_9999";
-            const refreshTokenLife = process.env.REFRESH_TOKEN_LIFE || "3650d";
-            const refreshTokenSecret =
-              process.env.REFRESH_TOKEN_SECRET ||
-              "process.env.REFRESH_TOKEN_SECRET_MQ_9999";
-
             const userData = {
               _id: user._id,
               userName: user.userName,
@@ -84,6 +82,11 @@ let login = async (req, res) => {
               refreshTokenLife,
             );
 
+            const expToken = await jwtHelper.verifyToken(
+              accessToken,
+              accessTokenSecret,
+            );
+
             tokenList[refreshToken] = { accessToken, refreshToken };
 
             token = {
@@ -91,13 +94,13 @@ let login = async (req, res) => {
               refreshToken,
             };
 
-            return res
-              .status(200)
-              .json({
-                token,
-                user: userData,
-                message: transSuccess.loginSuccess(user.userName),
-              });
+            return res.status(200).json({
+              token,
+              exp: expToken.exp,
+              iat: expToken.iat,
+              user: userData,
+              message: transSuccess.loginSuccess(user.userName),
+            });
           }
         } else {
           return res
@@ -154,6 +157,8 @@ let sendResetPassword = async (req, res, next) => {
 let resetPassword = async (req, res, next) => {
   try {
     const { email, password, resetToken } = req.body;
+    console.log(email);
+    console.log(resetToken);
 
     const resetTokenObject = await PasswordResetToken.findOneAndRemove({
       userEmail: email,
@@ -196,10 +201,54 @@ let resetPassword = async (req, res, next) => {
   }
 };
 
+/**
+ * controller refreshToken
+ * @param {*} req
+ * @param {*} res
+ */
+let refreshToken = async (req, res) => {
+  const refreshTokenFromClient = req.body.refreshToken;
+
+  if (refreshTokenFromClient && tokenList[refreshTokenFromClient]) {
+    try {
+      const decoded = await jwtHelper.verifyToken(
+        refreshTokenFromClient,
+        refreshTokenSecret,
+      );
+
+      const userData = decoded.data;
+
+      const accessToken = await jwtHelper.generateToken(
+        userData,
+        accessTokenSecret,
+        accessTokenLife,
+      );
+
+      const expToken = await jwtHelper.verifyToken(
+        accessToken,
+        accessTokenSecret,
+      );
+
+      return res
+        .status(200)
+        .json({ accessToken, exp: expToken.exp, iat: expToken.iat });
+    } catch (error) {
+      res.status(403).json({
+        message: "Invalid refresh token.",
+      });
+    }
+  } else {
+    return res.status(403).send({
+      message: "No token provided.",
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
   verifyEmailAccount,
   sendResetPassword,
   resetPassword,
+  refreshToken,
 };

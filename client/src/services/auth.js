@@ -35,11 +35,14 @@ export const fetchChangePassword = async (data) => {
   return response;
 };
 
-export const fetchRefreshToken = async (data) => {
-  const response = await api.post("/auth/refresh-token", data);
-  return response;
-};
 export const fetchVerifyEmailAccount = async (data) => {
   const response = await api.post("/auth/verify-email", data);
+  return response;
+};
+
+export const fetchRefreshToken = async (data) => {
+  const response = await api.post("/auth/refresh-token", {
+    refreshToken: data,
+  });
   return response;
 };

@@ -23,6 +23,10 @@ const actions = {
 
   doSignOut: () => (dispatch) => {
     window.localStorage.removeItem("asauth");
+    window.localStorage.removeItem("accessToken");
+    window.localStorage.removeItem("refresh-token");
+    window.localStorage.removeItem("exp");
+    window.localStorage.removeItem("iat");
     socketDisconnect();
 
     getHistory().push("/signin");
@@ -34,8 +38,11 @@ const actions = {
       dispatch({ type: constants.SIGNIN_START });
 
       let response = await fetchSignin(userInfo);
-      console.log(response);
       window.localStorage.setItem("asauth", JSON.stringify(response.data));
+      window.localStorage.setItem("accessToken", JSON.stringify(response.data.token.accessToken));
+      window.localStorage.setItem("refresh-token", JSON.stringify(response.data.token.refreshToken));
+      window.localStorage.setItem("exp", JSON.stringify(response.data.exp));
+      window.localStorage.setItem("iat", JSON.stringify(response.data.iat));
       dispatch({
         type: constants.UPDATE_INFO,
         payload: response.data,
@@ -52,7 +59,7 @@ const actions = {
       configSocket();
       initSetting();
     } catch (error) {
-      console.log(error)
+      console.log(error);
       if (error.response && error.response.data) {
         Message.error(error.response.data.message);
       } else {
