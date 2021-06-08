@@ -17,6 +17,9 @@ const actions = {
   doToggleScrollToBottom: () => ({
     type: constants.CHAT_SCROLL_TO_BOTTOM_TOGGLE,
   }),
+  doClear: () => ({
+    type: constants.CHAT_CLEAR_DATA,
+  }),
   list: (data) => async (dispatch) => {
     try {
       dispatch({ type: constants.CHAT_GET_START });
@@ -158,29 +161,31 @@ const actions = {
       });
     }
   },
-  readMore: (id, skip = 0, limit = 30) => async (dispatch) => {
-    try {
-      if (!id) {
-        return;
+  readMore:
+    (id, skip = 0, limit = 30) =>
+    async (dispatch) => {
+      try {
+        if (!id) {
+          return;
+        }
+        dispatch({
+          type: constants.READ_MORE_START,
+        });
+
+        const response = await services.readMore({ id, skip, limit });
+
+        dispatch({
+          type: constants.READ_MORE_SUCCESS,
+          payload: { data: response.data, skip },
+        });
+        dispatch(layoutActions.doHideLeftSidebar());
+      } catch (error) {
+        Message.error("Read more message fail!");
+        dispatch({
+          type: constants.READ_MORE_ERROR,
+        });
       }
-      dispatch({
-        type: constants.READ_MORE_START,
-      });
-
-      const response = await services.readMore({ id, skip, limit });
-
-      dispatch({
-        type: constants.READ_MORE_SUCCESS,
-        payload: { data: response.data, skip },
-      });
-      dispatch(layoutActions.doHideLeftSidebar());
-    } catch (error) {
-      Message.error("Read more message fail!");
-      dispatch({
-        type: constants.READ_MORE_ERROR,
-      });
-    }
-  },
+    },
   doCreateGroup: (data) => async (dispatch) => {
     try {
       dispatch({
@@ -268,7 +273,7 @@ const actions = {
           payload: data.groupId,
         });
         getHistory().push("/");
-        /*  dispatch({
+      /*    dispatch({
           type: layoutConstants.LAYOUT_LEFT_SIDEBAR_SHOW,
         }); */
       }
