@@ -56,20 +56,7 @@ function ChatContentHeader() {
       }}
     >
       <Row type="flex" align="middle">
-        {isMobileDevice && (
-          <Link to="/">
-            <Button
-              style={{ border: "0", marginLeft: "-1.2rem" }}
-              shape="circle"
-              onClick={() => {
-                dispatch(actions.doClear());
-                dispatch(layoutActions.doShowLeftSidebar());
-              }}
-            >
-              <ArrowLeft size={20} strokeWidth={2} />
-            </Button>
-          </Link>
-        )}
+       
 
         <AvatarCus record={record ? record : null} />
 

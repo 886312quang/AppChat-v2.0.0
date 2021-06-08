@@ -31,6 +31,7 @@ import UserList from "../UserPage/List/List";
 import ModalCreateGroupChat from "./ModalCreateGroupChat";
 import ContactModal from "../ContactPage/ContactModal/ContactModal";
 import MessagesList from "./MessageList";
+import { textAbstract } from "../Shared/helper";
 
 const { Sider, Header } = Layout;
 const { Search } = Input;
@@ -41,10 +42,8 @@ function ChatSidebar() {
   // State
   const [currentTab, setCurrentTab] = useState("message");
   const [playSound, setPlaySound] = useState(getSetting().sound);
-  const [
-    modalCreateGroupChatVisible,
-    setModalCreateGroupChatVisible,
-  ] = useState(false);
+  const [modalCreateGroupChatVisible, setModalCreateGroupChatVisible] =
+    useState(false);
   const [modalContactVisible, setModalContactVisible] = useState(false);
 
   // Selector
@@ -125,10 +124,17 @@ function ChatSidebar() {
     >
       <Menu.Item
         key="message"
-        style={{
-          width: "33%",
-          textAlign: "center",
-        }}
+        style={
+          isMobileDevice
+            ? {
+                width: "100%",
+                textAlign: "center",
+              }
+            : {
+                width: "33%",
+                textAlign: "center",
+              }
+        }
       >
         <Tooltip title="Message">
           <MessageCircle size={20} strokeWidth={1} />
@@ -136,10 +142,17 @@ function ChatSidebar() {
       </Menu.Item>
       <Menu.Item
         key="searchFriend"
-        style={{
-          width: "33%",
-          textAlign: "center",
-        }}
+        style={
+          isMobileDevice
+            ? {
+                width: "100%",
+                textAlign: "center",
+              }
+            : {
+                width: "33%",
+                textAlign: "center",
+              }
+        }
       >
         <Tooltip title="Search friend">
           <SearchIcon size={20} strokeWidth={1} />
@@ -147,10 +160,17 @@ function ChatSidebar() {
       </Menu.Item>
       <Menu.Item
         key="contact"
-        style={{
-          width: "34%",
-          textAlign: "center",
-        }}
+        style={
+          isMobileDevice
+            ? {
+                width: "100%",
+                textAlign: "center",
+              }
+            : {
+                width: "34%",
+                textAlign: "center",
+              }
+        }
         onClick={() => setModalContactVisible(!modalContactVisible)}
       >
         <Tooltip title="Contact">
@@ -178,11 +198,39 @@ function ChatSidebar() {
       <Row type="flex" align="middle">
         <AvatarCus record={currentUser ? currentUser : null} />
         <span className="ml-3" style={{ lineHeight: "1" }}>
-          <span style={{ display: "block" }}>
-            {currentUser ? `${currentUser.userName}` : ""}
+          <span
+            style={
+              isMobileDevice
+                ? {
+                    width: "100%",
+                    textAlign: "center",
+                    display: "flex",
+                    marginLeft: "-10px",
+                  }
+                : {
+                    display: "block",
+                  }
+            }
+          >
+            {currentUser ? textAbstract(`${currentUser.userName}`, 20) : ""}
           </span>
           <small className="text-muted">
-            <span>Online</span>
+            <span
+              style={
+                isMobileDevice
+                  ? {
+                      width: "100%",
+                      textAlign: "center",
+                      display: "flex",
+                      marginLeft: "-10px",
+                    }
+                  : {
+                      display: "block",
+                    }
+              }
+            >
+              Online
+            </span>
           </small>
         </span>
       </Row>
@@ -192,9 +240,10 @@ function ChatSidebar() {
           <Dropdown overlay={menu} trigger={["click"]}>
             <Button
               className="ant-dropdown-link"
-              style={{ border: "0" }}
+              style={{ border: "0", zIndex: 2 }}
               shape="circle"
               icon="setting"
+              color="red"
             ></Button>
           </Dropdown>
         </Tooltip>
@@ -222,6 +271,9 @@ function ChatSidebar() {
           ? "0"
           : "320"
       }
+      trigger={null}
+      collapsible
+      collapsed={isMobileDevice}
     >
       <ModalCreateGroupChat
         visible={modalCreateGroupChatVisible}
@@ -245,7 +297,7 @@ function ChatSidebar() {
       >
         {userInfo}
         {messageHeader}
-        {/* {messageFooter} */}
+        {/*   {messageFooter} */}
         {messagesSidebar()}
       </div>
     </Sider>

@@ -333,7 +333,7 @@ function RightSideBar() {
 
   return (
     <Sider
-      width={isMobileDevice ? "100vw" : "300px"}
+      width={isMobileDevice ? "300px" : "300px"}
       style={{ overflowY: "auto" }}
     >
       <ModalGateway>

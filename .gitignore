@@ -3,8 +3,7 @@
 
 dev.js
 
-
-
+/server/config/info.log
 .DS_Store
 
 npm-debug.log*

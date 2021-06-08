@@ -1,7 +1,7 @@
 import api from "../api/api";
 
 const services = {
-  getList: async ({ groupSkip = 0, personSkip = 0 }) => {
+  getList: async ({ groupSkip, personSkip }) => {
     const response = await api.get(
       `/message/read-more-all-chat?skipPersonal=${personSkip}&skipGroup=${groupSkip}`,
     );
@@ -58,7 +58,7 @@ const services = {
   },
   updateChatGroup: async (info) => {
     const response = await api.put(`/group`, info);
-    return response
+    return response;
   },
 };
 

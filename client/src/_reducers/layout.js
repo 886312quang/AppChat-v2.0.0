@@ -15,7 +15,7 @@ const layoutReducer = (state = initialState, { type, payload }) =>
   produce(state, (draft) => {
     switch (type) {
       case constants.LAYOUT_WINDOW_RESIZE:
-        if (payload < 648) {
+        if (payload < 900) {
           draft.isMobileDevice = true;
         } else {
           draft.isMobileDevice = false;
@@ -27,15 +27,13 @@ const layoutReducer = (state = initialState, { type, payload }) =>
         break;
       case constants.LAYOUT_LEFT_SIDEBAR_SHOW:
         draft.leftSidebarVisible = true;
+        draft.rightSidebarVisible = false;
         break;
       case constants.LAYOUT_RIGHT_SIDEBAR_TOGGLE:
         draft.rightSidebarVisible = !state.rightSidebarVisible;
         break;
       case constants.LAYOUT_RIGHT_SIDEBAR_HIDE:
         draft.rightSidebarVisible = false;
-        break;
-      case constants.LAYOUT_LEFT_SIDEBAR_SHOW:
-        draft.rightSidebarVisible = true;
         break;
       case constants.LAYOUT_SOUND_TOGGLE:
         draft.settings.sound = !state.settings.sound;

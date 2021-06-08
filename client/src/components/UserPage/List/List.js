@@ -4,6 +4,7 @@ import Search from "antd/lib/input/Search";
 import { useDispatch, useSelector } from "react-redux";
 import actions from "../../../_actions/user";
 import selectors from "../../../_selectors/user";
+import layoutSelectors from "../../../_selectors/layout";
 import contactActions from "../../../_actions/contact";
 import AvatarCus from "../../../components/Commons/AvatarCus";
 const UserList = () => {
@@ -12,6 +13,7 @@ const UserList = () => {
   // Selector
   const users = useSelector(selectors.selectUsers);
   const findLoading = useSelector(selectors.selectFindLoading);
+  const isMobileDevice = useSelector(layoutSelectors.selectIsMobileDevice);
 
   const handleSearch = (term) => {
     if (term.trim() === "") return;
@@ -45,15 +47,20 @@ const UserList = () => {
           <List.Item className={`"border-0" border-0 px-4 py-3`}>
             <List.Item.Meta
               key={index}
-              avatar={
-                <AvatarCus record={item} />
-              }
+              avatar={<AvatarCus record={item} />}
               title={
                 <span
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                  }}
+              
+                  style={
+                    isMobileDevice
+                      ? {
+                          display: "block"
+                        }
+                      : {
+                          display: "flex",
+                          width: "100%",
+                        }
+                  }
                 >
                   {item.userName}
                 </span>

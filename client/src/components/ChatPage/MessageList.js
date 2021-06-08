@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Icon, List, Spin, Badge } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import selectors from "../../_selectors/message";
@@ -14,6 +14,8 @@ import { textAbstract } from "../Shared/helper";
 const MessageList = () => {
   const dispatch = useDispatch();
   const { userId } = useParams();
+  /*   const [personSkip, setPersonSkip] = useState(0);
+  const [groupSkip, setGroupSkip] = useState(0); */
 
   // Selector
   const messages = useSelector(selectors.selectMessages);
@@ -25,8 +27,10 @@ const MessageList = () => {
     let groupSkip = 0;
     let personSkip = 0;
     messages.forEach((message) => {
-      if (message.conversationType === "User") personSkip += 1;
       if (message.conversationType === "ChatGroup") groupSkip += 1;
+      else {
+        personSkip += 1;
+      }
     });
     dispatch(actions.list({ groupSkip, personSkip }));
   };
