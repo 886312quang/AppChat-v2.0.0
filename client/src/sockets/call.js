@@ -100,23 +100,25 @@ export const onListenerAnswerCall = (payload) => {
       navigator.mozGetUserMedia
     ).bind(navigator);
 
-    peer.on("call", function (call) {
-      getUserMedia({ video: true, audio: true }, function (stream) {
-        getStore().dispatch({
-          type: constants.CALL_LOCAL_STREAM,
-          payload: stream,
-        });
-
-        call.answer(stream); // Answer the call with an A/V stream.
-        call.on("stream", function (remoteStream) {
-          // Show stream in some video/canvas element.
+    if (peer) {
+      peer.on("call", function (call) {
+        getUserMedia({ video: true, audio: true }, function (stream) {
           getStore().dispatch({
-            type: constants.CALL_REMOTE_STREAM,
-            payload: remoteStream,
+            type: constants.CALL_LOCAL_STREAM,
+            payload: stream,
+          });
+
+          call.answer(stream); // Answer the call with an A/V stream.
+          call.on("stream", function (remoteStream) {
+            // Show stream in some video/canvas element.
+            getStore().dispatch({
+              type: constants.CALL_REMOTE_STREAM,
+              payload: remoteStream,
+            });
           });
         });
       });
-    });
+    }
   } catch (error) {
     console.log("Failed to get local stream", error);
     Modal.error({
@@ -149,17 +151,19 @@ export const onCallerAnswerCall = (payload) => {
       });
 
       getUserMedia({ video: true, audio: true }, function (stream) {
-        let call = peer.call(peerId, stream);
-        getStore().dispatch({
-          type: constants.CALL_LOCAL_STREAM,
-          payload: stream,
-        });
-        call.on("stream", function (remoteStream) {
+        let c = peer.call(peerId, stream);
+        if (c) {
           getStore().dispatch({
-            type: constants.CALL_REMOTE_STREAM,
-            payload: remoteStream,
+            type: constants.CALL_LOCAL_STREAM,
+            payload: stream,
           });
-        });
+          c.on("stream", function (remoteStream) {
+            getStore().dispatch({
+              type: constants.CALL_REMOTE_STREAM,
+              payload: remoteStream,
+            });
+          });
+        }
       });
     } else if (!peerId) {
       getStore().dispatch({
