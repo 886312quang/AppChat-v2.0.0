@@ -30,6 +30,8 @@ const ChangePassword = ({ form }) => {
   const doSubmit = (userInfo) => {
     const email = query.get("email");
     const resetToken = query.get("resetToken");
+    console.log(email);
+    console.log(resetToken);
 
     dispatch(actions.doChangePassword({ ...userInfo, email, resetToken }));
   };

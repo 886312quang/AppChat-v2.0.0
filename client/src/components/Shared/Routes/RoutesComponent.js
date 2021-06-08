@@ -1,10 +1,11 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import routes from "./routes";
 import PublicRoute from "./PublicRoute";
-import PrivateRoute from './PrivateRoute';
+import PrivateRoute from "./PrivateRoute";
 import AuthRoute from "./AuthRoute";
 import CustomLoadable from "../CustomLoadable";
+const NotFound = () => import("../error/Error404Page");
 
 const RoutesComponent = () => (
   <Switch>
@@ -43,6 +44,7 @@ const RoutesComponent = () => (
         component={CustomLoadable({ loader: route.loader })}
       />
     ))}
+    <Route component={CustomLoadable({ loader: NotFound })} />
   </Switch>
 );
 
