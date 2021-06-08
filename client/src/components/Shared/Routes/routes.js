@@ -40,7 +40,13 @@ const privateRoutes = [
   }, */
 ];
 
-const publicRoutes = [];
+const publicRoutes = [
+  {
+    path: "/newscovid",
+    exact: true,
+    loader: () => import("../../NewsCovid/index"),
+  },
+];
 
 const errorRoutes = [
   {

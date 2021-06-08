@@ -1,6 +1,6 @@
 import { Button, Layout, Row } from "antd";
 import React, { useEffect } from "react";
-import { ArrowLeft, Info, Video } from "react-feather";
+import { ArrowLeft, Info, Video, Shield } from "react-feather";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import AvatarCus from "../../components/Commons/AvatarCus";
@@ -87,7 +87,12 @@ function ChatContentHeader() {
       </Row>
       <span className="mr-auto" />
       <div>
-        {record /*  && record[0].conversationType === "personal" */ && (
+        <Link to="/newscovid">
+          <Button style={{ border: "0" }}>
+            <Shield size={20} strokeWidth={2} color="#4cd137" />
+          </Button>
+        </Link>
+        {record && record.conversationType !== "ChatGroup" && (
           <>
             <Button
               style={{ border: "0" }}
